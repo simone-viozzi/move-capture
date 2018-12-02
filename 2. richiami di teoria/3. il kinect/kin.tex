@@ -4,6 +4,7 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+
 \usepackage[left=1.25cm,right=1.25cm,top=1.25cm,bottom=1.25cm]{geometry}
 
 \usepackage{blindtext}
@@ -12,24 +13,16 @@
 
 \usepackage{titlesec}
 \setcounter{secnumdepth}{4}
-\titleformat{\paragraph}
-{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
-\titlespacing*{\paragraph}
-{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+\titleformat{\paragraph}{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
 \usepackage{graphicx}
 \usepackage{subcaption}
 
 \usepackage{wrapfig}
 
-\usepackage{listings}
-\usepackage{xcolor}
-\lstset { %
-    language=C++,
-    backgroundcolor=\color{black!5}, % set backgroundcolor
-    basicstyle=\footnotesize,% basic font setting
-}
-
+\pagenumbering{arabic}
+\pagestyle{plain}
 
 \begin{document}
 
@@ -57,15 +50,16 @@ In particolare ci siamo interessati alla capacit\`a del kinect di poter ricostru
   	\label{fig:kinmap1}
 \end{figure}
 
-\begin{wrapfigure}{r}{0.5\textwidth}
+\begin{wrapfigure}{r}{0.45\textwidth}
 	\vspace{-15pt}
   	\centering
-   	\includegraphics[width=0.5\textwidth]{kin_axis.png}
+   	\includegraphics[width=0.45\textwidth]{kin_axis.png}
   	\vspace{-13pt}
   	\caption{Orientazione degli assi rispetto al kinect.}
   	\label{fig:kinaxis1}
   	\vspace{-15pt}
 \end{wrapfigure}
+
 \noindent
 I dati di posizione e profondit\`a restituiti dal kinect fanno riferimento alla terna di orientazione indicata in figura \ref{fig:kinaxis1}. Per in nostri scopi abbiamo utilizzato delle procedure gi\`a definite dalla libreria che permettono di acquisire la posizione nello spazio di ogni singolo giunto dello scheletro e il suo stato di tracciamento, se la sua posizione \`e stata interpolata o \`e stato effettivamente tracciato.
 
