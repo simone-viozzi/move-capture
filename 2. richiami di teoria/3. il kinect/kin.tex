@@ -4,7 +4,7 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
-\usepackage[left=1cm,right=1cm,top=1cm,bottom=1cm]{geometry}
+\usepackage[left=1.25cm,right=1.25cm,top=1.25cm,bottom=1.25cm]{geometry}
 
 \usepackage{blindtext}
 \usepackage[T1]{fontenc}
@@ -22,18 +22,57 @@
 
 \usepackage{wrapfig}
 
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset { %
+    language=C++,
+    backgroundcolor=\color{black!5}, % set backgroundcolor
+    basicstyle=\footnotesize,% basic font setting
+}
+
 
 \begin{document}
 
 \subsection{Il kinect}
 
-Il kinect \`e \ un dispositivo per la rilevazione del movimento prodotto da Microsoft e commercializzato con la console di gioco Xbox, pu\`o per\`o essere modificato per poterlo interfacciare ad un comune pc.
+\begin{wrapfigure}{r}{0.2\textwidth}
+	\vspace{-10pt}
+  	\centering
+   	\includegraphics[width=0.2\textwidth]{kinect.jpg}
+  	\vspace{-13pt}
+  	\caption{Il kinect.}
+  	\vspace{-10pt}
+\end{wrapfigure}
+
+Il kinect \`e un dispositivo per la rilevazione del movimento, prodotto dall'azienda Microsoft e commercializzato insieme alla console videoludica Xbox. Esso pu\`o tuttavia essere interfacciato ad un comune pc tramite l'apposito connettore. 
+Nel kinect \`e presente una fotocamera 1080p RGB, una fotocamera infrarossi per calcolare la profondit\`a e 4 microfoni. Con questo set di sensori ed il suo SDK (software development kit), consente l'utilizzo dei dati prodotti per scopi pi\`u generici, una tra le quali l'utilizzo delle gesture per controllare il pc o la ricostruzione delle espressioni facciali. Questi dati sono resi disponibili attraverso l'apposito SDK e possono essere usati in generici programmi C++, C\# ed altri linguaggi di programmazione, nello specifico per il linguaggio C++ si usa la libreria "Kinect.h".
+
+\subsubsection{Modello dello scheletro}
+In particolare ci siamo interessati alla capacit\`a del kinect di poter ricostruire la posizione delle parti del corpo nello spazio, infatti utilizzando la fotocamera infrarossi \`e in grado di rilevare 24 punti diversi nel corpo come indicato in figura \ref{fig:kinmap1}.
+
+\begin{figure}[h]
+  	\centering
+    \includegraphics[width=1\textwidth]{kinectskeletonmap.png}
+  	\caption{La mappa dei giunti che il kinect \`e in grado di rilevare.}
+  	\label{fig:kinmap1}
+\end{figure}
 
 \begin{wrapfigure}{r}{0.5\textwidth}
-  \begin{center}
-    \includegraphics[width=0.5\textwidth]{kinect.jpg}
-  \end{center}
-  \caption{Il kinect}
+	\vspace{-15pt}
+  	\centering
+   	\includegraphics[width=0.5\textwidth]{kin_axis.png}
+  	\vspace{-13pt}
+  	\caption{Orientazione degli assi rispetto al kinect.}
+  	\label{fig:kinaxis1}
+  	\vspace{-15pt}
 \end{wrapfigure}
+\noindent
+I dati di posizione e profondit\`a restituiti dal kinect fanno riferimento alla terna di orientazione indicata in figura \ref{fig:kinaxis1}. Per in nostri scopi abbiamo utilizzato delle procedure gi\`a definite dalla libreria che permettono di acquisire la posizione nello spazio di ogni singolo giunto dello scheletro e il suo stato di tracciamento, se la sua posizione \`e stata interpolata o \`e stato effettivamente tracciato.
+
+
+
+
+
+
 
 \end{document}
