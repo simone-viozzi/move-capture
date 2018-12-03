@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6630 64-bit) (preloaded format=pdflatex 2018.11.4)  3 DEC 2018 02:04
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6630 64-bit) (preloaded format=pdflatex 2018.11.4)  3 DEC 2018 11:51
 entering extended mode
 **./prefazione.tex
 (prefazione.tex
@@ -625,11 +625,12 @@ Package caption3 Info: TeX engine: e-TeX on input line 64.
 \WF@everypar=\toks24
 Package: wrapfig 2003/01/31  v 3.6
 )
-No file prefazione.aux.
+(prefazione.aux)
 \openout1 = `prefazione.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/txmi/m/it on input line 31.
 LaTeX Font Info:    Try loading font information for OML+txmi on input line 31.
+
 
 (C:\Users\viozz\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\omltxmi.fd
 File: omltxmi.fd 2000/12/15 v3.1
@@ -773,18 +774,18 @@ Package caption Info: End \AtBeginDocument code.
 {C:/Users/viozz/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}] (prefazione
 .aux) ) 
 Here is how much of TeX's memory you used:
- 6065 strings out of 493305
- 81822 string characters out of 3142358
- 155836 words of memory out of 3000000
+ 6067 strings out of 493305
+ 81918 string characters out of 3142358
+ 156836 words of memory out of 3000000
  9515 multiletter control sequences out of 15000+200000
  16782 words of font info for 26 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 42i,4n,40p,797b,117s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,4n,40p,797b,118s stack positions out of 5000i,500n,10000p,200000b,50000s
 {D:/programmi/MiKTex/fonts/enc/dvips/base/8r.enc}<C:/Users/viozz/AppData
 /Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/rtxr.pfb><D:/programmi/MiKTex/fo
 nts/type1/urw/times/utmb8a.pfb><D:/programmi/MiKTex/fonts/type1/urw/times/utmr8
 a.pfb>
-Output written on prefazione.pdf (1 page, 27181 bytes).
+Output written on prefazione.pdf (1 page, 29937 bytes).
 PDF statistics:
  19 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
