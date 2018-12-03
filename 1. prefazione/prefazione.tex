@@ -1,46 +1,43 @@
 \documentclass[10pt,a4paper]{article}
-\usepackage[utf8]{inputenc}
+
 \usepackage[italian]{babel}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
-\usepackage[left=1cm,right=1cm,top=1cm,bottom=1cm]{geometry}
 
-\usepackage{blindtext}
+\usepackage[left=1cm,right=1cm,top=1cm,bottom=2cm]{geometry}
+
+\usepackage{txfonts}
 \usepackage[T1]{fontenc}
+
+%\usepackage{blindtext}
+%\usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 
 \usepackage{titlesec}
 \setcounter{secnumdepth}{4}
-\titleformat{\paragraph}
-{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
-\titlespacing*{\paragraph}
-{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+\titleformat{\paragraph}{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
+\usepackage{graphicx}
+\usepackage{subcaption}
+
+\usepackage{wrapfig}
+
+\pagenumbering{arabic}
+\pagestyle{plain}
+\setlength{\parindent}{0pt}
 
 \begin{document}
  
 \section{Prefazione}
- 
-This is the first section.
- 
-Lorem  ipsum  dolor  sit  amet,  consectetuer  adipiscing  
-elit.   Etiam  lobortisfacilisis sem.  Nullam nec mi et 
-neque pharetra sollicitudin.  Praesent imperdietmi nec ante. 
-Donec ullamcorper, felis non sodales...
+(..boh!)
  
 \subsection{scopo del progetto}
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit.  
-Etiam lobortis facilisissem.  Nullam nec mi et neque pharetra 
-sollicitudin.  Praesent imperdiet mi necante...
+L'obbiettivo di questo progetto \`e la realizzazione di una modello di machine learning in grado di apprendere le relazioni tra i dati fruiti da una scheda embeded dotata di accelerometro, giroscopio e magnetometro, e la posizione spaziale di un braccio umano.
+Il problema che ci si \`e posti di risolvere poteva essere risolto in modo deterministico ma per lo scopo del progetto (.. si volle (?)) risolvere il problema tramite un'algoritmo di ML, per poter testare (.. l'accuratezza e l'efficenza nella generalizzazione).
 
 \subsection{introduzione generale alle tecniche utilizzate}
-Etiam lobortis facilisissem.  Nullam nec mi et neque pharetra 
-sollicitudin.  Praesent imperdiet mi necante...
-
-\subsubsection{dsdsdd}
-bvfcdsxbvadf
-\paragraph{ciao}
-dfsggsa \\ ssasdf
+(..boh!)
 
 \end{document}
