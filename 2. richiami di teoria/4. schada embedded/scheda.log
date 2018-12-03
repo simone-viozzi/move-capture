@@ -1,7 +1,7 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6630 64-bit) (preloaded format=pdflatex 2018.11.4)  3 DEC 2018 11:54
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6630 64-bit) (preloaded format=pdflatex 2018.11.4)  3 DEC 2018 13:47
 entering extended mode
-**./imu.tex
-(imu.tex
+**./scheda.tex
+(scheda.tex
 LaTeX2e <2017-04-15>
 Babel <3.18> and hyphenation patterns for 75 language(s) loaded.
 (D:\programmi\MiKTex\tex\latex\base\article.cls
@@ -625,51 +625,55 @@ Package caption3 Info: TeX engine: e-TeX on input line 64.
 \WF@everypar=\toks24
 Package: wrapfig 2003/01/31  v 3.6
 )
-(imu.aux)
-\openout1 = `imu.aux'.
+(C:\Users\viozz\AppData\Roaming\MiKTeX\2.9\tex\latex\hyphenat\hyphenat.sty
+Package: hyphenat 2009/09/02 v2.3c hyphenation utilities
+\langwohyphens=\language76
+LaTeX Info: Redefining \_ on input line 43.
+)
+No file scheda.aux.
+\openout1 = `scheda.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/txmi/m/it on input line 27.
-LaTeX Font Info:    Try loading font information for OML+txmi on input line 27.
-
+LaTeX Font Info:    Checking defaults for OML/txmi/m/it on input line 32.
+LaTeX Font Info:    Try loading font information for OML+txmi on input line 32.
 
 (C:\Users\viozz\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\omltxmi.fd
 File: omltxmi.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for OMS/txsy/m/n on input line 27.
-LaTeX Font Info:    Try loading font information for OMS+txsy on input line 27.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMS/txsy/m/n on input line 32.
+LaTeX Font Info:    Try loading font information for OMS+txsy on input line 32.
 
 
 (C:\Users\viozz\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\omstxsy.fd
 File: omstxsy.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for OMX/txex/m/n on input line 27.
-LaTeX Font Info:    Try loading font information for OMX+txex on input line 27.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMX/txex/m/n on input line 32.
+LaTeX Font Info:    Try loading font information for OMX+txex on input line 32.
 
 
 (C:\Users\viozz\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\omxtxex.fd
 File: omxtxex.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for U/txexa/m/n on input line 27.
-LaTeX Font Info:    Try loading font information for U+txexa on input line 27.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for U/txexa/m/n on input line 32.
+LaTeX Font Info:    Try loading font information for U+txexa on input line 32.
 
 (C:\Users\viozz\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\utxexa.fd
 File: utxexa.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Try loading font information for T1+txr on input line 27.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Try loading font information for T1+txr on input line 32.
 
 (C:\Users\viozz\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\t1txr.fd
 File: t1txr.fd 2000/12/15 v3.1
 )
-LaTeX Info: Redefining \it@ocap on input line 27.
-LaTeX Info: Redefining \it@ccap on input line 27.
+LaTeX Info: Redefining \it@ocap on input line 32.
+LaTeX Info: Redefining \it@ccap on input line 32.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -769,32 +773,46 @@ G,.JBIG2,.JB2,.eps]
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: wrapfig package is loaded.
 Package caption Info: End \AtBeginDocument code.
+
+
+LaTeX Warning: Reference `fig:MPU-6050' on page 1 undefined on input line 39.
+
+
+LaTeX Warning: Reference `fig:HMC5883L' on page 1 undefined on input line 39.
+
 <MPU-6050.jpg, id=1, 247.92625pt x 204.765pt>
 File: MPU-6050.jpg Graphic file (type jpg)
 <use MPU-6050.jpg>
-Package pdftex.def Info: MPU-6050.jpg  used on input line 38.
+Package pdftex.def Info: MPU-6050.jpg  used on input line 44.
 (pdftex.def)             Requested size: 147.27773pt x 121.63676pt.
 <HMC5883L.jpg, id=2, 618.05907pt x 618.05907pt>
 File: HMC5883L.jpg Graphic file (type jpg)
 <use HMC5883L.jpg>
-Package pdftex.def Info: HMC5883L.jpg  used on input line 43.
+Package pdftex.def Info: HMC5883L.jpg  used on input line 49.
 (pdftex.def)             Requested size: 121.62915pt x 121.63676pt.
- [1
+[1
 
 {C:/Users/viozz/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <./MPU-6050.
-jpg> <./HMC5883L.jpg>] (imu.aux) ) 
+jpg> <./HMC5883L.jpg>] (scheda.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
- 6085 strings out of 493305
- 82217 string characters out of 3142358
- 156878 words of memory out of 3000000
- 9530 multiletter control sequences out of 15000+200000
- 15049 words of font info for 25 fonts, out of 3000000 for 9000
+ 6120 strings out of 493305
+ 82737 string characters out of 3142358
+ 157579 words of memory out of 3000000
+ 9561 multiletter control sequences out of 15000+200000
+ 18098 words of font info for 28 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 42i,7n,40p,790b,459s stack positions out of 5000i,500n,10000p,200000b,50000s
-{D:/programmi/MiKTex/fonts/enc/dvips/base/8r.
-enc}<D:/programmi/MiKTex/fonts/type1/urw/times/utmb8a.pfb><D:/programmi/MiKTex/
-fonts/type1/urw/times/utmr8a.pfb>
-Output written on imu.pdf (1 page, 165454 bytes).
+ 42i,7n,40p,793b,457s stack positions out of 5000i,500n,10000p,200000b,50000s
+{D:/programmi/MiKTex/fonts/enc/dvips/base/8r.enc}<D:/programmi/MiKTex/fonts/t
+ype1/urw/times/utmb8a.pfb><D:/programmi/MiKTex/fonts/type1/urw/times/utmr8a.pfb
+>
+Output written on scheda.pdf (1 page, 166186 bytes).
 PDF statistics:
  17 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
