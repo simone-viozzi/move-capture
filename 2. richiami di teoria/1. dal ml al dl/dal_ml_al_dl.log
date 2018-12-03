@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6840 64-bit) (preloaded format=pdflatex 2018.12.1)  3 DEC 2018 01:19
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6840 64-bit) (preloaded format=pdflatex 2018.12.1)  3 DEC 2018 12:54
 entering extended mode
 **./dal_ml_al_dl.tex
 (dal_ml_al_dl.tex
@@ -487,24 +487,35 @@ iagram.png> <./diff_between_aprochs.png> <./neurone.jpg>]
 <percettrone.png, id=13, 382.42876pt x 147.55125pt>
 File: percettrone.png Graphic file (type png)
 <use percettrone.png>
-Package pdftex.def Info: percettrone.png  used on input line 81.
+Package pdftex.def Info: percettrone.png  used on input line 79.
 (pdftex.def)             Requested size: 216.23764pt x 83.42964pt.
- [2 <./percettrone.png>] (dal_ml_al_dl.aux) ) 
+
+Underfull \hbox (badness 10000) in paragraph at lines 84--92
+
+ []
+
+<FDTs.png, id=14, 349.305pt x 232.61906pt>
+File: FDTs.png Graphic file (type png)
+<use FDTs.png>
+Package pdftex.def Info: FDTs.png  used on input line 97.
+(pdftex.def)             Requested size: 216.23764pt x 144.0058pt.
+[2 <./percettrone.png> <./FDTs.png>] (dal_ml_al_dl.aux) ) 
 Here is how much of TeX's memory you used:
- 5874 strings out of 492970
- 82242 string characters out of 3135855
- 165551 words of memory out of 3000000
- 9644 multiletter control sequences out of 15000+200000
+ 5880 strings out of 492970
+ 82313 string characters out of 3135855
+ 165559 words of memory out of 3000000
+ 9649 multiletter control sequences out of 15000+200000
  18098 words of font info for 28 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  42i,7n,40p,799b,465s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Program Files/MiKTeX 2.9/fonts
-/enc/dvips/base/8r.enc}<C:/Users/Maxxy/AppData/Roaming/MiKTeX/2.9/fonts/type1/p
-ublic/txfonts/rtxr.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmb8
-a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb>
-Output written on dal_ml_al_dl.pdf (2 pages, 209914 bytes).
+{C:/Program Files/MiKT
+eX 2.9/fonts/enc/dvips/base/8r.enc}<C:/Users/Maxxy/AppData/Roaming/MiKTeX/2.9/f
+onts/type1/public/txfonts/rtxr.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw
+/times/utmb8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb
+>
+Output written on dal_ml_al_dl.pdf (2 pages, 214190 bytes).
 PDF statistics:
- 29 PDF objects out of 1000 (max. 8388607)
+ 31 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 21 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 26 words of extra memory for PDF output out of 10000 (max. 10000000)
 
