@@ -31,7 +31,6 @@
 \begin{document}
  
 \section{Prefazione}
-(..boh!)
  
 \subsection{scopo del progetto}
 L'obbiettivo di questo progetto \`e la realizzazione di una modello di machine learning in grado di apprendere le relazioni tra i dati fruiti da una scheda embeded dotata di accelerometro, giroscopio e magnetometro, e la posizione spaziale di un braccio umano.
@@ -39,6 +38,11 @@ Il problema che ci si \`e posti di risolvere poteva essere risolto in modo deter
 
 
 \subsection{introduzione generale alle tecniche utilizzate}
-Per questo progetto abbiamo utilizzato un sacco di tempo
+Per la realizzazione del progetto è stata realizzata una scheda con microcontrollore arduino, provvista di bluetooth, accelerometro, magnetometro, alimentata a batteria.
+\'E stata realizzata una libreria in C++/CUDA per la creazione, l'addestramento e l'utilizzo di una rete neuronale con supporto per CPU e GPU.
+\'E stato realizzato un secondo programma C++, per l'acquisizione dei dati della scheda e per l'acquisizione dei punti dello scheletro forniti dal kinect, lo stesso programma si occupa della sincronizzazione di tali dati e della creazione di un dataset necessario per il processo di addestramento della rete neuronale.
+In fine è stato realizzato un programma C\# che sfrutta il game engine Unity per la realizzazione dell'ambiente grafico, che rende possibile la visualizzazione dell'output della rete, muovendo un manichino secondo gli input della scheda.
+Quest'ultima operazione è stata effettuata mettendo in comunicazione il programma C++ che si occuppa dell'acquisizione dei dati della scheda, e che ne esegue l'input nel modello addestrato, per poi passare i dati elaborati tramite comunicazione socket interna al motore grafico.       
+
 
 \end{document}
