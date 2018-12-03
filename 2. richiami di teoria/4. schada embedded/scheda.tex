@@ -30,10 +30,61 @@
 \setlength{\parindent}{0pt}
 
 \begin{document}
+\subsection{Scheda enbedded}
+Per questo progetto abbiamo realizzato una scheda enbedded che comprendesse l'imu, un modulo bluetooth, la batteria con il suo regolatore e un arduino.
+
+\begin{figure}[h]
+	\centering
+	\vspace{-10pt}
+	\includegraphics[width=0.80\textwidth]{scheda.png}
+	\vspace{-10pt}
+	\caption{Schema scheda enbedded}
+	\label{fig:scheda}
+\end{figure}
+(..c'e' da dire altro?)
+
+\subsubsection{Arduino}
+
+\begin{wrapfigure}{r}{0.2\textwidth}
+	\centering
+	\vspace{-30pt}
+	\includegraphics[width=0.2\textwidth]{arduino.jpg}
+	\vspace{-30pt}
+	\caption{Arduino nano}
+	\label{fig:arduino_nano}
+	\vspace{-30pt}
+\end{wrapfigure}
+
+Arduino \`e una piattaforma hardware open-source dotata di microcontrollore e tutto il suo ecosistema. Questo la rendono un ottima scheda per la prototipazione rapida (..da ristrutturare la frase). Nel nostro progetto abbiamo usato la scheda "Arduino nano" (fig.\ref{fig:arduino_nano}).
+(..da aggiunge che e' alimentata a 5v)
+La scheda si interfaccia al pc per essere programmata, tramite "Arduino IDE", e ha al suo interno un regolatore di tensione da 5V a 3.3V, utile per alimentare accelerometro e magnetometro.
+\\
+(..ce la metto una breve lista delle periferiche?)
+\\
+(.. tipo ha l'I2C, seriale, che micro e' etc..)
+
+\vspace{10pt}
+
+\subsubsection{Bluetooth}
+\begin{wrapfigure}{r}{0.2\textwidth}
+	\centering
+	\vspace{-30pt}
+	\includegraphics[width=0.2\textwidth]{HC-05.jpg}
+	\vspace{-30pt}
+	\caption{HC-05}
+	\label{fig:HC-05}
+	\vspace{-30pt}
+\end{wrapfigure}
+Il modulo bluetooth ulilizzato \`e "HC-05", questo modulo deve essere alimentato a 5V. Per comunicare con arduino usa la seriale (RS-232) con livello logico 3.3V, ci\`o comporta la necessit\`a di inserire un partitore sul pin rx del modulo (quindi il pin tx di arduino).
+\\
+(..sta cosa la mettiamo qua o da qualche altra parte?)
+
+\hfill \break
+\hfill \break
+\hfill \break
 
 
-\subsection{L'imu}
-
+\subsubsection{L'imu}
 
 L'imu (inertial measurement unit) serve (..serve non va bene) a misurare le forze ad esso applicate e l'orientazione dello stesso. Questo viene solitamente fatto combinando i dati di accelerometro, magnetometro e giroscopio. In particolare l'accelerometro misura le accelerazioni, da cui in condizioni di moto inerziale si pu\`o estrarre il vettore gravit\`a sui 3 assi determinando quindi l'angolazione rispetto al suolo; Il magnetometro rileva invece il campo magnetico terrestre su 3 assi, dando cos\`i indicazione della direzione "nord"; Infine il giroscopio restituisce le accelerazioni angolari.
 Per questo specifico progetto si sono utilizzati i moduli commerciali "MPU-6050" (fig.\ref{fig:MPU-6050}) e "HMC5883L" (fig.\ref{fig:HMC5883L}), rispettivamente come accelerometro pi\`u giroscopio e magnetometro. 
@@ -54,7 +105,7 @@ Per questo specifico progetto si sono utilizzati i moduli commerciali "MPU-6050"
     \label{fig:imu}
 \end{figure}
 
-Questi dispositivi comunicano con il resto della 
+Questi dispositivi comunicano con arduino attraverso il protocollo I2C.
 
 
 

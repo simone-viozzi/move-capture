@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6630 64-bit) (preloaded format=pdflatex 2018.11.4)  3 DEC 2018 13:47
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6630 64-bit) (preloaded format=pdflatex 2018.11.4)  3 DEC 2018 16:18
 entering extended mode
 **./scheda.tex
 (scheda.tex
@@ -630,11 +630,12 @@ Package: hyphenat 2009/09/02 v2.3c hyphenation utilities
 \langwohyphens=\language76
 LaTeX Info: Redefining \_ on input line 43.
 )
-No file scheda.aux.
+(scheda.aux)
 \openout1 = `scheda.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/txmi/m/it on input line 32.
 LaTeX Font Info:    Try loading font information for OML+txmi on input line 32.
+
 
 (C:\Users\viozz\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\omltxmi.fd
 File: omltxmi.fd 2000/12/15 v3.1
@@ -773,48 +774,65 @@ G,.JBIG2,.JB2,.eps]
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: wrapfig package is loaded.
 Package caption Info: End \AtBeginDocument code.
+<scheda.png, id=1, 872.50969pt x 210.7875pt>
+File: scheda.png Graphic file (type png)
+<use scheda.png>
+Package pdftex.def Info: scheda.png  used on input line 39.
+(pdftex.def)             Requested size: 432.48355pt x 104.48326pt.
+<arduino.jpg, id=3, 652.4375pt x 652.4375pt>
+File: arduino.jpg Graphic file (type jpg)
+<use arduino.jpg>
+Package pdftex.def Info: arduino.jpg  used on input line 51.
+(pdftex.def)             Requested size: 108.11882pt x 108.11543pt.
+<HC-05.jpg, id=4, 467.7475pt x 467.7475pt>
+File: HC-05.jpg Graphic file (type jpg)
+<use HC-05.jpg>
+Package pdftex.def Info: HC-05.jpg  used on input line 72.
+(pdftex.def)             Requested size: 108.11882pt x 108.11494pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 82--85
+
+ []
 
 
-LaTeX Warning: Reference `fig:MPU-6050' on page 1 undefined on input line 39.
+Underfull \hbox (badness 10000) in paragraph at lines 82--85
+
+ []
 
 
-LaTeX Warning: Reference `fig:HMC5883L' on page 1 undefined on input line 39.
+Underfull \hbox (badness 10000) in paragraph at lines 82--85
 
-<MPU-6050.jpg, id=1, 247.92625pt x 204.765pt>
+ []
+
+<MPU-6050.jpg, id=5, 247.92625pt x 204.765pt>
 File: MPU-6050.jpg Graphic file (type jpg)
 <use MPU-6050.jpg>
-Package pdftex.def Info: MPU-6050.jpg  used on input line 44.
+Package pdftex.def Info: MPU-6050.jpg  used on input line 95.
 (pdftex.def)             Requested size: 147.27773pt x 121.63676pt.
-<HMC5883L.jpg, id=2, 618.05907pt x 618.05907pt>
+<HMC5883L.jpg, id=6, 618.05907pt x 618.05907pt>
 File: HMC5883L.jpg Graphic file (type jpg)
 <use HMC5883L.jpg>
-Package pdftex.def Info: HMC5883L.jpg  used on input line 49.
+Package pdftex.def Info: HMC5883L.jpg  used on input line 100.
 (pdftex.def)             Requested size: 121.62915pt x 121.63676pt.
 [1
 
-{C:/Users/viozz/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <./MPU-6050.
-jpg> <./HMC5883L.jpg>] (scheda.aux)
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+{C:/Users/viozz/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <./scheda.pn
+g> <./arduino.jpg> <./HC-05.jpg> <./MPU-6050.jpg> <./HMC5883L.jpg>]
+(scheda.aux) ) 
 Here is how much of TeX's memory you used:
- 6120 strings out of 493305
- 82737 string characters out of 3142358
- 157579 words of memory out of 3000000
- 9561 multiletter control sequences out of 15000+200000
+ 6148 strings out of 493305
+ 83248 string characters out of 3142358
+ 160645 words of memory out of 3000000
+ 9584 multiletter control sequences out of 15000+200000
  18098 words of font info for 28 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  42i,7n,40p,793b,457s stack positions out of 5000i,500n,10000p,200000b,50000s
-{D:/programmi/MiKTex/fonts/enc/dvips/base/8r.enc}<D:/programmi/MiKTex/fonts/t
-ype1/urw/times/utmb8a.pfb><D:/programmi/MiKTex/fonts/type1/urw/times/utmr8a.pfb
->
-Output written on scheda.pdf (1 page, 166186 bytes).
+{D:/programmi/MiKTex/fonts/enc/dvips/base/8r.enc}<D:/programmi/Mi
+KTex/fonts/type1/urw/times/utmb8a.pfb><D:/programmi/MiKTex/fonts/type1/urw/time
+s/utmr8a.pfb>
+Output written on scheda.pdf (1 page, 261487 bytes).
 PDF statistics:
- 17 PDF objects out of 1000 (max. 8388607)
+ 22 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 11 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 26 words of extra memory for PDF output out of 10000 (max. 10000000)
 
