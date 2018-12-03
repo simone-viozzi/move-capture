@@ -4,13 +4,13 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
-\usepackage[left=1cm,right=1cm,top=1cm,bottom=1cm]{geometry}
+\usepackage[left=1cm,right=1cm,top=1cm,bottom=2cm]{geometry}
 
-\usepackage{blindtext}
+\usepackage{txfonts}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
-
+\usepackage{wrapfig}
 \usepackage{subcaption}
 
 \usepackage{titlesec}
@@ -21,26 +21,74 @@
 {0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
 
-
+\usepackage[none]{hyphenat}
 
 
 \begin{document}
-\section{Dal machine learning al deep learning}
-Oggi l'intelligenza artificiale è un fiorente campo di ricerca, con l'obiettivo di risolvere una grande varietà di problemi, che per essere risolti attraverso la programmazione classica necessitano di una grande quantità di conoscenze a riguardo, spesso non disponibile. I Programmi basati sul paradigma dell'intelligenza artificiale si propongono di superare questi ostacoli acquisendo direttamente queste conoscenze dai dati grezzi, tale capacità è nota come machine learning.
+\subsection{Dal machine learning al deep learning}
+Oggi l'intelligenza artificiale è un fiorente campo di ricerca, con l'obiettivo di risolvere una grande varietà di problemi, che per essere risolti attraverso la programmazione classica necessitano di una grande quantità di conoscenze pregresse, spesso non disponibili.\\
+I Programmi basati sul paradigma dell'intelligenza artificiale si propongono di superare questi ostacoli acquisendo direttamente queste conoscenze dai dati grezzi, tale capacità è nota come machine learning.
+Sotto questa famiglia di algoritmi si trovano altri sottogruppi quali il representation learning e all'interno di quest'ultimo il deep learning.\\ 
+Il deep learning rispetto ai metodi più classici, tipicamente in grado di riconoscere relazioni lineari(come ad esempio il noto SVM o support vector machine), si propone come alternativa per l'apprendimento di funzioni a molte variabili non lineari anche molto complesse.
+Le applicazioni più comuni comprendono il riconoscimento di oggetti nelle immagini, delle parole in tracce audio o anche per le traduzioni multilingue. \\
+Il termine "deep learning" deriva proprio dalla capacità di questi modelli di riuscire a cogliere delle relazioni molto "profonde" tra i dati di ingresso e di uscita, approssimando con un certo errore ,dipendente dal caso specifico, la funzione che dati gli input restituisce l'output desiderato, purtroppo però presentano il grande problema di non rendere disponibile in maniera chiara le relazioni apprese.
+   
 
 \begin{figure}[h!]
   \centering
-  \begin{subfigure}[b]{0.45\linewidth}
+  \begin{subfigure}[t]{0.45\linewidth}
   	\centering
     \includegraphics[height=200pt]{AI_venn_diagram.png}
     \caption{famiglie di algoritmi}
   \end{subfigure}
-  \begin{subfigure}[b]{0.45\linewidth}
+  \begin{subfigure}[t]{0.45\linewidth}
   	\centering
     \includegraphics[height=200pt]{diff_between_aprochs.png}
-    \caption{differenze tra le diverse tipologie}
+    \caption{differenze generali tra \\ le diverse tipologie di algoritmi}
   \end{subfigure}
-  \label{fig:garph1}
+  \label{fig:graph1}
 \end{figure}
+
+\subsubsection{Le reti feed-forward (MLP)}
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+	\centering
+	\vspace{-25pt}
+    \includegraphics[width=0.4\textwidth]{neurone.jpg}
+  	\vspace{-10pt}
+  	\caption{Il neurone biologico}
+  	\label{fig:graph2}
+  	\vspace{-20pt}
+\end{wrapfigure}
+
+Uno dei modelli della famiglia del deep learning più comuni e semplici da utilizzare sono le reti neurali feed-forward o multi layer perceptron, le quali sono assimilabili a modelli di regressione statistica.\\
+Le reti neurali sono un modello matematico molto semplificato del\\ cervello, e per parlarne è necessario qualche riferimento al modello \\biologico.
+
+\subsubsection*{IL neurone biologico}
+L'unità base del cervello è rappresentata dai neuroni (Figuara \ref{fig:graph2}),\\ i quali a loro volta sono composti dai dendriti, dal soma, dall'assone e dalle sinapsi. 
+\\I dendriti sono l'apparato di input del neurone, attraverso il quale riceve i segnali dall'ambiente o da altri neuroni, tali segnali caricano il neurone, che accumula un potenziale elettrico all'interno del soma.
+In determinate condizioni o al raggiungimento di una certa soglia di potenziale il neurone emette un impulso lungo l'assone giungendo alle sinapsi, poste alla fine dell'assone, le quali sono connesse con altri neuroni o con altri apparati del corpo, come i muscoli.\\
+Questa particolare cellula oltre a scambiare impulsi è in grado di accumulare informazioni attraverso l'ispessimento o l'assottigliamento della guaina mielinica, la quale è presente lungo l'assone.
+Le variazioni dello spessore della guaina comportano un aumento o una diminuzione della resistenza elettrica dell'assone determinando una variazione dell'impulso percepito dai neuroni connessi alle sinapsi a parità di potenziale rilasciato.   
+
+\newpage
+
+\subsubsection*{Il percettrone} 
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+	\centering
+	\vspace{-15pt}
+    \includegraphics[width=0.4\textwidth]{percettrone.png}
+  	\vspace{-17pt}
+  	\caption{Il percettrone}
+  	\label{fig:graph3}
+  	\vspace{-10pt}
+\end{wrapfigure}
+
+Il neurone artificiale riprende soltanto alcune caratteristiche peculiari di quello biologico, riorganizzando 
+
+\subsubsection*{Le reti multi-strato} 
+
+\subsubsection{La funzione di addestramento: Il back-propagation} 
 
 \end{document}

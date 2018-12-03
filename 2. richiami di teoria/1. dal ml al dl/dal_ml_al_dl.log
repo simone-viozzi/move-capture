@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6840 64-bit) (preloaded format=pdflatex 2018.12.1)  2 DEC 2018 01:14
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6840 64-bit) (preloaded format=pdflatex 2018.12.1)  3 DEC 2018 00:57
 entering extended mode
 **./dal_ml_al_dl.tex
 (dal_ml_al_dl.tex
@@ -156,30 +156,90 @@ Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
 \Gm@dimlist=\toks22
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\geometry\geometry.cfg"))
-(C:\Users\Maxxy\AppData\Roaming\MiKTeX\2.9\tex\latex\blindtext\blindtext.sty
-Package: blindtext 2012/01/06 V2.0 blindtext-Package
-
-("C:\Program Files\MiKTeX 2.9\tex\latex\tools\xspace.sty"
-Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
-)
-\c@blindtext=\count109
-\c@Blindtext=\count110
-\c@blind@countparstart=\count111
-\blind@countxx=\count112
-\blindtext@numBlindtext=\count113
-\blind@countyy=\count114
-\c@blindlist=\count115
-\c@blindlistlevel=\count116
-\c@blindlist@level=\count117
-\blind@listitem=\count118
-\c@blind@listcount=\count119
-\c@blind@levelcount=\count120
-\blind@mathformula=\count121
-\blind@Mathformula=\count122
-\c@blind@randomcount=\count123
-\c@blind@randommax=\count124
-\c@blind@pangramcount=\count125
-\c@blind@pangrammax=\count126
+(C:\Users\Maxxy\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\txfonts.sty
+Package: txfonts 2008/01/22 v3.2.1
+LaTeX Font Info:    Redeclaring symbol font `operators' on input line 21.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
+(Font)                  OT1/cmr/m/n --> OT1/txr/m/n on input line 21.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/txr/m/n on input line 21.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/txr/m/n --> OT1/txr/bx/n on input line 22.
+\symitalic=\mathgroup6
+LaTeX Font Info:    Overwriting symbol font `italic' in version `bold'
+(Font)                  OT1/txr/m/it --> OT1/txr/bx/it on input line 26.
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 29.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
+(Font)                  OT1/cmr/bx/n --> OT1/txr/bx/n on input line 29.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/txr/bx/n on input line 29.
+LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 30.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
+(Font)                  OT1/cmr/m/it --> OT1/txr/m/it on input line 30.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/cmr/bx/it --> OT1/txr/m/it on input line 30.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/txr/m/it --> OT1/txr/bx/it on input line 31.
+LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 40.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
+(Font)                  OT1/cmss/m/n --> OT1/txss/m/n on input line 40.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
+(Font)                  OT1/cmss/bx/n --> OT1/txss/m/n on input line 40.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
+(Font)                  OT1/txss/m/n --> OT1/txss/b/n on input line 41.
+LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 50.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
+(Font)                  OT1/cmtt/m/n --> OT1/txtt/m/n on input line 50.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
+(Font)                  OT1/cmtt/m/n --> OT1/txtt/m/n on input line 50.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
+(Font)                  OT1/txtt/m/n --> OT1/txtt/b/n on input line 51.
+LaTeX Font Info:    Redeclaring symbol font `letters' on input line 58.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `normal'
+(Font)                  OML/cmm/m/it --> OML/txmi/m/it on input line 58.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  OML/cmm/b/it --> OML/txmi/m/it on input line 58.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  OML/txmi/m/it --> OML/txmi/bx/it on input line 59.
+\symlettersA=\mathgroup7
+LaTeX Font Info:    Overwriting symbol font `lettersA' in version `bold'
+(Font)                  U/txmia/m/it --> U/txmia/bx/it on input line 67.
+LaTeX Font Info:    Redeclaring math alphabet \mathfrak on input line 70.
+LaTeX Font Info:    Redeclaring symbol font `symbols' on input line 77.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
+(Font)                  OMS/cmsy/m/n --> OMS/txsy/m/n on input line 77.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
+(Font)                  OMS/cmsy/b/n --> OMS/txsy/m/n on input line 77.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
+(Font)                  OMS/txsy/m/n --> OMS/txsy/bx/n on input line 78.
+LaTeX Font Info:    Redeclaring symbol font `AMSa' on input line 93.
+LaTeX Font Info:    Overwriting symbol font `AMSa' in version `normal'
+(Font)                  U/msa/m/n --> U/txsya/m/n on input line 93.
+LaTeX Font Info:    Overwriting symbol font `AMSa' in version `bold'
+(Font)                  U/msa/m/n --> U/txsya/m/n on input line 93.
+LaTeX Font Info:    Overwriting symbol font `AMSa' in version `bold'
+(Font)                  U/txsya/m/n --> U/txsya/bx/n on input line 94.
+LaTeX Font Info:    Redeclaring symbol font `AMSb' on input line 102.
+LaTeX Font Info:    Overwriting symbol font `AMSb' in version `normal'
+(Font)                  U/msb/m/n --> U/txsyb/m/n on input line 102.
+LaTeX Font Info:    Overwriting symbol font `AMSb' in version `bold'
+(Font)                  U/msb/m/n --> U/txsyb/m/n on input line 102.
+LaTeX Font Info:    Overwriting symbol font `AMSb' in version `bold'
+(Font)                  U/txsyb/m/n --> U/txsyb/bx/n on input line 103.
+\symsymbolsC=\mathgroup8
+LaTeX Font Info:    Overwriting symbol font `symbolsC' in version `bold'
+(Font)                  U/txsyc/m/n --> U/txsyc/bx/n on input line 113.
+LaTeX Font Info:    Redeclaring symbol font `largesymbols' on input line 120.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
+(Font)                  OMX/cmex/m/n --> OMX/txex/m/n on input line 120.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
+(Font)                  OMX/cmex/m/n --> OMX/txex/m/n on input line 120.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
+(Font)                  OMX/txex/m/n --> OMX/txex/bx/n on input line 121.
+\symlargesymbolsA=\mathgroup9
+LaTeX Font Info:    Overwriting symbol font `largesymbolsA' in version `bold'
+(Font)                  U/txexa/m/n --> U/txexa/bx/n on input line 129.
+LaTeX Info: Redefining \not on input line 1043.
 )
 ("C:\Program Files\MiKTeX 2.9\tex\latex\base\fontenc.sty"
 Package: fontenc 2017/04/05 v2.0i Standard LaTeX package
@@ -208,6 +268,14 @@ File: pdftex.def 2018/01/08 v1.0l Graphics/color driver for pdftex
 \Gin@req@height=\dimen121
 \Gin@req@width=\dimen122
 )
+(C:\Users\Maxxy\AppData\Roaming\MiKTeX\2.9\tex\latex\wrapfig\wrapfig.sty
+\wrapoverhang=\dimen123
+\WF@size=\dimen124
+\c@WF@wrappedlines=\count109
+\WF@box=\box28
+\WF@everypar=\toks23
+Package: wrapfig 2003/01/31  v 3.6
+)
 (C:\Users\Maxxy\AppData\Roaming\MiKTeX\2.9\tex\latex\caption\subcaption.sty
 Package: subcaption 2018/05/01 v1.1-162 Sub-captions (AR)
 
@@ -217,47 +285,81 @@ Package: caption 2018/10/06 v3.3-154 Customizing captions (AR)
 (C:\Users\Maxxy\AppData\Roaming\MiKTeX\2.9\tex\latex\caption\caption3.sty
 Package: caption3 2018/09/12 v1.8c caption3 kernel (AR)
 Package caption3 Info: TeX engine: e-TeX on input line 64.
-\captionmargin=\dimen123
-\captionmargin@=\dimen124
-\captionwidth=\dimen125
-\caption@tempdima=\dimen126
-\caption@indent=\dimen127
-\caption@parindent=\dimen128
-\caption@hangindent=\dimen129
+\captionmargin=\dimen125
+\captionmargin@=\dimen126
+\captionwidth=\dimen127
+\caption@tempdima=\dimen128
+\caption@indent=\dimen129
+\caption@parindent=\dimen130
+\caption@hangindent=\dimen131
 )
-\c@caption@flags=\count127
-\c@ContinuedFloat=\count128
+\c@caption@flags=\count110
+\c@ContinuedFloat=\count111
+Package caption Info: wrapfig package is loaded.
 )
-\c@subfigure=\count129
-\c@subtable=\count130
+\c@subfigure=\count112
+\c@subtable=\count113
 )
 (C:\Users\Maxxy\AppData\Roaming\MiKTeX\2.9\tex\latex\titlesec\titlesec.sty
 Package: titlesec 2016/03/21 v2.10.2 Sectioning titles
-\ttl@box=\box28
+\ttl@box=\box29
 \beforetitleunit=\skip46
 \aftertitleunit=\skip47
-\ttl@plus=\dimen130
-\ttl@minus=\dimen131
-\ttl@toksa=\toks23
-\titlewidth=\dimen132
-\titlewidthlast=\dimen133
-\titlewidthfirst=\dimen134
+\ttl@plus=\dimen132
+\ttl@minus=\dimen133
+\ttl@toksa=\toks24
+\titlewidth=\dimen134
+\titlewidthlast=\dimen135
+\titlewidthfirst=\dimen136
+)
+(C:\Users\Maxxy\AppData\Roaming\MiKTeX\2.9\tex\latex\hyphenat\hyphenat.sty
+Package: hyphenat 2009/09/02 v2.3c hyphenation utilities
+\langwohyphens=\language76
+LaTeX Info: Redefining \_ on input line 43.
 )
 (dal_ml_al_dl.aux)
 \openout1 = `dal_ml_al_dl.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 27.
+LaTeX Font Info:    Checking defaults for OML/txmi/m/it on input line 27.
+LaTeX Font Info:    Try loading font information for OML+txmi on input line 27.
+
+
+(C:\Users\Maxxy\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\omltxmi.fd
+File: omltxmi.fd 2000/12/15 v3.1
+)
 LaTeX Font Info:    ... okay on input line 27.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 27.
 LaTeX Font Info:    ... okay on input line 27.
 LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 27.
 LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 27.
+LaTeX Font Info:    Checking defaults for OMS/txsy/m/n on input line 27.
+LaTeX Font Info:    Try loading font information for OMS+txsy on input line 27.
+
+
+(C:\Users\Maxxy\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\omstxsy.fd
+File: omstxsy.fd 2000/12/15 v3.1
+)
 LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 27.
+LaTeX Font Info:    Checking defaults for OMX/txex/m/n on input line 27.
+LaTeX Font Info:    Try loading font information for OMX+txex on input line 27.
+
+
+(C:\Users\Maxxy\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\omxtxex.fd
+File: omxtxex.fd 2000/12/15 v3.1
+)
 LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 27.
+LaTeX Font Info:    Checking defaults for U/txexa/m/n on input line 27.
+LaTeX Font Info:    Try loading font information for U+txexa on input line 27.
+
+(C:\Users\Maxxy\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\utxexa.fd
+File: utxexa.fd 2000/12/15 v3.1
+)
 LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Try loading font information for T1+txr on input line 27.
+
+(C:\Users\Maxxy\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\t1txr.fd
+File: t1txr.fd 2000/12/15 v3.1
+)
 LaTeX Info: Redefining \it@ocap on input line 27.
 LaTeX Info: Redefining \it@ccap on input line 27.
 
@@ -270,11 +372,11 @@ LaTeX Info: Redefining \it@ccap on input line 27.
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
 * modes: 
 * h-part:(L,W,R)=(28.45274pt, 540.60239pt, 28.45274pt)
-* v-part:(T,H,B)=(28.45274pt, 788.14136pt, 28.45274pt)
+* v-part:(T,H,B)=(28.45274pt, 759.6886pt, 56.9055pt)
 * \paperwidth=597.50787pt
 * \paperheight=845.04684pt
 * \textwidth=540.60239pt
-* \textheight=788.14136pt
+* \textheight=759.6886pt
 * \oddsidemargin=-43.81725pt
 * \evensidemargin=-43.81725pt
 * \topmargin=-80.81725pt
@@ -297,17 +399,17 @@ LaTeX Info: Redefining \it@ccap on input line 27.
 
 (C:\Users\Maxxy\AppData\Roaming\MiKTeX\2.9\tex\context\base\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count131
-\scratchdimen=\dimen135
-\scratchbox=\box29
-\nofMPsegments=\count132
-\nofMParguments=\count133
-\everyMPshowfont=\toks24
-\MPscratchCnt=\count134
-\MPscratchDim=\dimen136
-\MPnumerator=\count135
-\makeMPintoPDFobject=\count136
-\everyMPtoPDFconversion=\toks25
+\scratchcounter=\count114
+\scratchdimen=\dimen137
+\scratchbox=\box30
+\nofMPsegments=\count115
+\nofMParguments=\count116
+\everyMPshowfont=\toks25
+\MPscratchCnt=\count117
+\MPscratchDim=\dimen138
+\MPnumerator=\count118
+\makeMPintoPDFobject=\count119
+\everyMPtoPDFconversion=\toks26
 ) ("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\epstopdf-base.sty"
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
 
@@ -361,38 +463,48 @@ Package caption Info: End \AtBeginDocument code.
 <AI_venn_diagram.png, id=1, 813.79031pt x 606.01407pt>
 File: AI_venn_diagram.png Graphic file (type png)
 <use AI_venn_diagram.png>
-Package pdftex.def Info: AI_venn_diagram.png  used on input line 35.
+Package pdftex.def Info: AI_venn_diagram.png  used on input line 41.
 (pdftex.def)             Requested size: 268.57646pt x 200.0pt.
 
-Overfull \hbox (25.30705pt too wide) in paragraph at lines 35--36
+Overfull \hbox (25.30705pt too wide) in paragraph at lines 41--42
  [][] 
  []
 
 <diff_between_aprochs.png, id=2, 366.61969pt x 494.59781pt>
 File: diff_between_aprochs.png Graphic file (type png)
 <use diff_between_aprochs.png>
-Package pdftex.def Info: diff_between_aprochs.png  used on input line 40.
+Package pdftex.def Info: diff_between_aprochs.png  used on input line 46.
 (pdftex.def)             Requested size: 148.2452pt x 200.0pt.
+<neurone.jpg, id=4, 401.5pt x 282.05376pt>
+File: neurone.jpg Graphic file (type jpg)
+<use neurone.jpg>
+Package pdftex.def Info: neurone.jpg  used on input line 57.
+(pdftex.def)             Requested size: 216.23764pt x 151.9108pt.
 [1
 
 {C:/Users/Maxxy/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <./AI_venn_d
-iagram.png> <./diff_between_aprochs.png>] (dal_ml_al_dl.aux) ) 
+iagram.png> <./diff_between_aprochs.png> <./neurone.jpg>]
+<percettrone.png, id=13, 382.42876pt x 147.55125pt>
+File: percettrone.png Graphic file (type png)
+<use percettrone.png>
+Package pdftex.def Info: percettrone.png  used on input line 81.
+(pdftex.def)             Requested size: 216.23764pt x 83.42964pt.
+ [2 <./percettrone.png>] (dal_ml_al_dl.aux) ) 
 Here is how much of TeX's memory you used:
- 5511 strings out of 492970
- 78303 string characters out of 3135855
- 170450 words of memory out of 3000000
- 9310 multiletter control sequences out of 15000+200000
- 6711 words of font info for 18 fonts, out of 3000000 for 9000
+ 5874 strings out of 492970
+ 82242 string characters out of 3135855
+ 165551 words of memory out of 3000000
+ 9644 multiletter control sequences out of 15000+200000
+ 18098 words of font info for 28 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  42i,7n,40p,799b,465s stack positions out of 5000i,500n,10000p,200000b,50000s
- <C:\Users\Maxxy\
-AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecrm0900.pk> <C:\Us
-ers\Maxxy\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecrm1000.
-pk> <C:\Users\Maxxy\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600
-\ecbx1440.pk>
-Output written on dal_ml_al_dl.pdf (1 page, 170416 bytes).
+{C:/Program Files/MiKTeX 2.9/fonts
+/enc/dvips/base/8r.enc}<C:/Users/Maxxy/AppData/Roaming/MiKTeX/2.9/fonts/type1/p
+ublic/txfonts/rtxr.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmb8
+a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb>
+Output written on dal_ml_al_dl.pdf (2 pages, 209883 bytes).
 PDF statistics:
- 86 PDF objects out of 1000 (max. 8388607)
+ 29 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 11 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 21 words of extra memory for PDF output out of 10000 (max. 10000000)
 
