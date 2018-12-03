@@ -55,10 +55,8 @@ Il termine "deep learning" deriva proprio dalla capacità di questi modelli di r
 	\centering
 	\vspace{-25pt}
     \includegraphics[width=0.4\textwidth]{neurone.jpg}
-  	\vspace{-10pt}
   	\caption{Il neurone biologico}
   	\label{fig:graph2}
-  	\vspace{-20pt}
 \end{wrapfigure}
 
 Uno dei modelli della famiglia del deep learning più comuni e semplici da utilizzare sono le reti neurali feed-forward o multi layer perceptron, le quali sono assimilabili a modelli di regressione statistica.\\
@@ -79,13 +77,30 @@ Le variazioni dello spessore della guaina comportano un aumento o una diminuzion
 	\centering
 	\vspace{-15pt}
     \includegraphics[width=0.4\textwidth]{percettrone.png}
-  	\vspace{-17pt}
   	\caption{Il percettrone}
   	\label{fig:graph3}
-  	\vspace{-10pt}
 \end{wrapfigure}
 
-Il neurone artificiale riprende soltanto alcune caratteristiche peculiari di quello biologico, riorganizzando in linea di principio la meccanica di funzionamento.
+Il neurone artificiale è composto da una serie di connessioni in ingresso, come nel caso di quello biologico che presentava i dendriti, questa volta però il compito di immagazzinare informazione viene svolto da queste connessioni in input e non più dalle connessioni in output. 
+Ad ogni input del neurone è associato un coefficiente che moltiplica il potenziale in ingresso, a questo punto gli ingressi pesati giungono al nodo sommatore, il corrispettivo del soma, che ne accumula la somma.
+Lo step successivo è il blocco contenente la funzione di trasferimento, una funzione che prende in input il potenziale del neurone e rende disponibile il risultato come output finale o come input per i neuroni successivi.
+La funzione di trasferimento del neurone può essere di vari tipi, può variare infatti anche tra i neuroni della medesima rete, alcune delle più comuni \\sono: \\
+(a) la funzione gradino. \\
+(b) la funzione lineare con saturazione \\
+(c) la funzione sigmoide tra 0 e 1 \\
+(d) la funzione sigmoide tra 1 e -1 \\
+
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+	\centering
+	\vspace{-120pt}
+    \includegraphics[width=0.4\textwidth]{FDTs.png}
+  	\caption{Le funzioni di trasferimento}
+  	\label{fig:graph4}
+\end{wrapfigure}
+
+
+ 
 
 \subsubsection*{Le reti multi-strato} 
 
