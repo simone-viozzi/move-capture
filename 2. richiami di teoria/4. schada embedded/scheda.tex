@@ -21,6 +21,23 @@
 
 \usepackage{wrapfig}
 
+%%%%%%%% per il codice c++
+\usepackage{listings}          % for creating language style
+\input{arduinoLanguage.tex}    % adds the arduino language listing
+
+%% Define an Arduino style fore use later %%
+\lstdefinestyle{myArduino}{
+  language=Arduino,
+  %% Add other words needing highlighting below %%
+  morekeywords=[1]{},                  % [1] -> dark green
+  morekeywords=[2]{FILE_WRITE},        % [2] -> light blue
+  morekeywords=[3]{SD, File},          % [3] -> bold orange
+  morekeywords=[4]{open, exists, write, SoftwareSerial},      % [4] -> orange
+}
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{siunitx}
+
 \pagenumbering{arabic}
 \pagestyle{plain}
 
@@ -28,6 +45,7 @@
 \usepackage[none]{hyphenat}
 % per togliere gli ident all'inizio dei paragrafi
 \setlength{\parindent}{0pt}
+
 
 \begin{document}
 \subsection{Scheda enbedded}
@@ -59,12 +77,10 @@ foto scheda
 \end{wrapfigure}
 
 Arduino \`e una piattaforma hardware open-source dotata di microcontrollore e tutto il suo ecosistema. Questo la rendono un ottima scheda per la prototipazione rapida (..da ristrutturare la frase). Nel nostro progetto abbiamo usato la scheda "Arduino nano" (fig.\ref{fig:arduino_nano}).
-(..da aggiunge che e' alimentata a 5v)
-La scheda si interfaccia al pc per essere programmata, tramite "Arduino IDE", e ha al suo interno un regolatore di tensione da 5V a 3.3V, utile per alimentare accelerometro e magnetometro.
-\\
-(..ce la metto una breve lista delle periferiche?)
-\\
-(.. tipo ha l'I2C, seriale, che micro e' etc..)
+(..da aggiunge che e' alimentata a \SI{5}{\volt})
+La scheda si interfaccia al pc per essere programmata, tramite "Arduino IDE", e ha al suo interno un regolatore di tensione da \SI{5}{\volt} a \SI{3.3}{\volt}, utile per alimentare accelerometro e magnetometro. Inoltre ha, una sola seriale, l'I2C, ed altri pin GPIO di cui ne abbiamo usato uno per controllare il pin state del'HC-05.
+
+(altro ????????)
 
 \vspace{10pt}
 
@@ -76,20 +92,38 @@ La scheda si interfaccia al pc per essere programmata, tramite "Arduino IDE", e 
 	\vspace{-30pt}
 	\caption{HC-05}
 	\label{fig:HC-05}
-	\vspace{-30pt}
+	%\vspace{-30pt}
 \end{wrapfigure}
-Il modulo bluetooth ulilizzato \`e "HC-05", questo modulo deve essere alimentato a 5V. Per comunicare con arduino usa la seriale (RS-232) con livello logico 3.3V, ci\`o comporta la necessit\`a di inserire un partitore sul pin rx del modulo (quindi il pin tx di arduino).
-\\
-(..sta cosa la mettiamo qua o da qualche altra parte?->qui->okk)
+Il modulo bluetooth ulilizzato \`e "HC-05", ha 6 pin per interfacciarsi con le atre periferiche: 2 di alimentazione, 2 per la seriale, state e key. Questo modulo ha un regolatore da \SI{5}{\volt} a \SI{3.3}{\volt} integrato, quindi va alimentato a \SI{5}{\volt}.
+Per comunicare con arduino usa la seriale (RS-232) con livello logico \SI{3.3}{\volt}, ci\`o comporta la necessit\`a di inserire un partitore sul pin rx del modulo (quindi il pin tx di arduino). Il pin state e\` stato usato per far conoscere ad arduino quando il modulo ha stabilito la connessione con il computer. Il pin key svolge una funzione particolare poich\`e permette di avviare il modulo in modalit\`a "command mode", in questa modalit\`a si possono usare gli AT commands per programmare il modulo (es. cambiare nome al dispositivo, oppure cambiare il baud rate della seriale).
+I comandi AT e la loro descrizione si trovano sul datasheet. Per avviare l'HC-05 in modalit\`a AT si deve collegare il modulo all'alimentazione tenendo premuto il pulsante che si trova sulla scheda, dopodiche si pu\`o procedere ad inviare gli at command tramite seriale con un baud rate di 38400Bd. Per fare ci\`o abbiamo collegato la seriale del modulo con 2  pin di arduino con supporto PWM ed abbiamo usato la libreria software serial per poter avere un'altra seriale (la principale connessa al pc e la secondaria connessa al modulo). Dopodich\`e basta programmare arduino in modo che reindirizzi ci\`o che gli viene scritto dal pc al modulo, e viceversa. il programma usato \`e il seguente:
+\begin{lstlisting}[style=myArduino]
+#include <SoftwareSerial.h>
 
-\hfill \break
-\hfill \break
-\hfill \break
+SoftwareSerial BTSerial(10, 11); // RX | TX
 
+void setup()
+{
+  Serial.begin(9600);
+  Serial.println("Enter AT commands:");
+  BTSerial.begin(38400);  // HC-05 default speed in AT command more
+}
+
+void loop()
+{
+  // Keep reading from HC-05 and send to Arduino Serial Monitor
+  if (BTSerial.available())
+    Serial.write(BTSerial.read());
+
+  // Keep reading from Arduino Serial Monitor and send to HC-05
+  if (Serial.available())
+    BTSerial.write(Serial.read());
+}
+\end{lstlisting}
+Cos\`i facendo abbiamo impostato il baud rate a \SI{115200}{\hertz}.
 
 \subsubsection{L'imu}
-
-L'imu (inertial measurement unit) serve (..serve non va bene) a misurare le forze ad esso applicate e l'orientazione dello stesso. Questo viene solitamente fatto combinando i dati di accelerometro, magnetometro e giroscopio. In particolare l'accelerometro misura le accelerazioni, da cui in condizioni di moto inerziale si pu\`o estrarre il vettore gravit\`a sui 3 assi determinando quindi l'angolazione rispetto al suolo; Il magnetometro rileva invece il campo magnetico terrestre su 3 assi, dando cos\`i indicazione della direzione "nord"; Infine il giroscopio restituisce le accelerazioni angolari.
+L'imu (inertial measurement unit) permette di misurare le forze ad esso applicate e l'orientazione dello stesso. Questo viene solitamente fatto combinando i dati di accelerometro, magnetometro e giroscopio. In particolare l'accelerometro misura le accelerazioni, da cui in condizioni di moto inerziale si pu\`o estrarre il vettore gravit\`a sui 3 assi determinando quindi l'angolazione rispetto al suolo; Il magnetometro rileva invece il campo magnetico terrestre su 3 assi, dando cos\`i indicazione della direzione "nord"; Infine il giroscopio restituisce le accelerazioni angolari.
 Per questo specifico progetto si sono utilizzati i moduli commerciali "MPU-6050" (fig.\ref{fig:MPU6050}) e "HMC5883L" (fig.\ref{fig:HMC5883L}), rispettivamente come accelerometro pi\`u giroscopio e magnetometro. 
 
 \begin{figure}[h]
@@ -108,8 +142,21 @@ Per questo specifico progetto si sono utilizzati i moduli commerciali "MPU-6050"
     \label{fig:imu}
 \end{figure}
 
-Questi dispositivi comunicano con arduino attraverso il protocollo I2C.
+Questi dispositivi comunicano con arduino attraverso il protocollo I2C, sono stati quindi connessi ai pin analogici 5 e 4 di arduino.
+In particolare l'MPU-6050 integra un accelerometro su 3 assi ed un giroscopio su 3 assi, che vengono convertiti in digitale da 6 ADC a 16 bits. Inoltre pu\`o essere programmato su diverse precisioni, il giroscopio tra \SI[per-mode = symbol]{+-250}{\degree\per\second} e \SI[per-mode = symbol]{+-2000}{\degree\per\second}, l'accelerometro tra \SI[per-mode = symbol]{+-2}{g} e \SI[per-mode = symbol]{+-16}{g}. Questo modulo ha anche un sensore di temperatura che per questo progetto non \`e  stato usato. Supporta l'I2C fino a \SI{400}{\kilo \hertz}.
 
+\subsubsection{Regolatore di tensione}
+\begin{wrapfigure}{r}{0.2\textwidth}
+	\centering
+	\vspace{-30pt}
+	\includegraphics[width=0.2\textwidth]{DC-DC_sx1308.jpg}
+	\vspace{-20pt}
+	\caption{SX1308}
+	\label{fig:sx1308}
+	%\vspace{-30pt}
+\end{wrapfigure}
+\sisetup{range-phrase=-}
+Questo regolatore di tensione \`e del tipo switching e permette di elevare la tensione da \SIrange{2}{24}{\volt} a \SIrange{2}{28}{\volt} con un picco massimo di \SI{2}{\ampere}. La tensione di uscita viene impostata girando il trimmer e qualunque sia la tensione in ingresso l'uscita rimarr\`a al valore impostato purch\`e si rispettino i limiti massimi e la tensione di ingresso sia sempre minore di quella di uscita. Nel nostro caso \`e stato molto utile perch\`e la betteria a litio ha una tensione che oscilla tra \SI{2.7}{\volt} quando \`e scarica e \SI{4.2}{\volt} quando \`e carica e questo integrato provvede a stabilizzare l'alimentazione a \SI{5}{\volt}.
 
 
 
