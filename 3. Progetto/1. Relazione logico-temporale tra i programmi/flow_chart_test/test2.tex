@@ -1,0 +1,126 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[italian]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+\usepackage[left=1cm,right=1cm,top=1cm,bottom=2cm]{geometry}
+
+\usepackage{txfonts}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage{titlesec}
+\setcounter{secnumdepth}{4}
+\titleformat{\paragraph}{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\usepackage{graphicx}
+\usepackage{subcaption}
+
+\usepackage{wrapfig}
+
+%%%%%%%% per il codice c++
+\usepackage{listings}          % for creating language style
+\input{arduinoLanguage.tex}    % adds the arduino language listing
+
+%% Define an Arduino style fore use later %%
+\lstdefinestyle{myArduino}{
+  language=Arduino,
+  %% Add other words needing highlighting below %%
+  morekeywords=[1]{},                  % [1] -> dark green
+  morekeywords=[2]{FILE_WRITE},        % [2] -> light blue
+  morekeywords=[3]{SD, File},          % [3] -> bold orange
+  morekeywords=[4]{open, exists, write, SoftwareSerial},      % [4] -> orange
+}
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{siunitx} %pacchetto per le unita' di misura
+
+%%%%%%%%%%%%%%%%%%%%%% per i flowchart
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+\tikzset{%
+  >={Latex[width=2mm,length=2mm]},
+  % Specifications for style of nodes:
+            base/.style = {rectangle, rounded corners, draw=black,
+                           minimum width=4cm, minimum height=1cm,
+                           text centered, font=\sffamily},
+           round/.style = {circle, draw=black,
+                           minimum width=4cm, minimum height=1cm,
+                           text centered, font=\sffamily},
+  			prog/.style = {base, fill=blue!30},
+   			file/.style = {base, fill=red!30},
+    activityRuns/.style = {base, fill=green!30},
+         process/.style = {base, minimum width=2.5cm, fill=orange!15,
+                           font=\ttfamily},
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pagenumbering{arabic}
+\pagestyle{plain}
+
+% per non farlo anadre a capo ovunque
+\usepackage[none]{hyphenat}
+% per togliere gli ident all'inizio dei paragrafi
+\setlength{\parindent}{0pt}
+\begin{document}
+ 
+\section{Prefazione}
+introduciamo i programmi con uno schema generale della relazione logico temporale tra i programmi
+\vspace{20pt}
+\\
+\begin{tikzpicture}[node distance=1.5cm, every node/.style={fill=white, font=\sffamily}, align=center]
+% ora vanno specificate le posizioni 
+%	\node (nome_blocco) 	[tipo_blocco, parentela] 	{testo_blocco};
+	\node (prg_ard)	[
+%
+%\begin{tikzpicture}[node distance=1.5cm,
+%    every node/.style={fill=white, font=\sffamily}, align=center]
+%  % Specification of nodes (position, etc.)
+%  \node (start)             [activityStarts]              {Activity starts};
+%  \node (onCreateBlock)     [process, below of=start]          {onCreate()};
+%  \node (onStartBlock)      [process, below of=onCreateBlock]   {onStart()};
+%  \node (onResumeBlock)     [process, below of=onStartBlock]   {onResume()};
+%  \node (activityRuns)      [activityRuns, below of=onResumeBlock]{Activity is running};
+%  \node (onPauseBlock)      [process, below of=activityRuns, yshift=-1cm]{onPause()};
+%  \node (onStopBlock)       [process, below of=onPauseBlock, yshift=-1cm]{onStop()};
+%  \node (onDestroyBlock)    [process, below of=onStopBlock, yshift=-1cm]{onDestroy()};
+%  \node (onRestartBlock)    [process, right of=onStartBlock, xshift=4cm]{onRestart()};
+%  \node (ActivityEnds)      [startstop, left of=activityRuns, xshift=-4cm]{Process is killed};
+%  \node (ActivityDestroyed) [startstop, below of=onDestroyBlock]{Activity is shut down};     
+%  % Specification of lines between nodes specified above
+%  % with aditional nodes for description 
+%  \draw[->]             (start) -- (onCreateBlock);
+%  \draw[->]     (onCreateBlock) -- (onStartBlock);
+%  \draw[->]      (onStartBlock) -- (onResumeBlock);
+%  \draw[->]     (onResumeBlock) -- (activityRuns);
+%  \draw[->]      (activityRuns) -- node[text width=4cm]
+%                                   {Another activity comes in
+%                                    front of the activity} (onPauseBlock);
+%  \draw[->,line width=5pt]      (onPauseBlock) -- node {The activity is no longer visible}
+%                                   (onStopBlock);
+%  \draw[->]       (onStopBlock) -- node {The activity is shut down by
+%                                   user or system} (onDestroyBlock);
+%  \draw[->]    (onRestartBlock) -- (onStartBlock);
+%  \draw[->]       (onStopBlock) -| node[yshift=1.25cm, text width=3cm]
+%                                   {The activity comes to the foreground}
+%                                   (onRestartBlock);
+%  \draw[->]    (onDestroyBlock) -- (ActivityDestroyed);
+%  \draw[->]      (onPauseBlock) -| node(priorityXMemory)
+%                                   {higher priority $\rightarrow$ more memory}
+%                                   (ActivityEnds);
+%  \draw           (onStopBlock) -| (priorityXMemory);
+%  \draw[->]     (ActivityEnds)  |- node [yshift=-2cm, text width=3.1cm]
+%                                    {User navigates back to the activity}
+%                                    (onCreateBlock);
+%  \draw[->] (onPauseBlock.east) -- ++(2.6,0) -- ++(0,2) -- ++(0,2) --                
+%     node[xshift=1.2cm,yshift=-1.5cm, text width=2.5cm]
+%     {The activity comes to the foreground}(onResumeBlock.east);
+%\end{tikzpicture}
+\vspace{30pt}
+\\
+cjusiaSISACHJENCL JWEKNFKC ENFWEJFWE KJJKj jee  e e e e
+
+\end{document}

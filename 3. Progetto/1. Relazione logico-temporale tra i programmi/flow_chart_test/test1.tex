@@ -39,7 +39,7 @@
   \draw[->]      (activityRuns) -- node[text width=4cm]
                                    {Another activity comes in
                                     front of the activity} (onPauseBlock);
-  \draw[->]      (onPauseBlock) -- node {The activity is no longer visible}
+  \draw[->,line width=5pt]      (onPauseBlock) -- node {The activity is no longer visible}
                                    (onStopBlock);
   \draw[->]       (onStopBlock) -- node {The activity is shut down by
                                    user or system} (onDestroyBlock);
