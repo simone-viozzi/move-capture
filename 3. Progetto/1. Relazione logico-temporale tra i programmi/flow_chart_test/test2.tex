@@ -40,21 +40,22 @@
 
 %%%%%%%%%%%%%%%%%%%%%% per i flowchart
 \usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
 \usetikzlibrary{arrows.meta}
 \tikzset{%
   >={Latex[width=2mm,length=2mm]},
   % Specifications for style of nodes:
-            base/.style = {rectangle, rounded corners, draw=black,
+            rect/.style = {rectangle, rounded corners, draw=black,
                            minimum width=4cm, minimum height=1cm,
                            text centered, font=\sffamily},
-           round/.style = {circle, draw=black,
+           round/.style = {ellipse, draw, draw=black,
                            minimum width=4cm, minimum height=1cm,
                            text centered, font=\sffamily},
-  			prog/.style = {base, fill=blue!30},
-   			file/.style = {base, fill=red!30},
-    activityRuns/.style = {base, fill=green!30},
-         process/.style = {base, minimum width=2.5cm, fill=orange!15,
-                           font=\ttfamily},
+%  			prog/.style = {base, fill=blue!30},
+%   			file/.style = {base, fill=red!30},
+%    activityRuns/.style = {base, fill=green!30},
+%         process/.style = {base, minimum width=2.5cm, fill=orange!15,
+%                           font=\ttfamily},
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -65,61 +66,54 @@
 \usepackage[none]{hyphenat}
 % per togliere gli ident all'inizio dei paragrafi
 \setlength{\parindent}{0pt}
+
+
+
+
+
 \begin{document}
  
 \section{Prefazione}
-introduciamo i programmi con uno schema generale della relazione logico temporale tra i programmi
-\vspace{20pt}
-\\
-\begin{tikzpicture}[node distance=1.5cm, every node/.style={fill=white, font=\sffamily}, align=center]
+Introduciamo i programmi con uno schema generale della relazione logico temporale tra i programmi:
+%\vspace{20pt}
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[node distance=2.5cm, align=center, every node/.style={fill=white, font=\sffamily}, align=center]
+%	\draw[help lines] (-10,-10) grid (1,1);
 % ora vanno specificate le posizioni 
-%	\node (nome_blocco) 	[tipo_blocco, parentela] 	{testo_blocco};
-	\node (prg_ard)	[
+%	\node (nome_blocco) 	[tipo_blocco, parentela] 		
+%								{testo_blocco};
+	\node (prg_ard)			[rect, fill=green!30] 							
+								{programma arduino};
+	\node (prg_get_data)	[rect, right of=prg_ard, xshift=+4cm] 
+								{programma di acquisizione dati};
+	\node (file_data_kin)	[round, below of=prg_get_data, xshift=+2.2cm]	
+								{file dati kinect};
+	\node (file_data_ard)	[round, below of=prg_get_data, xshift=-2.2cm]	
+								{file dati arduino};
+	\node (prg_elab_data)	[rect, below of=prg_get_data, yshift=-2.5cm]
+								{programma di post\\ elaborazione dei dati};
+	\node (file_dataset)	[round, below of=prg_elab_data]	
+								{file del dataset};
+	\node (prg_addesr)		[rect, below of=file_dataset]
+								{programma di addestramento\\ della rete};
+	\node (file_pesi_rete)	[round, below of=prg_addesr]	
+								{file dei pesi della\\ rete addestrata};
+% per le freccie si fa
+%	\daraw[tipo_freccia] (origine) "tipo connessione" "eventuale scritta" (destinazione)			
+	\draw[blue, ultra thick, arrows={[scale=1.75,blue]<->[scale=1.75,blue]}]	
+				(prg_ard)		-- 					(prg_get_data);
+	\draw[->]	(prg_get_data)	to [in=90,out=-90]	(file_data_kin);
+	\draw[->]	(prg_get_data)	to [in=90,out=-90]	(file_data_ard);
+	\draw[->]	(file_data_kin)	to [in=90,out=-90]	(prg_elab_data);
+	\draw[->]	(file_data_ard)	to [in=90,out=-90] 	(prg_elab_data);
+	\draw[->]	(prg_elab_data)	-- 					(file_dataset);
+	\draw[->]	(file_dataset)	-- 					(prg_addesr);
+	\draw[->]	(prg_addesr)	-- 					(file_pesi_rete);
 %
-%\begin{tikzpicture}[node distance=1.5cm,
-%    every node/.style={fill=white, font=\sffamily}, align=center]
-%  % Specification of nodes (position, etc.)
-%  \node (start)             [activityStarts]              {Activity starts};
-%  \node (onCreateBlock)     [process, below of=start]          {onCreate()};
-%  \node (onStartBlock)      [process, below of=onCreateBlock]   {onStart()};
-%  \node (onResumeBlock)     [process, below of=onStartBlock]   {onResume()};
-%  \node (activityRuns)      [activityRuns, below of=onResumeBlock]{Activity is running};
-%  \node (onPauseBlock)      [process, below of=activityRuns, yshift=-1cm]{onPause()};
-%  \node (onStopBlock)       [process, below of=onPauseBlock, yshift=-1cm]{onStop()};
-%  \node (onDestroyBlock)    [process, below of=onStopBlock, yshift=-1cm]{onDestroy()};
-%  \node (onRestartBlock)    [process, right of=onStartBlock, xshift=4cm]{onRestart()};
-%  \node (ActivityEnds)      [startstop, left of=activityRuns, xshift=-4cm]{Process is killed};
-%  \node (ActivityDestroyed) [startstop, below of=onDestroyBlock]{Activity is shut down};     
-%  % Specification of lines between nodes specified above
-%  % with aditional nodes for description 
-%  \draw[->]             (start) -- (onCreateBlock);
-%  \draw[->]     (onCreateBlock) -- (onStartBlock);
-%  \draw[->]      (onStartBlock) -- (onResumeBlock);
-%  \draw[->]     (onResumeBlock) -- (activityRuns);
-%  \draw[->]      (activityRuns) -- node[text width=4cm]
-%                                   {Another activity comes in
-%                                    front of the activity} (onPauseBlock);
-%  \draw[->,line width=5pt]      (onPauseBlock) -- node {The activity is no longer visible}
-%                                   (onStopBlock);
-%  \draw[->]       (onStopBlock) -- node {The activity is shut down by
-%                                   user or system} (onDestroyBlock);
-%  \draw[->]    (onRestartBlock) -- (onStartBlock);
-%  \draw[->]       (onStopBlock) -| node[yshift=1.25cm, text width=3cm]
-%                                   {The activity comes to the foreground}
-%                                   (onRestartBlock);
-%  \draw[->]    (onDestroyBlock) -- (ActivityDestroyed);
-%  \draw[->]      (onPauseBlock) -| node(priorityXMemory)
-%                                   {higher priority $\rightarrow$ more memory}
-%                                   (ActivityEnds);
-%  \draw           (onStopBlock) -| (priorityXMemory);
-%  \draw[->]     (ActivityEnds)  |- node [yshift=-2cm, text width=3.1cm]
-%                                    {User navigates back to the activity}
-%                                    (onCreateBlock);
-%  \draw[->] (onPauseBlock.east) -- ++(2.6,0) -- ++(0,2) -- ++(0,2) --                
-%     node[xshift=1.2cm,yshift=-1.5cm, text width=2.5cm]
-%     {The activity comes to the foreground}(onResumeBlock.east);
-%\end{tikzpicture}
-\vspace{30pt}
+\end{tikzpicture}
+\caption{l'IMU utilizzata in questo progetto}
+\end{figure}
 \\
 cjusiaSISACHJENCL JWEKNFKC ENFWEJFWE KJJKj jee  e e e e
 
