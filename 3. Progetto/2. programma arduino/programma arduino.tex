@@ -1,0 +1,198 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[italian]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+\usepackage[left=1cm,right=1cm,top=1cm,bottom=2cm]{geometry}
+
+\usepackage{txfonts}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage{titlesec}
+\setcounter{secnumdepth}{4}
+\titleformat{\paragraph}{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\usepackage{graphicx}
+\usepackage{subcaption}
+
+\usepackage{wrapfig}
+
+%%%%%%%% per il codice c++
+\usepackage{textcomp}
+\usepackage{listings}          % for creating language style
+\usepackage{listingsutf8}
+\input{arduinoLanguage.tex}    % adds the arduino language listing
+
+%% Define an Arduino style fore use later %%
+\lstdefinestyle{myArduino}{
+  language=Arduino,
+    %% Add other words needing highlighting below %%
+    morekeywords=[1]{},                  % [1] -> dark green
+    morekeywords=[2]{FILE_WRITE},        % [2] -> light blue
+    morekeywords=[3]{SD, File},          % [3] -> bold orange
+    morekeywords=[4]{open, exists, write, SoftwareSerial},      % [4] -> orange
+}
+\lstset{
+    language=Arduino,
+    style=myArduino,
+    inputencoding=utf8,
+    extendedchars=true,
+}
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{siunitx} %pacchetto per le unita' di misura
+
+%%%%%%%%%%%%%%%%%%%%%% per i flowchart
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{arrows.meta}
+\tikzset{%
+    >={Latex[width=2mm,length=2mm]},
+      % Specifications for style of nodes:
+         declare/.style = {trapezium, draw=black, trapezium left angle=70,
+                                       trapezium right angle=-70,
+                                minimum width=4cm, minimum height=1cm,
+                                text centered, font=\sffamily},
+           start/.style = {ellipse, draw, draw=black,
+                                minimum width=4cm, minimum height=1cm,
+                                text centered, font=\sffamily},
+               cond/.style = {diamond, aspect=2, draw, draw=black,
+                                minimum width=4cm, minimum height=1cm,
+                                text centered, font=\sffamily},
+            rect/.style = {rectangle, draw, draw=black,
+                                minimum width=4cm, minimum height=1cm,
+                                text centered, font=\sffamily},
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+
+\pagenumbering{arabic}
+\pagestyle{plain}
+
+% per non farlo anadre a capo ovunque
+\usepackage[none]{hyphenat}
+% per togliere gli ident all'inizio dei paragrafi
+\setlength{\parindent}{0pt}
+
+
+
+
+
+\begin{document}
+
+\subsection{Programma arduino}
+Questo programma si occupa di acquisire i dati dai sensori attraverso l'I2C, elaborarli e scriverli sulla seriale. Il programma si scompone nella classe "MPU0\_6050" che gestisce l'accelerometro, nella classe "QMC5883" che gestisce il magnetometro, nella classe "serial" per gestire la seriale e nelle 2 funzioni standard di arduino "setup" e "loop". inoltre abbiamo usato la libreria "Wire.h" per la seriale. \\
+Nel "setup" si trova soltanto l'inilizializzazione alla seriale per comunicare con il modulo "HC-05":
+\begin{lstlisting}[style=myArduino, caption=funzione "setup", captionpos=b]
+void setup() 
+{
+  Serial.begin(115200);
+}
+\end{lstlisting}
+Nella funzione "loop" si trovano le varie dichiarazioni alle altre classi, un loop per aspettare che il modulo "HC-05" sia connesso al pc ed il ciclo infinito che provvede ad acquisire i dati dai sensori e scriverli sulla seriale:
+\begin{lstlisting}[style=myArduino, caption=funzione "loop", captionpos=b]
+void loop() 
+{
+  // chiamo i costruttori delle 2 classi che gestiscono i sensori e provvedo al loro settaggio.
+  QMC5883 mm;
+  MPU_6050 aa;
+  aa.setting();
+
+  // accendo un led per il debug  
+  digitalWrite(13, HIGH);
+  
+  // aspetto finch\`e il pin "state" del modulo "HC-05" non diventa alto
+  while (!digitalRead(3))
+  {
+    delay(10);
+  }
+  
+  // quando il bluetooth \`e connesso posso procedere ad inizializzare e sincronizzare la seriale
+  serial ser; \pounds
+  ser.sinc(); 
+
+  // spengo il led
+  digitalWrite(13, LOW);
+  
+  while (true)
+  {
+    // acquisisco i dati del magnetometro e li normalizzo
+    mm.get_data();
+    mm.normalize(100);
+    
+    // acquisisco i dati dell'accelerometro
+    aa.get_data();
+
+    // li sposto in degli array
+    float acc_xyz[] = {aa.get_AcX(), aa.get_AcY(), aa.get_AcZ()};
+    float g_xyz[] = {aa.get_GyX(), aa.get_GyY(), aa.get_GyZ()};
+    float magn[] = {mm.getX(), mm.getY(), mm.getZ()};
+
+    // li scrivo sulla seriale in modo che il modulo bluetooth li trasmetta al pc.
+    ser.send_data(acc_xyz, g_xyz, magn, aa.get_temp());
+  }
+}
+\end{lstlisting}
+Nella funzione loop sono state usate le classi "MPU\_6050", "QMC5883" e "serial".
+iniziando dalle 2 classi che gestiscono i sensori:
+\begin{lstlisting}[style=myArduino, caption=funzione "loop", captionpos=b]
+class MPU_6050
+{
+  public:
+    int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
+    float normalized_AcX, normalized_AcY, normalized_AcZ, normalized_GyX, normalized_GyY, normalized_GyZ;
+    float rescaled_AcX, rescaled_AcY, rescaled_AcZ, rescaled_GyX, rescaled_GyY, rescaled_GyZ;
+  
+    const uint8_t MPU = 0x68; // I2C address of the MPU-6050
+    
+    // costruttore della classe, accende l'MPU_6050
+    MPU_6050(){...}
+  
+    // prede i dati dall'MPU_6050 e le sposta sulle variabili di classe.
+    void get_data(){...}
+  
+    // funzioni per ritornare i valori dell'accelerometro
+    float get_AcX(){ return (AcX*1.0); }
+    float get_AcY(){...}
+    float get_AcZ(){...}
+  
+    // funzioni per ritornare i valori del giroscopio
+    float get_GyX(){ return (GyX*1.0); }
+    float get_GyY(){...}
+    float get_GyZ(){...}
+    
+    // funzioni per ritornare i valori normalizzati dell'accelerometro
+    float get_normalized_AcX(){ return normalized_AcX; }
+    float get_normalized_AcY(){...}
+    float get_normalized_AcZ(){...}
+  
+    // funzioni per ritornar i valori normalizzati del giroscopio
+    float get_normalized_GyX(){ return normalized_GyX; }
+    float get_normalized_GyY(){...}
+    float get_normalized_GyZ(){...}
+  
+    // funzioni per calcolare e ritornare la norma dell'accelerometro o del magnetometro
+    float norma(float x, float y, float z){...}
+    float get_norma_Gy(){ return norma(GyX, GyY, GyZ); }
+    float get_norma_Ac(){...}
+  
+    // funzione per ritornare la temperatura
+    float get_temp(){ return Tmp; }
+  
+    // funzioni per normalizzare l'accelerometro o il magnetometro
+    void normalize_Ac(int Max){...}
+    void normalize_Gy(int Max){...}
+    
+    // funzione che scrive le impostazioni all'MPU_6050
+    void setting(){...}
+};
+\end{lstlisting}
+
+
+
+\end{document}

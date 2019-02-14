@@ -39,6 +39,7 @@
 \usepackage{siunitx} %pacchetto per le unita' di misura
 
 %%%%%%%%%%%%%%%%%%%%%% per i flowchart
+\usepackage{xcolor}
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows}
 \usetikzlibrary{arrows.meta}
@@ -51,11 +52,6 @@
            round/.style = {ellipse, draw, draw=black,
                            minimum width=4cm, minimum height=1cm,
                            text centered, font=\sffamily},
-%  			prog/.style = {base, fill=blue!30},
-%   			file/.style = {base, fill=red!30},
-%    activityRuns/.style = {base, fill=green!30},
-%         process/.style = {base, minimum width=2.5cm, fill=orange!15,
-%                           font=\ttfamily},
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -73,7 +69,7 @@
 
 \begin{document}
  
-\section{Prefazione}
+\subsection{Prefazione}
 Introduciamo i programmi con uno schema generale della relazione logico temporale tra i programmi:
 per prima cosa abbiamo dovuto acquisire un dataset ed usarlo per addesrare la rete neurale
 \begin{figure}[h]
@@ -103,14 +99,23 @@ per prima cosa abbiamo dovuto acquisire un dataset ed usarlo per addesrare la re
 %	\daraw[tipo_freccia] (origine) "tipo connessione" "eventuale scritta" (destinazione)			
 	\draw[blue, line width=1mm, arrows={[scale=1.75,blue]<->[scale=1.75,blue]}]	
 				(prg_ard)		-- 					(prg_get_data);
-	\draw[->]	(prg_get_data)	to [in=90,out=-90]	(file_data_kin);
-	\draw[->]	(prg_get_data)	to [in=90,out=-90]	(file_data_ard);
-	\draw[->]	(file_data_kin)	to [in=90,out=-90]	(prg_elab_data);
-	\draw[->]	(file_data_ard)	to [in=90,out=-90] 	(prg_elab_data);
-	\draw[->]	(prg_elab_data)	-- 					(file_dataset);
-	\draw[->]	(file_dataset)	-- 					(prg_addesr);
-	\draw[->]	(prg_addesr)	-- 					(file_pesi_rete);
+	\draw[->, red]	(prg_get_data)	to [in=90,out=-90]	(file_data_kin);
+	\draw[->, red]	(prg_get_data)	to [in=90,out=-90]	(file_data_ard);
+	\draw[->, cyan]	(file_data_kin)	to [in=90,out=-90]	(prg_elab_data);
+	\draw[->, cyan]	(file_data_ard)	to [in=90,out=-90] 	(prg_elab_data);
+	\draw[->, red]	(prg_elab_data)	-- 					(file_dataset);
+	\draw[->, cyan]	(file_dataset)	-- 					(prg_addesr);
+	\draw[->, red]	(prg_addesr)	-- 					(file_pesi_rete);
 %
+\matrix [draw,above] at (current bounding box.south west) {
+  \node [shape=circle, fill=green, label=right:programma per la scheda arduino] {}; \\
+  \node [shape=circle, fill=yellow, label=right:programma per pc] {}; \\
+  \node [shape=circle, fill=gray, label=right:file di testo] {}; \\
+  \draw[->, cyan, text=black] ++(-1em, -0em) -- ++(3em, -0em) node[right] {file in input}; \\
+  \draw[->, red, text=black] ++(-1em, -0em) -- ++(3em, -0em) node[right] {file in output}; \\
+  \draw[blue, text=black, line width=1mm, arrows={[scale=1.75,blue]<->[scale=1.75,blue]}]
+  		 ++(-1em, -0em) -- ++(3em, 0) node[right] {in esecuzione contemporanea}; \\
+};
 \end{tikzpicture}
 \caption{i programmi usati per ottenere i pesi della rete addestrata (?)}
 \end{figure}
@@ -134,10 +139,10 @@ una volta addestrata la rete si possono usare i pesi cos\`i ottenuti per visuali
 % per le freccie si fa
 %	\daraw[tipo_freccia] (origine) "tipo connessione" "eventuale scritta" (destinazione)			
 	\draw[blue, line width=1mm, arrows={[scale=1.75,blue]<->[scale=1.75,blue]}]	
-				(prg_ard)		-- 	(prg_main);
+					(prg_ard)		-- 	(prg_main);
 	\draw[blue, line width=1mm, arrows={[scale=1.75,blue]<->[scale=1.75,blue]}]	
-				(prg_main)		-- 	(prg_unity);
-	\draw[->]	(file_dataset)	--	(prg_main);
+					(prg_main)		-- 	(prg_unity);
+	\draw[->, cyan]	(file_dataset)	--	(prg_main);
 \end{tikzpicture}
 \caption{una volta addestrata la rete si pu\`o vedere il pupo muoversi in tempo reale}
 \end{figure}
