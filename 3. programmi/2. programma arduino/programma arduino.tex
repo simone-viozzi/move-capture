@@ -26,6 +26,11 @@
 \usepackage{listings}          % for creating language style
 \usepackage{listingsutf8}
 \input{arduinoLanguage.tex}    % adds the arduino language listing
+\definecolor{commentgreen}{RGB}{2,112,10}
+\definecolor{eminence}{RGB}{108,48,130}
+\definecolor{weborange}{RGB}{255,165,0}
+\definecolor{frenchplum}{RGB}{129,20,83}
+
 
 %% Define an Arduino style fore use later %%
 \lstdefinestyle{myArduino}{
@@ -35,12 +40,42 @@
     morekeywords=[2]{FILE_WRITE},        % [2] -> light blue
     morekeywords=[3]{SD, File},          % [3] -> bold orange
     morekeywords=[4]{open, exists, write, SoftwareSerial},      % [4] -> orange
-}
-\lstset{
-    language=Arduino,
-    style=myArduino,
+    frame=tb,    
     inputencoding=utf8,
     extendedchars=true,
+    literate={è}{{\`{e}}}{1},
+    breaklines=true,  
+}
+
+\lstdefinestyle{mycpp}{
+    language=C++,
+    inputencoding=utf8,
+    extendedchars=true,
+    literate={è}{{\`{e}}}{1},
+    frame=tb,
+    tabsize=2,
+    breaklines=true,                    % wordwrapping
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+    tabsize=2,         
+    basicstyle=\fontsize{9}{11}\ttfamily,
+    backgroundcolor=\color{light-gray},
+    xleftmargin=.25in
+    showstringspaces=false,
+    numbers=left,
+    %upquote=true,
+    commentstyle=\color{commentgreen},
+    keywordstyle=\color{eminence},
+    stringstyle=\color{red},
+    basicstyle=\small\ttfamily, % basic font setting
+    emph={int,char,double,float,unsigned,void,bool},
+    emphstyle={\color{blue}},
+    escapechar=\&,
+    % keyword highlighting
+    classoffset=1, % starting new class
+    otherkeywords={>,<,.,;,-,!,=,~},
+    morekeywords={>,<,.,;,-,!,=,~},
+    keywordstyle=\color{weborange},
+    classoffset=0,
 }
 %%%%%%%%%%%%%%%%%%%%%%%
 
@@ -75,7 +110,7 @@
 \pagestyle{plain}
 
 % per non farlo anadre a capo ovunque
-\usepackage[none]{hyphenat}
+%\usepackage[none]{hyphenat}
 % per togliere gli ident all'inizio dei paragrafi
 \setlength{\parindent}{0pt}
 
@@ -106,14 +141,14 @@ void loop()
   // accendo un led per il debug  
   digitalWrite(13, HIGH);
   
-  // aspetto finch\`e il pin "state" del modulo "HC-05" non diventa alto
+  // aspetto finchè il pin "state" del modulo "HC-05" non diventa alto
   while (!digitalRead(3))
   {
     delay(10);
   }
   
-  // quando il bluetooth \`e connesso posso procedere ad inizializzare e sincronizzare la seriale
-  serial ser; \pounds
+  // quando il bluetooth è connesso posso procedere ad inizializzare e sincronizzare la seriale
+  serial ser; 
   ser.sinc(); 
 
   // spengo il led
