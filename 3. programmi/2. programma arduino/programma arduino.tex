@@ -138,9 +138,9 @@ void loop()
   }
 }
 \end{lstlisting}
-Nella funzione loop sono state usate le classi "MPU\_6050", "QMC5883" e "serial".
+Qui sono state usate le classi "MPU\_6050", "QMC5883" e "serial".
 iniziando dalle 2 classi che gestiscono i sensori:
-\begin{lstlisting}[style=myArduino, caption=funzione "loop", captionpos=b]
+\begin{lstlisting}[style=myArduino, caption=classe "MPU\_6050", captionpos=b]
 class MPU_6050
 {
   public:
@@ -192,7 +192,68 @@ class MPU_6050
     void setting(){...}
 };
 \end{lstlisting}
+\begin{lstlisting}[style=myArduino, caption=classe "QMC5883", captionpos=b]
+class QMC5883
+{
+  public:
+    uint8_t add = 0x0D;
+    int nowX = 0;
+    int nowY = 0;
+    int nowZ = 0;
+    float rescaled_x = 0; 
+    float rescaled_y = 0;
+    float rescaled_z = 0;
+    
+    // il costruttore provvede ad inizializzare il modulo e settarne i vari registri 
+    QMC5883(){...}
+    
+    // funzioni per ritornare i valori x-y-z del magnetometro
+    float getX(){ return (nowX*1.0); }
+    float getY(){...}
+    float getZ(){...}
 
+    // funzioni per ritornare i valori del magnetometro dopo averli riscalati
+    float getX_rescaled(){ return rescaled_x; }
+    float getY_rescaled(){...}
+    float getZ_rescaled(){...}
+  
+    // funzione che provvede a leggere i regisrti del modulo per acquisire i dati
+    // spostandoli nelle variabili di classe
+    void get_data(){...}
 
+    // funzioni per calcolare la norma e ritornare i valori normalizzati 
+    float norma(float x, float y, float z){...}
+    float get_norma(){ return norma(nowX, nowY, nowZ); }
+    void normalize(int Max){...}
+};
+\end{lstlisting}
+\begin{lstlisting}[style=myArduino, caption=classe "serial", captionpos=b]
+class serial
+{
+  public:
+
+    // funzione che permette di sincronizzarsi con il pc
+    void sinc(){...}
+
+    // union per poter scompattare un float in 4 byte
+    union Scomp_float{...};
+
+    // funzione che permette di inviare un intero float scompattandolo in 
+    // 4 byte che vengono trasmessi serialmente
+    void send_float(float n){...}
+
+    // funzione che permette di riceve un float come sopra
+    float receive_float(){...}
+
+    // funzione per l'invio di un solo carattere
+    void send_char(char ch){...}
+
+    // funzione per la ricezione di un singolo carattere
+    char receive_char(){...}
+
+    // funzione che provvede ad inviare i dati necessari.
+    void send_data(float* acc_xyz, float* g_xyz, float* magn, float temp){...} 
+};
+\end{lstlisting}
 
 \end{document}

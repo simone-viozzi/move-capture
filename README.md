@@ -1,6 +1,6 @@
 **TODO**
 ========
 
--   massi dai una letta alla parte della scheda e butta giu’ quello che manca
+massi ho pensato una cosa, nella sezione "programmi" ci mettiamo i prototipi delle cose.
 
--   il kinect e’ finito finito??
+poi nella sezione successiva spieghiamo le cose necessarie, tipo qualche funzione etc..
