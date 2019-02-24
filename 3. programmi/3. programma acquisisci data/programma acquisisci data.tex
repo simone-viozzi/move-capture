@@ -16,10 +16,13 @@
 \titleformat{\paragraph}{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
 \titlespacing*{\paragraph}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
+%per le immagini
 \usepackage{graphicx}
 \usepackage{subcaption}
-
 \usepackage{wrapfig}
+
+%per i link
+\usepackage{hyperref} 
 
 %%%%%%%% per il codice c++
 \usepackage{textcomp}
@@ -52,11 +55,14 @@
     inputencoding=utf8,
     extendedchars=true,
     literate={è}{{\`{e}}}{1},
+    %escapeinside={(*******}{*******)}
+    escapechar=\£,
+    %escapeinside=~~,
     frame=tb,
     tabsize=2,
+    mathescape=false,
     breaklines=true,                    % wordwrapping
-    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
-    tabsize=2,         
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},         
     basicstyle=\fontsize{9}{11}\ttfamily,
     backgroundcolor=\color{light-gray},
     xleftmargin=.25in,
@@ -72,13 +78,30 @@
     basicstyle=\small\ttfamily, % basic font setting
     emph={int,char,double,float,unsigned,void,bool},
     emphstyle={\color{blue}},
-    escapechar=\&,
     % keyword highlighting
     classoffset=1, % starting new class
     otherkeywords={>,<,.,;,-,!,=,~},
     morekeywords={>,<,.,;,-,!,=,~},
     keywordstyle=\color{weborange},
     classoffset=0,
+}
+
+
+\lstdefinestyle{myoutput}
+{
+    inputencoding=utf8,
+    extendedchars=true,
+    literate={è}{{\`{e}}}{1},
+    tabsize=2,
+    frame=tb,
+    breaklines=true,                    % wordwrapping
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},         
+    basicstyle=\fontsize{9}{11}\ttfamily,
+    backgroundcolor=\color{light-gray},
+    xleftmargin=.25in,
+    showstringspaces=false,
+    numbers=left,                    
+    numbersep=5pt, 
 }
 %%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{siunitx} %pacchetto per le unita' di misura
@@ -110,8 +133,11 @@
 \pagenumbering{arabic}
 \pagestyle{plain}
 
-% per non farlo anadre a capo ovunque
-\usepackage[none]{hyphenat}
+% per non farlo anadre a capo ovunque 
+% va in conflitto con quello che lo fa andare a capo nel codice quindi attenzione <--------
+%\usepackage[none]{hyphenat}
+
+
 % per togliere gli ident all'inizio dei paragrafi
 \setlength{\parindent}{0pt}
 
@@ -469,11 +495,8 @@ private:
   };
 
 public:
-
-
   Serial(std::string com);
-
-
+  
   /// <summary>
   /// sincronizza arduino ed il pc
   /// </summary>
@@ -518,6 +541,397 @@ public:
 \end{lstlisting}
 %
 %
-ora devo cominciare con il main e tutte le classi che ci stanno dentro
+Oltre a quste classi/strutture integrate in delle librerie separate ci sono altre classi/altro nel main, infatti abbiamo: "namespace logger", "class bounded\_buffer", "class kinect\_class", "class arduino\_class", "class ard\_handler", "class kin\_handler", "void start\_aquire\_data" e "void acquire\_data".
+%
+%
+\\
+Per prima cosa \`e bene spiegare il logger, che viene usato nel resto del programma. Questa libreria serve esclusivamente per il debug e ha attributi specifici per lavoare con pi\`u thread contemporaneamente in modo asincrono. Serve fondamentalmente a stampare un testo a schermo, ma una volta settate le impostazioni si pu\`o aggiungere a quasto testo il nome del thread il tempo esatto in cui il messaggio viene stampato ed evitare che 2 thread stampino contemporaneamente nella console (se lo facessero il testo si mischierebbe e non si capirebbe nulla). La documentazione approfondita su come funziona questa libreria si pu\`o trovare \href{https://www.boost.org/doc/libs/1_69_0/libs/log/doc/html/index.html#log.moti}{qui}. Nel nostro caso i settaggi usati sono: un id che identifica il thread, un tag che identifica il nome del trhead, un tag che identifica il livello di severit\`a, il tempo assoluto e la stringa da stampare. Ad esempio se questa riga \`e posta all'inizio del main e il main thread viene chiamato "main":
+%
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+BOOST_LOG_SEV(slg, logger::normal) << "hello log";
+\end{lstlisting}
+%
+Allora viene stampato a schermo un messaggio formattato in questo modo:
+%
+\begin{lstlisting}[style=myoutput, caption=librerie usate, captionpos=b]
+id->(0x24a8): main < normal >   time->[00:00:00.000404]  -> hello log
+\end{lstlisting}
+%
+Ci\`o consente di debuggare facilmente operazioni asincrone su pi\`u trhead.
+Il codice relativo hai settaggi necessari per ottenere quel tipo di formattazione \`e il "namespace logger":
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+namespace logger
+{
+  // definizione dei divesti livelli di severit\`a
+  enum severity_level
+  {
+    normal,
+    warning,
+    error,
+    critical
+  };
+  
+  // definizione degli attributi usati
+  BOOST_LOG_ATTRIBUTE_KEYWORD(severity, "Severity", severity_level)
+  BOOST_LOG_ATTRIBUTE_KEYWORD(tag_attr, "Tag", std::string)
+  BOOST_LOG_ATTRIBUTE_KEYWORD(timeline, "Timeline", boost::log::attributes::timer::value_type)
+  BOOST_LOG_ATTRIBUTE_KEYWORD(tread_id, "Tread_id", boost::thread::id)
+  BOOST_LOG_ATTRIBUTE_KEYWORD(tread_name, "tread_name", std::string)
+
+  // provvede a sostituire il numero del severity_level con la relativa stringa
+  std::ostream& operator<< (std::ostream& strm, severity_level level){...}
+
+  // inizializzazione della formattazione del logger
+  void init(){...}
+
+  // definizione dei vari parametri
+  boost::log::sources::severity_logger< severity_level > f_init(){...}
+  void attr_thread(...){...}
+  void attr_time(...){...}
+  void attr_tag(...){...}
+  void attr_thread_name(...){...}
+};
+\end{lstlisting}
+Inoltre per funzionare correttamente richiede che all'inizio del main siano posti alcuni settaggi:
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+// inizializzazione logger
+logger::init();
+auto slg = logger::f_init();
+attr_thread(&slg);
+attr_time(&slg);
+
+// imposto il nome del main trhead in "main"
+logger::attr_thread_name(&slg, "main");
+\end{lstlisting}
+%
+%
+Un altra classe usata nel resto del programma \`e "class bounded\_buffer", questa classe ospita funzioni specifiche per immagazzinare temporaneamente dei dati gestendone l'ingresso e l'uscita dal buffer. Fondamentalmente costituisce un registro FIFO indipendente dal tipo di dato che si utilizza. Questo tipo di buffer viene comunemente usato in caso si ha la struttura thread che produce dati - thread che consuma dati: il produttore acquisisce i dati e li inserisce nel buffer, il consumatore estrae i dati e li processa. La dimensione del buffer viene specificata quando lo si inizializza e deve essere sufficentemente grande in modo da garantire la non perdita di dati e il non rallentamento del trhead produttore. Nel nostro caso abbiamo adottato questo tipo di buffer per poter garantire l'asincronicit\`a delle acquisizioni tra arduino e il kinect, cos\`i facendo si garantisce la massima velocit\`a tra le acquisizioni dei dati. Il codice relativo a questa classe \`e stato quasi interamente presto dagli esempi della libreria boost, \href{https://www.boost.org/doc/libs/1_69_0/doc/html/circular_buffer/examples.html}{qui} ed \`e:
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+template <class T>
+class bounded_buffer
+{
+public:
+
+  typedef boost::circular_buffer<T> container_type;
+  typedef typename container_type::size_type size_type;
+  typedef typename container_type::value_type value_type;
+  typedef typename boost::call_traits<value_type>::param_type param_type;
+
+  // nel costruttore si imposta la capacit\`a del buffer
+  explicit bounded_buffer(size_type capacity) : m_unread(0), m_container(capacity) {}
+
+  // questa funzione permette di aggiungere un elemeto al buffer
+  void push_front(param_type item){...}
+
+  // questa funzione permette di estrarre un elemento dal buffer 
+  void pop_back(value_type* pItem){...}
+
+  // restituisce la percentuale di riempimento del buffer
+  float percentage_of_filling(){...}
+
+  // svuota il buffer
+  void flush(){...}
+
+private:
+  bounded_buffer(const bounded_buffer&);              // Disabled copy constructor
+  bounded_buffer& operator = (const bounded_buffer&); // Disabled assign operator
+
+  bool is_not_empty() const { return m_unread > 0; }
+
+  bool is_not_full() const { return m_unread < m_container.capacity(); }
+
+  size_type m_unread;
+  container_type m_container;
+  boost::mutex m_mutex;
+  boost::condition_variable m_not_empty;
+  boost::condition_variable m_not_full;
+};
+\end{lstlisting}
+%
+%
+Di seguito troviamo i thread producer "kinect\_class" e "arduino\_class".
+La classe "kinect\_class" provvede a leggere i dati dal kinect ed aggiungerli al suo corrispettivo registro FIFO. L'estrazione dei dati dal kinect \`e stata per la maggior parte copiata dall'esempio body basic D2D integrato nell'\href{https://www.microsoft.com/en-us/download/details.aspx?id=44561}{sdk browser} fornito da microsoft. Il codice relativo a questa classe \`e:
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+class kinect_class
+{
+public:
+
+  // Current Kinect
+  IKinectSensor* m_pKinectSensor;
+  ICoordinateMapper* m_pCoordinateMapper;
+
+  // Body reader
+  IBodyFrameReader* m_pBodyFrameReader;
+
+  real_time t;
+
+  bounded_buffer<kinect_data>* FIFO_kin;
+
+  kinect_class(bounded_buffer<kinect_data>* data_FIFO){...}
+
+  void start()
+  {
+    
+    bool flag = false;
+    while (true)
+    {
+      {...}
+      
+      // prendo il tempo
+      uint64_t t1 = t.get_curr_time();  
+      
+      // acquisisco i dati e li sposto in data
+      flag = Update(&data);
+
+      // se l'acquisizione \`e andata a buon fine procedo
+      if (flag)
+      {
+        // prendo un altra volta il tempo
+        uint64_t t2 = t.get_curr_time();
+        // cos\`i da poter impostare che il tempo in cui sono stati acquisiti i dati sia 
+        // la media tra il tempo prima di cominciare l'acquisizione ed il tempo dopo che essa \`e finita
+        data.frame_time = (t1 + t2) / 2;
+
+        // inserisco i dati cos\`i acquisiti nel registro fifo
+        FIFO_kin->push_front(data);
+        
+        // faccio aspettare un po di tempo a questo trhead perch\`e altrimenti il kinect da errore, 
+        // dato che non supporta un acquisizione a pi\`u di 30fps
+        boost::this_thread::sleep(boost::posix_time::milliseconds(35));  al kinect scoppia
+
+      }
+
+      {...}
+
+    }
+  }
+
+  // inizializza il kinect, ritorna 1 se ha avuto successo, 0 altrimenti
+  int InitializeDefaultSensor(){...}
+
+  // acquisisce i dati e li passa alla funzione per processarli
+  bool Update(kinect_data* data)
+  {
+    {...}
+    
+    flag = ProcessBody(BODY_COUNT, ppBodies, data);
+    
+    {...}
+    
+    return flag;
+    
+  }
+
+  // questa funzione provvede a spostare i dati da joints a data sistemandoli nella loro struttura dati, 
+  // una spiegazione di come ci\`o viene fatto verra data nel capitolo successivo
+  bool handle_data(Joint* joints, kinect_data* data){...}
+  
+
+  // quetsta funzione separa le diverse persone rilevate e trasferisce le informazioni 
+  // relative hai giunti della prima persona alla funzione handle_data
+  bool ProcessBody(int nBodyCount, IBody** ppBodies, kinect_data* data)
+  {
+    {...}
+    
+    for (int i = 0; i < nBodyCount; ++i)
+    {
+      {...}
+      
+      Joint joints[JointType_Count];
+
+      hr = pBody->GetJoints(_countof(joints), joints);
+      
+      return handle_data(joints, data);
+          
+      {...}
+      
+    }
+    
+    {...}
+  }
+
+  // provvede a spegnere il kinect e deallocare le sue risorse nel caso la classe venga distrutta
+  ~kinect_class(){...}
+  template<class Interface>
+  inline void SafeRelease(Interface *& pInterfaceToRelease){...}
+
+};
+\end{lstlisting}
+%
+%
+La classe "arduino\_class" provvede a caricare continuamente i dati provenienti dal kineck nel registro fifo, infatti la funzione "start" viene lanciata come thread e continua a caricare i dati fino al termine del programma.
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+class arduino_class
+{
+public:
+  Serial* ser;
+  real_time t;
+  bounded_buffer<arduino_data>* FIFO_ard;
+
+  // il costruttore provvede ad inizializzare la seriale e sincronizzare i 2 dispositivi
+  arduino_class(bounded_buffer<arduino_data>* data_FIFO, string com_port)
+  {
+    ser = new Serial(com_port);
+    cout << "serial ok" << endl;
+    FIFO_ard = data_FIFO;
+    ser->sinc();
+  }
+
+  // questa funzione viene lanciata all'avvio del thread e provvede ad acquisire i dati ed inserirli nel registro fifo
+  void start()
+  {
+    while (true)
+    {
+      arduino_data data;
+      
+      uint64_t t1 = t.get_curr_time();
+      ser->receive_data(data.acc_xyz, data.gy_xyz, data.magn_xyz, &data.temp);
+      uint64_t t2 = t.get_curr_time();
+
+	  // per ottenere un accurata misurazione del tempo viene preso prima e dopo l'acquisizione e poi fatta la media dei valori ottenuti
+      data.frame_time = (t1 + t2) / 2;
+
+      FIFO_ard->push_front(data);
+    }
+  }
+};
+\end{lstlisting}
+%
+%
+Dopo i 2 thread producer si hanno i 2 thread consumer: "class ard\_handler" e "class kin\_handler", che si occupano rispettivamente di salvare su file di testo le informazioni di arduino e del kinect. \\ 
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+/// <summary>
+/// handle the data from arduino and write it on a file
+/// </summary>
+class ard_handler
+{
+private:
+  bounded_buffer<arduino_data>* ard;
+  ard_file_manager* f;
+
+public:
+  // il costruttore provvede ad inizializzare la classe per gestire i file di testo di arduino
+  ard_handler(bounded_buffer<arduino_data>* ard, string file_name)
+  {
+    this->ard = ard;
+    f = new ard_file_manager(file_name, std::ios::out);
+  }
+
+  // questa funzione \`e quella che viene effettivamente lanciata all'avvio del thread e provvede a scaricare il buffer scrivendo i dati sul file fino al raggiungimento della quota predichiarata "tot_esempi"
+  void start()
+  {
+	// inizializzazione logger
+    auto slg = logger::f_init();
+    attr_thread(&slg);
+    logger::attr_thread_name(&slg, "ard_handler");
+
+    BOOST_LOG_SEV(slg, logger::normal) << "hello log";
+
+    for (int i = 0; i < tot_esempi; i++)
+    {
+      arduino_data data_ard;
+      ard->pop_back(&data_ard);
+
+      f->write_data_line(data_ard);
+
+    }
+    
+	// segnalo sulla console qunado il thread ha finito il suo lavoro
+    BOOST_LOG_SEV(slg, logger::normal) << "end";
+  }
+};
+\end{lstlisting}
+%
+%
+La classe "kin\_handler" esegue esattamente le stesse operazioni della precedente con la sola differenza che usa "kin\_file\_manager" al posto di "ard\_file\_manager".
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+/// <summary>
+/// handle the data from the kinect and write it in the file
+/// </summary>
+class kin_handler
+{
+private:
+  bounded_buffer<kinect_data>* kin;
+  kin_file_manager* f;
+
+public:
+  kin_handler(bounded_buffer<kinect_data>* kin, string file_name){...}
+
+  void start(){...}
+};
+\end{lstlisting}
+%
+%
+Dopo tutte queste classi si hanno 2 funzioni che si occupano di inizializzare le altre classi, lanciare tutti i thread neccessari ed acquisire dall'utente i nomi dei file etc.
+
+
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+/// <summary>
+/// ok
+/// </summary>
+void start_aquire_data(string out_ard, string out_kin, string com_port)
+{
+  auto slg = logger::f_init();
+  attr_thread(&slg);
+  logger::attr_thread_name(&slg, "main");
+
+  bounded_buffer<arduino_data> data_FIFO_ard(20);
+  bounded_buffer<kinect_data> data_FIFO_kin(20);
+
+  arduino_class a(&data_FIFO_ard, com_port);
+  kinect_class k(&data_FIFO_kin);
+
+  ard_handler a_h(&data_FIFO_ard, out_ard);
+  kin_handler k_h(&data_FIFO_kin, out_kin);
+
+  BOOST_LOG_SEV(slg, logger::normal) << "costructor end" << std::endl;
+
+  boost::thread ard([&a]() { a.start(); });
+  boost::thread kin([&k]() { k.start(); });
+
+  BOOST_LOG_SEV(slg, logger::normal) << "producer thread launced" << std::endl;
+
+  boost::thread ard_h([&a_h]() { a_h.start(); });
+  boost::thread kin_h([&k_h]() { k_h.start(); });
+
+  BOOST_LOG_SEV(slg, logger::normal) << "consumer thread launched" << std::endl;
+
+  kin.join();
+  ard.join();
+  kin_h.join();
+  ard_h.join();
+}
+\end{lstlisting}
+
 
 \end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

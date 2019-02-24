@@ -4,3 +4,5 @@
 *.log
 *.blg
 *.bbl
+*.out
+*.tex.bak
