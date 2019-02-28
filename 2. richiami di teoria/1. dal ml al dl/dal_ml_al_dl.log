@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6840 64-bit) (preloaded format=pdflatex 2018.12.1)  3 DEC 2018 12:54
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6840 64-bit) (preloaded format=pdflatex 2018.12.1)  4 DEC 2018 23:26
 entering extended mode
 **./dal_ml_al_dl.tex
 (dal_ml_al_dl.tex
@@ -460,21 +460,21 @@ G,.JBIG2,.JB2,.eps]
 )
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-<AI_venn_diagram.png, id=1, 813.79031pt x 606.01407pt>
+<AI_venn_diagram.png, id=1, 458.46281pt x 365.86688pt>
 File: AI_venn_diagram.png Graphic file (type png)
 <use AI_venn_diagram.png>
 Package pdftex.def Info: AI_venn_diagram.png  used on input line 41.
-(pdftex.def)             Requested size: 268.57646pt x 200.0pt.
+(pdftex.def)             Requested size: 250.61629pt x 200.0pt.
 
-Overfull \hbox (25.30705pt too wide) in paragraph at lines 41--42
+Overfull \hbox (7.34688pt too wide) in paragraph at lines 41--42
  [][] 
  []
 
-<diff_between_aprochs.png, id=2, 366.61969pt x 494.59781pt>
+<diff_between_aprochs.png, id=3, 398.99063pt x 480.29437pt>
 File: diff_between_aprochs.png Graphic file (type png)
 <use diff_between_aprochs.png>
 Package pdftex.def Info: diff_between_aprochs.png  used on input line 46.
-(pdftex.def)             Requested size: 148.2452pt x 200.0pt.
+(pdftex.def)             Requested size: 166.14421pt x 200.0pt.
 <neurone.jpg, id=4, 401.5pt x 282.05376pt>
 File: neurone.jpg Graphic file (type jpg)
 <use neurone.jpg>
@@ -484,38 +484,114 @@ Package pdftex.def Info: neurone.jpg  used on input line 57.
 
 {C:/Users/Maxxy/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <./AI_venn_d
 iagram.png> <./diff_between_aprochs.png> <./neurone.jpg>]
-<percettrone.png, id=13, 382.42876pt x 147.55125pt>
+<percettrone.png, id=14, 382.42876pt x 147.55125pt>
 File: percettrone.png Graphic file (type png)
 <use percettrone.png>
-Package pdftex.def Info: percettrone.png  used on input line 79.
+Package pdftex.def Info: percettrone.png  used on input line 80.
 (pdftex.def)             Requested size: 216.23764pt x 83.42964pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 84--92
+
+Package wrapfig Warning: Collision between wrapping environments on input line 
+89.
+
+<FDTs.png, id=15, 349.305pt x 232.61906pt>
+File: FDTs.png Graphic file (type png)
+<use FDTs.png>
+Package pdftex.def Info: FDTs.png  used on input line 92.
+(pdftex.def)             Requested size: 216.23764pt x 144.0058pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 85--95
+\T1/txr/m/n/10 sono:
+ []
+
+
+Package wrapfig Warning: Stationary wrapfigure forced to float on input line 95
+.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 95--101
 
  []
 
-<FDTs.png, id=14, 349.305pt x 232.61906pt>
-File: FDTs.png Graphic file (type png)
-<use FDTs.png>
-Package pdftex.def Info: FDTs.png  used on input line 97.
-(pdftex.def)             Requested size: 216.23764pt x 144.0058pt.
-[2 <./percettrone.png> <./FDTs.png>] (dal_ml_al_dl.aux) ) 
+LaTeX Font Info:    Try loading font information for OT1+txr on input line 102.
+
+(C:\Users\Maxxy\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\ot1txr.fd
+File: ot1txr.fd 2000/12/15 v3.1
+)
+LaTeX Font Info:    Try loading font information for U+txsya on input line 102.
+
+
+(C:\Users\Maxxy\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\utxsya.fd
+File: utxsya.fd 2000/12/15 v3.1
+)
+LaTeX Font Info:    Try loading font information for U+txsyb on input line 102.
+
+
+(C:\Users\Maxxy\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\utxsyb.fd
+File: utxsyb.fd 2000/12/15 v3.1
+)
+LaTeX Font Info:    Try loading font information for U+txmia on input line 102.
+
+
+(C:\Users\Maxxy\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\utxmia.fd
+File: utxmia.fd 2000/12/15 v3.1
+)
+LaTeX Font Info:    Try loading font information for U+txsyc on input line 102.
+
+
+(C:\Users\Maxxy\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\utxsyc.fd
+File: utxsyc.fd 2000/12/15 v3.1
+)
+<sepAndOr.png, id=16, 533.74406pt x 525.46312pt>
+File: sepAndOr.png Graphic file (type png)
+<use sepAndOr.png>
+Package pdftex.def Info: sepAndOr.png  used on input line 114.
+(pdftex.def)             Requested size: 243.78236pt x 240.0pt.
+
+Overfull \hbox (0.51295pt too wide) in paragraph at lines 114--118
+ [][] 
+ []
+
+<sepR3.png, id=17, 508.14844pt x 597.73312pt>
+File: sepR3.png Graphic file (type png)
+<use sepR3.png>
+Package pdftex.def Info: sepR3.png  used on input line 123.
+(pdftex.def)             Requested size: 204.03114pt x 240.0pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 102--130
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 102--130
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 102--130
+
+ []
+
+[2 <./percettrone.png> <./FDTs.png> <./sepAndOr.png> <./sepR3.png>] [3]
+(dal_ml_al_dl.aux) ) 
 Here is how much of TeX's memory you used:
- 5880 strings out of 492970
- 82313 string characters out of 3135855
- 165559 words of memory out of 3000000
- 9649 multiletter control sequences out of 15000+200000
- 18098 words of font info for 28 fonts, out of 3000000 for 9000
+ 6005 strings out of 492970
+ 84275 string characters out of 3135855
+ 165609 words of memory out of 3000000
+ 9741 multiletter control sequences out of 15000+200000
+ 32093 words of font info for 64 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 42i,7n,40p,799b,465s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Program Files/MiKT
-eX 2.9/fonts/enc/dvips/base/8r.enc}<C:/Users/Maxxy/AppData/Roaming/MiKTeX/2.9/f
-onts/type1/public/txfonts/rtxr.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw
-/times/utmb8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb
->
-Output written on dal_ml_al_dl.pdf (2 pages, 214190 bytes).
+ 42i,8n,40p,799b,477s stack positions out of 5000i,500n,10000p,200000b,50000s
+{C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/base/8r.enc}<C
+:/Users/Maxxy/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/rtxr.pfb><C
+:/Users/Maxxy/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/txex.pfb><C
+:/Users/Maxxy/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/txsy.pfb><C
+:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files/M
+iKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/t
+ype1/urw/times/utmri8a.pfb>
+Output written on dal_ml_al_dl.pdf (3 pages, 327289 bytes).
 PDF statistics:
- 31 PDF objects out of 1000 (max. 8388607)
+ 51 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 26 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 36 words of extra memory for PDF output out of 10000 (max. 10000000)
 
