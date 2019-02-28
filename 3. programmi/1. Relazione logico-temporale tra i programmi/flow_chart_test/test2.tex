@@ -1,0 +1,120 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[italian]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+\usepackage[left=1cm,right=1cm,top=1cm,bottom=2cm]{geometry}
+
+\usepackage{txfonts}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage{titlesec}
+\setcounter{secnumdepth}{4}
+\titleformat{\paragraph}{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\usepackage{graphicx}
+\usepackage{subcaption}
+
+\usepackage{wrapfig}
+
+%%%%%%%% per il codice c++
+\usepackage{listings}          % for creating language style
+\input{arduinoLanguage.tex}    % adds the arduino language listing
+
+%% Define an Arduino style fore use later %%
+\lstdefinestyle{myArduino}{
+  language=Arduino,
+  %% Add other words needing highlighting below %%
+  morekeywords=[1]{},                  % [1] -> dark green
+  morekeywords=[2]{FILE_WRITE},        % [2] -> light blue
+  morekeywords=[3]{SD, File},          % [3] -> bold orange
+  morekeywords=[4]{open, exists, write, SoftwareSerial},      % [4] -> orange
+}
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{siunitx} %pacchetto per le unita' di misura
+
+%%%%%%%%%%%%%%%%%%%%%% per i flowchart
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{arrows.meta}
+\tikzset{%
+  >={Latex[width=2mm,length=2mm]},
+  % Specifications for style of nodes:
+            rect/.style = {rectangle, rounded corners, draw=black,
+                           minimum width=4cm, minimum height=1cm,
+                           text centered, font=\sffamily},
+           round/.style = {ellipse, draw, draw=black,
+                           minimum width=4cm, minimum height=1cm,
+                           text centered, font=\sffamily},
+%  			prog/.style = {base, fill=blue!30},
+%   			file/.style = {base, fill=red!30},
+%    activityRuns/.style = {base, fill=green!30},
+%         process/.style = {base, minimum width=2.5cm, fill=orange!15,
+%                           font=\ttfamily},
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pagenumbering{arabic}
+\pagestyle{plain}
+
+% per non farlo anadre a capo ovunque
+\usepackage[none]{hyphenat}
+% per togliere gli ident all'inizio dei paragrafi
+\setlength{\parindent}{0pt}
+
+
+
+
+
+\begin{document}
+ 
+\section{Prefazione}
+Introduciamo i programmi con uno schema generale della relazione logico temporale tra i programmi:
+%\vspace{20pt}
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[node distance=2.5cm, align=center, every node/.style={fill=white, font=\sffamily}, align=center]
+%	\draw[help lines] (-10,-10) grid (1,1);
+% ora vanno specificate le posizioni 
+%	\node (nome_blocco) 	[tipo_blocco, parentela] 		
+%								{testo_blocco};
+	\node (prg_ard)			[rect, fill=green!30] 							
+								{programma arduino};
+	\node (prg_get_data)	[rect, right of=prg_ard, xshift=+4cm] 
+								{programma di acquisizione dati};
+	\node (file_data_kin)	[round, below of=prg_get_data, xshift=+2.2cm]	
+								{file dati kinect};
+	\node (file_data_ard)	[round, below of=prg_get_data, xshift=-2.2cm]	
+								{file dati arduino};
+	\node (prg_elab_data)	[rect, below of=prg_get_data, yshift=-2.5cm]
+								{programma di post\\ elaborazione dei dati};
+	\node (file_dataset)	[round, below of=prg_elab_data]	
+								{file del dataset};
+	\node (prg_addesr)		[rect, below of=file_dataset]
+								{programma di addestramento\\ della rete};
+	\node (file_pesi_rete)	[round, below of=prg_addesr]	
+								{file dei pesi della\\ rete addestrata};
+% per le freccie si fa
+%	\daraw[tipo_freccia] (origine) "tipo connessione" "eventuale scritta" (destinazione)			
+	\draw[blue, ultra thick, arrows={[scale=1.75,blue]<->[scale=1.75,blue]}]	
+				(prg_ard)		-- 					(prg_get_data);
+	\draw[->]	(prg_get_data)	to [in=90,out=-90]	(file_data_kin);
+	\draw[->]	(prg_get_data)	to [in=90,out=-90]	(file_data_ard);
+	\draw[->]	(file_data_kin)	to [in=90,out=-90]	(prg_elab_data);
+	\draw[->]	(file_data_ard)	to [in=90,out=-90] 	(prg_elab_data);
+	\draw[->]	(prg_elab_data)	-- 					(file_dataset);
+	\draw[->]	(file_dataset)	-- 					(prg_addesr);
+	\draw[->]	(prg_addesr)	-- 					(file_pesi_rete);
+%
+\end{tikzpicture}
+\caption{l'IMU utilizzata in questo progetto}
+\end{figure}
+\\
+cjusiaSISACHJENCL JWEKNFKC ENFWEJFWE KJJKj jee  e e e e
+
+\end{document}

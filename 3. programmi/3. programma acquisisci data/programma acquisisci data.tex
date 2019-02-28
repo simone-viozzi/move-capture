@@ -1,0 +1,937 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[italian]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+\usepackage[left=1cm,right=1cm,top=1cm,bottom=2cm]{geometry}
+
+\usepackage{txfonts}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage{titlesec}
+\setcounter{secnumdepth}{4}
+\titleformat{\paragraph}{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+%per le immagini
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{wrapfig}
+
+%per i link
+\usepackage{hyperref} 
+
+%%%%%%%% per il codice c++
+\usepackage{textcomp}
+\usepackage{listings}          % for creating language style
+\usepackage{listingsutf8}
+\input{arduinoLanguage.tex}    % adds the arduino language listing
+\definecolor{commentgreen}{RGB}{2,112,10}
+\definecolor{eminence}{RGB}{108,48,130}
+\definecolor{weborange}{RGB}{255,165,0}
+\definecolor{frenchplum}{RGB}{129,20,83}
+
+
+%% Define an Arduino style fore use later %%
+\lstdefinestyle{myArduino}{
+  language=Arduino,
+    %% Add other words needing highlighting below %%
+    morekeywords=[1]{},                  % [1] -> dark green
+    morekeywords=[2]{FILE_WRITE},        % [2] -> light blue
+    morekeywords=[3]{SD, File},          % [3] -> bold orange
+    morekeywords=[4]{open, exists, write, SoftwareSerial},      % [4] -> orange
+    frame=tb,    
+    inputencoding=utf8,
+    extendedchars=true,
+    literate={è}{{\`{e}}}{1},
+    breaklines=true,  
+}
+
+\lstdefinestyle{mycpp}{
+    language=C++,
+    inputencoding=utf8,
+    extendedchars=true,
+    literate={è}{{\`{e}}}{1},
+    %escapeinside={(*******}{*******)}
+    escapechar=\£,
+    %escapeinside=~~,
+    frame=tb,
+    tabsize=2,
+    mathescape=false,
+    breaklines=true,                    % wordwrapping
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},         
+    basicstyle=\fontsize{9}{11}\ttfamily,
+    backgroundcolor=\color{light-gray},
+    xleftmargin=.25in,
+    showstringspaces=false,
+    numbers=left,                    
+    numbersep=5pt,                   
+    %numberstyle=\color{arduinoGrey},    
+    %stepnumber=2, 
+    %upquote=true,
+    commentstyle=\color{commentgreen},
+    keywordstyle=\color{eminence},
+    stringstyle=\color{red},
+    basicstyle=\small\ttfamily, % basic font setting
+    emph={int,char,double,float,unsigned,void,bool},
+    emphstyle={\color{blue}},
+    % keyword highlighting
+    classoffset=1, % starting new class
+    otherkeywords={>,<,.,;,-,!,=,~},
+    morekeywords={>,<,.,;,-,!,=,~},
+    keywordstyle=\color{weborange},
+    classoffset=0,
+}
+
+
+\lstdefinestyle{myoutput}
+{
+    inputencoding=utf8,
+    extendedchars=true,
+    literate={è}{{\`{e}}}{1},
+    tabsize=2,
+    frame=tb,
+    breaklines=true,                    % wordwrapping
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},         
+    basicstyle=\fontsize{9}{11}\ttfamily,
+    backgroundcolor=\color{light-gray},
+    xleftmargin=.25in,
+    showstringspaces=false,
+    numbers=left,                    
+    numbersep=5pt, 
+}
+%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{siunitx} %pacchetto per le unita' di misura
+
+%%%%%%%%%%%%%%%%%%%%%% per i flowchart
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{arrows.meta}
+\tikzset{%
+    >={Latex[width=2mm,length=2mm]},
+      % Specifications for style of nodes:
+         declare/.style = {trapezium,draw=black, minimum width=4cm, minimum height=1cm, 
+                                trapezium right angle=-70, trapezium left angle=70,
+                                minimum width=4cm, minimum height=1cm,
+                                text centered, font=\sffamily},
+           start/.style = {ellipse, draw, draw=black, minimum width=4cm, 
+                                minimum height=1cm, text centered, font=\sffamily},
+            cond/.style = {diamond, aspect=2, draw, draw=black,
+                                minimum width=4cm, minimum height=1cm,
+                                text centered, font=\sffamily},
+            rect/.style = {rectangle, draw, draw=black,
+                                minimum width=4cm, minimum height=1cm,
+                                text centered, font=\sffamily},
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+
+\pagenumbering{arabic}
+\pagestyle{plain}
+
+% per non farlo anadre a capo ovunque 
+% va in conflitto con quello che lo fa andare a capo nel codice quindi attenzione <--------
+%\usepackage[none]{hyphenat}
+
+
+% per togliere gli ident all'inizio dei paragrafi
+\setlength{\parindent}{0pt}
+
+
+
+
+
+
+\begin{document}
+
+\subsection{programma per l'acquisizione dei dati dal kinect e da arduino}
+Questo programma \`e stato usato per acquisire i dati dai dispositivi e scriverli in dei file di testo. Per poter lavorare meglio abbiamo separato il programma principale in diverse librerie con scopi specifici, la lista completa delle librerie usate \`e:
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+// libreria usata da visual studio, da togliere in caso si usi un altro ide
+#include "pch.h"
+
+// librerie standard per i file stringhe e altro
+#include <cstddef>
+#include <cstdlib>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <ostream>
+#include <string>
+#include <math.h>
+
+// librerie create da noi
+#include "real_time.h"
+#include "kin_file_manager.h"
+#include "ard_file_manager.h"
+#include "data_structure.h"
+
+// libreria per usare i thread
+#include <boost/thread.hpp>
+
+// altre librerie per log, alcuni tipi di dato, un buffer FIFO
+#include <boost/log/core.hpp>
+#include <boost/call_traits.hpp>
+#include <boost/circular_buffer.hpp>
+#include <boost/container/vector.hpp>
+
+// altre librerie per il logger
+#include <boost/log/attributes.hpp>
+#include <boost/log/attributes/scoped_attribute.hpp>
+#include <boost/log/expressions.hpp>
+#include <boost/log/sinks/sync_frontend.hpp>
+#include <boost/log/sinks/text_ostream_backend.hpp>
+#include <boost/log/sources/basic_logger.hpp>
+#include <boost/log/sources/record_ostream.hpp>
+#include <boost/log/sources/severity_logger.hpp>
+#include <boost/log/utility/setup/common_attributes.hpp>
+#include <boost/log/utility/setup/console.hpp>
+#include <boost/log/utility/setup/file.hpp>
+
+#include <boost/smart_ptr/make_shared_object.hpp>
+#include <boost/smart_ptr/shared_ptr.hpp>
+
+// altre librerie per i thread 
+#include <boost/thread/condition_variable.hpp>
+#include <boost/thread/mutex.hpp>
+#include <boost/thread/thread.hpp>
+
+// librereria per il tempo
+#include <boost/date_time/posix_time/posix_time.hpp>
+
+// libreria fatta da noi per gestire la seriale
+#include "Serial_handler.h"
+
+// librerie di Windows e kinect 
+#include <Windows.h>
+#include <Kinect.h>
+#include <Shlobj.h>
+
+// namespace standard
+using namespace std;
+\end{lstlisting}
+%
+%
+Le librerie fatte da noi sono: "real\_time.h", "kin\_file\_manager.h", "ard\_file\_manager.h", "data\_structure.h", "Serial\_handler.h". 
+In "real\_time.h" ci sono alcune funzioni per prendere il tempo e misurarlo:
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+#pragma once
+
+#ifndef _REAL_TIME_H_
+#define _REAL_TIME_H_
+
+#include <boost/chrono.hpp>
+#include <boost/timer/timer.hpp>
+
+class real_time
+{
+private:
+  boost::timer::cpu_timer timer;
+  boost::timer::cpu_times t;
+
+public:
+  /// <summary>
+  /// start the time counting
+  /// </summary>
+  /// <returns></returns>
+  void start();
+
+  /// <summary>
+  /// return enlapsed time in millisecond
+  /// </summary>
+  /// <returns></returns>
+  float stop();
+
+  /// <summary>
+  /// get the time in millisecond
+  /// </summary>
+  /// <returns></returns>
+  uint64_t get_curr_time();
+
+};
+
+#endif // #ifndef _REAL_TIME_H_
+\end{lstlisting}
+%
+%
+In "kin\_file\_manager.h" ci sono le funzioni per gestire il file di testo relativo al kinect:
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+#pragma once
+
+#ifndef _KIN_FILE_MANAGER_H_
+#define _KIN_FILE_MANAGER_H_
+
+#include <iostream>
+#include <ostream>
+#include <fstream>
+#include <string>
+
+// in questa libreria sono dichiarate le varie strutture dati
+#include "data_structure.h"
+
+class kin_file_manager
+{
+private:
+  std::fstream f;
+  std::ios::_Openmode mode;
+  unsigned long int line_id = 0;
+
+public:
+  // il costruttore provvede a settare il nome del file e la modalit\`a di apertura
+  kin_file_manager(std::string file_name, std::ios::_Openmode mode);
+
+  // questa funzione provvede a scrivere un singolo blocco di dati nel file
+  void write_data_line(kinect_data dat);
+
+  // funzione che legge un blocco di dati dal file e lo sposta nella struttura dati
+  // se si \`e raggiunta la fine del file la funzione ritorna 0, altrimenti ritorna 1. 
+  bool read_data_line(kinect_data* dat);
+
+  // distruttore della classe, chiude il file
+  ~kin_file_manager()
+  {
+  f.close();
+  }
+
+  // funzione che chiude il file
+  void close()
+  {
+  f.close();
+  }
+
+};
+
+#endif // #ifndef _KIN_FILE_MANAGER_H_
+\end{lstlisting}
+%
+%
+Stessa cosa per "ard\_file\_manager.h" che contiene le funzioni per la gestione del file di testo relativo ai dati di arduino:
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+#pragma once
+
+#ifndef _ARD_FILE_MANAGER_
+#define _ARD_FILE_MANAGER_
+
+#include <iostream>
+#include <ostream>
+#include <fstream>
+#include <string>
+#include "data_structure.h"
+
+
+class ard_file_manager
+{
+private:
+  std::fstream f;
+  std::ios::_Openmode mode;
+  unsigned long int line_id = 0;
+
+public:
+  ard_file_manager(std::string file_name, std::ios::_Openmode mode);
+
+  void write_data_line(arduino_data dat);
+
+  bool read_data_line(arduino_data* dat);
+
+  ~ard_file_manager()
+  {
+    f.close();
+  }
+
+  void close()
+  {
+    f.close();
+  }
+};
+
+#endif //#ifndef _ARD_FILE_MANAGER_
+\end{lstlisting}
+Questa libreria \`e strutturata in modo totalmente simile alla precedente con l'unica differenza che la struttura dati utilizzata \`e relativa ad arduino e non al kinect.
+\\
+%
+%
+La libreria "data\_structure.h" \`e fondamentale e definisce le strutture dati utilizzate nel resto del programma:
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+#pragma once
+
+
+#ifndef _DATA_STRUCTURE_H_
+#define _DATA_STRUCTURE_H_
+
+#include <iostream>
+#include <string>
+#include <boost/array.hpp>
+
+////////// massiiiiiiiiiiiiiiiiii <------------------------------------------------
+// struttura dati per gestire i dati provenienti dal kinect
+struct kinect_data
+{
+  static const int number_of_joints = 3;
+
+  // sottostruttura che contiene i dati di ogni giunto: il suo numero, il giunto attaccato ad esso, la posizione e l'angolo rispetto all'altro giunto
+  struct joit_data
+  {
+    int joint_name = -1;
+    int to_joint = -1;
+    float position[3] = { 0, 0, 0 };
+    float angle[3] = { 0, 0, 0 };
+  };
+
+  // <-------------------------------------------------------massiiii
+  int needed_joint[number_of_joints] = { 8, 9, 10 };
+  int to_joint[24] = { -1, -1, -1, -1, -1, -1, -1, -1, 9, 10, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+  int to_ref_joint[24] = { -1, -1, -1, -1, -1, -1, -1, -1, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }; // tabella di accesso (chiave numero joint kinect) -> (restituisce l-indice del numero del giunto in needed_joint)    
+  float ref_Ang_x[number_of_joints] = { 0, 0, 0 }; //per  8, 9
+  float ref_Ang_y[number_of_joints] = { 0, 0, 0 }; //per 8, 9
+  float ref_Ang_z[number_of_joints] = { 180, 180, 0 }; //per 8, 9
+  float mul_fctor_x[number_of_joints] = { 0, 0, 0 }; //per 8, 9
+  float mul_fctor_y[number_of_joints] = { 1, 1, 0 }; //per 8, 9
+  float mul_fctor_z[number_of_joints] = { 1, 1, 0 }; //per 8, 9
+
+  //int needed_joint[number_of_joints] = { 4, 5, 6, 8, 9, 10, 1, 20 };
+  //int to_joint[24] = { -1, 20, -1, -1, 5, 6, -1, -1, 9, 10, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, };
+  //int to_ref_joint[24] = { -1, 6, -1, -1, -1, 1, 2, -1, 3, 4, 5, -1, -1, -1, -1, -1, -1, -1, -1, -1, 7, -1, -1, -1 }; // tabella di accesso (chiave numero joint kinect)  
+  //float ref_Ang_x[number_of_joints] = { 0, 0, 0, 0, 0, 0, -90, 0 }; //per 4, 5, 8, 9
+  //float ref_Ang_y[number_of_joints] = { 0, 0, 0, 0, 0, 0, 90, 0 }; //per 4, 5, 8, 9
+  //float ref_Ang_z[number_of_joints] = { 180, 180, 0, 180, 180, 0, 270, 0 }; //per 4, 5, 8, 9
+  //float mul_fctor_x[number_of_joints] = { 0, 0, 0, 0, 0, 0, 0, 0 }; //per 4, 5, 8, 9
+  //float mul_fctor_y[number_of_joints] = { 1, 1, 0, 1, 1, 0, 0, 0 }; //per 4, 5, 8, 9
+  //float mul_fctor_z[number_of_joints] = { 1, 1, 0, 1, 1, 0, 0, 0 }; //per 4, 5, 8, 9
+
+  joit_data needed_joints[number_of_joints];
+
+  // tempo esatto in cui i dati sono stati acquisiti
+  uint64_t frame_time = 0;
+
+  // questo che era? <-----------------------------------
+  uint64_t contatore = 0;
+
+  // funzione per verificare se il frame acquisito \`e parziale o completo 
+  bool full_frame();
+
+  // funzione per stampare i dati memorizzati
+  void print_data();
+
+  float jointAngleX(float *P1, float *P2);
+
+  float jointAngleY(float *P1, float *P2);
+
+  float jointAngleZ(float *P1, float *P2);
+
+  void updateAngles();
+
+  // funzione per convertire il numero del giunto in una stringa
+  std::string joint_Enum_ToStr(int n, std::string language);
+};
+
+// struttura dati per gestire i dati provenienti da arduino
+struct arduino_data
+{
+  // variabili che rappresentano i dati: dell'accelerometro, del giroscopio, del magnetometro e la temperatura
+  float acc_xyz[3];
+  float gy_xyz[3];
+  float magn_xyz[3];
+  float temp;
+
+  // tempo esatto di acquisizione dei dati
+  uint64_t frame_time = 0;
+
+  // ?
+  uint64_t contatore = 0;
+
+  // funzione che permette di stampare il set di dati attualmente immagazzinato a schermo 
+  void print_data();
+};
+
+// struttura template che gestisce un set di dati del dataset
+template<typename type_in, std::size_t N, typename type_out, std::size_t M>
+struct dataset_data
+{
+  boost::array<type_in, N> in;
+  boost::array<type_out, M> out;
+
+  // stamapa i dati attualmente immagazzinati
+  void print_data();
+};
+
+#endif //#ifndef _DATA_STRUCTURE_H_
+\end{lstlisting}
+%
+%
+Infine l'ultima libreria fatta da noi ospita la classe che gestisce la seriale per la comunicazione tramite bluetooth con arduino:
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+#pragma once
+
+#ifndef _SERIAL_HADLER_H_
+#define _SERIAL_HADLER_H_
+
+#include <iostream>
+#include <string>
+#include <boost/asio.hpp> 
+#include <boost/bind.hpp>
+#include <boost/asio/serial_port.hpp> 
+
+
+class Serial
+{
+private:
+  boost::asio::serial_port* port;
+
+  union Scomp_float
+  {
+    float n_float;
+    uint32_t n_int;
+    uint8_t n_bytes[4];
+  };
+
+  union Scomp_msg_tag
+  {
+    uint16_t n_16b;
+    uint8_t n_bytes[2];
+  };
+
+public:
+  Serial(std::string com);
+  
+  /// <summary>
+  /// sincronizza arduino ed il pc
+  /// </summary>
+  void sinc();
+
+  /// <summary>
+  /// invia un floar ad arduino
+  /// </summary>
+  /// <param name="n"></param>
+  void send_float(float n);
+
+  /// <summary>
+  /// riceve un float da arduino
+  /// </summary>
+  /// <returns></returns>
+  float receive_float();
+
+  void send_char(char ch);
+
+  char receive_char();
+
+  /// <summary>
+  /// receive the data of acc, gy, magn from arduino
+  /// </summary>
+  /// <param name="acc_xyz"></param>
+  /// <param name="g_xyz"></param>
+  /// <param name="magn"></param>
+  /// <param name="temp"></param>
+  /// <returns>
+  /// -> 0 if the trasmission is good
+  /// -> 1 if it falied
+  /// </returns>
+  int receive_data(float* acc_xyz, float* g_xyz, float* magn, float* temp);
+
+  ~Serial()
+  {
+    port->close();
+  }
+};
+
+#endif // #ifndef _SERIAL_HADLER_H_
+\end{lstlisting}
+%
+%
+Oltre a quste classi/strutture integrate in delle librerie separate ci sono altre classi/altro nel main, infatti abbiamo: "namespace logger", "class bounded\_buffer", "class kinect\_class", "class arduino\_class", "class ard\_handler", "class kin\_handler", "void start\_aquire\_data" e "void acquire\_data".
+%
+%
+\\
+Per prima cosa \`e bene spiegare il logger, che viene usato nel resto del programma. Questa libreria serve esclusivamente per il debug e ha attributi specifici per lavoare con pi\`u thread contemporaneamente in modo asincrono. Serve fondamentalmente a stampare un testo a schermo, ma una volta settate le impostazioni si pu\`o aggiungere a quasto testo il nome del thread il tempo esatto in cui il messaggio viene stampato ed evitare che 2 thread stampino contemporaneamente nella console (se lo facessero il testo si mischierebbe e non si capirebbe nulla). La documentazione approfondita su come funziona questa libreria si pu\`o trovare \href{https://www.boost.org/doc/libs/1_69_0/libs/log/doc/html/index.html#log.moti}{qui}. Nel nostro caso i settaggi usati sono: un id che identifica il thread, un tag che identifica il nome del trhead, un tag che identifica il livello di severit\`a, il tempo assoluto e la stringa da stampare. Ad esempio se questa riga \`e posta all'inizio del main e il main thread viene chiamato "main":
+%
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+BOOST_LOG_SEV(slg, logger::normal) << "hello log";
+\end{lstlisting}
+%
+Allora viene stampato a schermo un messaggio formattato in questo modo:
+%
+\begin{lstlisting}[style=myoutput, caption=librerie usate, captionpos=b]
+id->(0x24a8): main < normal >   time->[00:00:00.000404]  -> hello log
+\end{lstlisting}
+%
+Ci\`o consente di debuggare facilmente operazioni asincrone su pi\`u trhead.
+Il codice relativo hai settaggi necessari per ottenere quel tipo di formattazione \`e il "namespace logger":
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+namespace logger
+{
+  // definizione dei divesti livelli di severit\`a
+  enum severity_level
+  {
+    normal,
+    warning,
+    error,
+    critical
+  };
+  
+  // definizione degli attributi usati
+  BOOST_LOG_ATTRIBUTE_KEYWORD(severity, "Severity", severity_level)
+  BOOST_LOG_ATTRIBUTE_KEYWORD(tag_attr, "Tag", std::string)
+  BOOST_LOG_ATTRIBUTE_KEYWORD(timeline, "Timeline", boost::log::attributes::timer::value_type)
+  BOOST_LOG_ATTRIBUTE_KEYWORD(tread_id, "Tread_id", boost::thread::id)
+  BOOST_LOG_ATTRIBUTE_KEYWORD(tread_name, "tread_name", std::string)
+
+  // provvede a sostituire il numero del severity_level con la relativa stringa
+  std::ostream& operator<< (std::ostream& strm, severity_level level){...}
+
+  // inizializzazione della formattazione del logger
+  void init(){...}
+
+  // definizione dei vari parametri
+  boost::log::sources::severity_logger< severity_level > f_init(){...}
+  void attr_thread(...){...}
+  void attr_time(...){...}
+  void attr_tag(...){...}
+  void attr_thread_name(...){...}
+};
+\end{lstlisting}
+Inoltre per funzionare correttamente richiede che all'inizio del main siano posti alcuni settaggi:
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+// inizializzazione logger
+logger::init();
+auto slg = logger::f_init();
+attr_thread(&slg);
+attr_time(&slg);
+
+// imposto il nome del main trhead in "main"
+logger::attr_thread_name(&slg, "main");
+\end{lstlisting}
+%
+%
+Un altra classe usata nel resto del programma \`e "class bounded\_buffer", questa classe ospita funzioni specifiche per immagazzinare temporaneamente dei dati gestendone l'ingresso e l'uscita dal buffer. Fondamentalmente costituisce un registro FIFO indipendente dal tipo di dato che si utilizza. Questo tipo di buffer viene comunemente usato in caso si ha la struttura thread che produce dati - thread che consuma dati: il produttore acquisisce i dati e li inserisce nel buffer, il consumatore estrae i dati e li processa. La dimensione del buffer viene specificata quando lo si inizializza e deve essere sufficentemente grande in modo da garantire la non perdita di dati e il non rallentamento del trhead produttore. Nel nostro caso abbiamo adottato questo tipo di buffer per poter garantire l'asincronicit\`a delle acquisizioni tra arduino e il kinect, cos\`i facendo si garantisce la massima velocit\`a tra le acquisizioni dei dati. Il codice relativo a questa classe \`e stato quasi interamente presto dagli esempi della libreria boost, \href{https://www.boost.org/doc/libs/1_69_0/doc/html/circular_buffer/examples.html}{qui} ed \`e:
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+template <class T>
+class bounded_buffer
+{
+public:
+
+  typedef boost::circular_buffer<T> container_type;
+  typedef typename container_type::size_type size_type;
+  typedef typename container_type::value_type value_type;
+  typedef typename boost::call_traits<value_type>::param_type param_type;
+
+  // nel costruttore si imposta la capacit\`a del buffer
+  explicit bounded_buffer(size_type capacity) : m_unread(0), m_container(capacity) {}
+
+  // questa funzione permette di aggiungere un elemeto al buffer
+  void push_front(param_type item){...}
+
+  // questa funzione permette di estrarre un elemento dal buffer 
+  void pop_back(value_type* pItem){...}
+
+  // restituisce la percentuale di riempimento del buffer
+  float percentage_of_filling(){...}
+
+  // svuota il buffer
+  void flush(){...}
+
+private:
+  bounded_buffer(const bounded_buffer&);              // Disabled copy constructor
+  bounded_buffer& operator = (const bounded_buffer&); // Disabled assign operator
+
+  bool is_not_empty() const { return m_unread > 0; }
+
+  bool is_not_full() const { return m_unread < m_container.capacity(); }
+
+  size_type m_unread;
+  container_type m_container;
+  boost::mutex m_mutex;
+  boost::condition_variable m_not_empty;
+  boost::condition_variable m_not_full;
+};
+\end{lstlisting}
+%
+%
+Di seguito troviamo i thread producer "kinect\_class" e "arduino\_class".
+La classe "kinect\_class" provvede a leggere i dati dal kinect ed aggiungerli al suo corrispettivo registro FIFO. L'estrazione dei dati dal kinect \`e stata per la maggior parte copiata dall'esempio body basic D2D integrato nell'\href{https://www.microsoft.com/en-us/download/details.aspx?id=44561}{sdk browser} fornito da microsoft. Il codice relativo a questa classe \`e:
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+class kinect_class
+{
+public:
+
+  // Current Kinect
+  IKinectSensor* m_pKinectSensor;
+  ICoordinateMapper* m_pCoordinateMapper;
+
+  // Body reader
+  IBodyFrameReader* m_pBodyFrameReader;
+
+  real_time t;
+
+  bounded_buffer<kinect_data>* FIFO_kin;
+
+  kinect_class(bounded_buffer<kinect_data>* data_FIFO){...}
+
+  void start()
+  {
+    
+    bool flag = false;
+    while (true)
+    {
+      {...}
+      
+      // prendo il tempo
+      uint64_t t1 = t.get_curr_time();  
+      
+      // acquisisco i dati e li sposto in data
+      flag = Update(&data);
+
+      // se l'acquisizione \`e andata a buon fine procedo
+      if (flag)
+      {
+        // prendo un altra volta il tempo
+        uint64_t t2 = t.get_curr_time();
+        // cos\`i da poter impostare che il tempo in cui sono stati acquisiti i dati sia 
+        // la media tra il tempo prima di cominciare l'acquisizione ed il tempo dopo che essa \`e finita
+        data.frame_time = (t1 + t2) / 2;
+
+        // inserisco i dati cos\`i acquisiti nel registro fifo
+        FIFO_kin->push_front(data);
+        
+        // faccio aspettare un po di tempo a questo trhead perch\`e altrimenti il kinect da errore, 
+        // dato che non supporta un acquisizione a pi\`u di 30fps
+        boost::this_thread::sleep(boost::posix_time::milliseconds(35));  al kinect scoppia
+
+      }
+
+      {...}
+
+    }
+  }
+
+  // inizializza il kinect, ritorna 1 se ha avuto successo, 0 altrimenti
+  int InitializeDefaultSensor(){...}
+
+  // acquisisce i dati e li passa alla funzione per processarli
+  bool Update(kinect_data* data)
+  {
+    {...}
+    
+    flag = ProcessBody(BODY_COUNT, ppBodies, data);
+    
+    {...}
+    
+    return flag;
+    
+  }
+
+  // questa funzione provvede a spostare i dati da joints a data sistemandoli nella loro struttura dati, 
+  // una spiegazione di come ci\`o viene fatto verra data nel capitolo successivo
+  bool handle_data(Joint* joints, kinect_data* data){...}
+  
+
+  // quetsta funzione separa le diverse persone rilevate e trasferisce le informazioni 
+  // relative hai giunti della prima persona alla funzione handle_data
+  bool ProcessBody(int nBodyCount, IBody** ppBodies, kinect_data* data)
+  {
+    {...}
+    
+    for (int i = 0; i < nBodyCount; ++i)
+    {
+      {...}
+      
+      Joint joints[JointType_Count];
+
+      hr = pBody->GetJoints(_countof(joints), joints);
+      
+      return handle_data(joints, data);
+          
+      {...}
+      
+    }
+    
+    {...}
+  }
+
+  // provvede a spegnere il kinect e deallocare le sue risorse nel caso la classe venga distrutta
+  ~kinect_class(){...}
+  template<class Interface>
+  inline void SafeRelease(Interface *& pInterfaceToRelease){...}
+
+};
+\end{lstlisting}
+%
+%
+La classe "arduino\_class" provvede a caricare continuamente i dati provenienti dal kineck nel registro fifo, infatti la funzione "start" viene lanciata come thread e continua a caricare i dati fino al termine del programma.
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+class arduino_class
+{
+public:
+  Serial* ser;
+  real_time t;
+  bounded_buffer<arduino_data>* FIFO_ard;
+
+  // il costruttore provvede ad inizializzare la seriale e sincronizzare i 2 dispositivi
+  arduino_class(bounded_buffer<arduino_data>* data_FIFO, string com_port)
+  {
+    ser = new Serial(com_port);
+    cout << "serial ok" << endl;
+    FIFO_ard = data_FIFO;
+    ser->sinc();
+  }
+
+  // questa funzione viene lanciata all'avvio del thread e provvede ad acquisire i dati ed inserirli nel registro fifo
+  void start()
+  {
+    while (true)
+    {
+      arduino_data data;
+      
+      uint64_t t1 = t.get_curr_time();
+      ser->receive_data(data.acc_xyz, data.gy_xyz, data.magn_xyz, &data.temp);
+      uint64_t t2 = t.get_curr_time();
+
+	  // per ottenere un accurata misurazione del tempo viene preso prima e dopo l'acquisizione e poi fatta la media dei valori ottenuti
+      data.frame_time = (t1 + t2) / 2;
+
+      FIFO_ard->push_front(data);
+    }
+  }
+};
+\end{lstlisting}
+%
+%
+Dopo i 2 thread producer si hanno i 2 thread consumer: "class ard\_handler" e "class kin\_handler", che si occupano rispettivamente di salvare su file di testo le informazioni di arduino e del kinect. \\ 
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+/// <summary>
+/// handle the data from arduino and write it on a file
+/// </summary>
+class ard_handler
+{
+private:
+  bounded_buffer<arduino_data>* ard;
+  ard_file_manager* f;
+
+public:
+  // il costruttore provvede ad inizializzare la classe per gestire i file di testo di arduino
+  ard_handler(bounded_buffer<arduino_data>* ard, string file_name)
+  {
+    this->ard = ard;
+    f = new ard_file_manager(file_name, std::ios::out);
+  }
+
+  // questa funzione \`e quella che viene effettivamente lanciata all'avvio del thread e provvede a scaricare il buffer scrivendo i dati sul file fino al raggiungimento della quota predichiarata "tot_esempi"
+  void start()
+  {
+	// inizializzazione logger
+    auto slg = logger::f_init();
+    attr_thread(&slg);
+    logger::attr_thread_name(&slg, "ard_handler");
+
+    BOOST_LOG_SEV(slg, logger::normal) << "hello log";
+
+    for (int i = 0; i < tot_esempi; i++)
+    {
+      arduino_data data_ard;
+      ard->pop_back(&data_ard);
+
+      f->write_data_line(data_ard);
+
+    }
+    
+	// segnalo sulla console qunado il thread ha finito il suo lavoro
+    BOOST_LOG_SEV(slg, logger::normal) << "end";
+  }
+};
+\end{lstlisting}
+%
+%
+La classe "kin\_handler" esegue esattamente le stesse operazioni della precedente con la sola differenza che usa "kin\_file\_manager" al posto di "ard\_file\_manager".
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+/// <summary>
+/// handle the data from the kinect and write it in the file
+/// </summary>
+class kin_handler
+{
+private:
+  bounded_buffer<kinect_data>* kin;
+  kin_file_manager* f;
+
+public:
+  kin_handler(bounded_buffer<kinect_data>* kin, string file_name){...}
+
+  void start(){...}
+};
+\end{lstlisting}
+%
+%
+Dopo tutte queste classi si hanno 2 funzioni che si occupano di inizializzare le altre classi, lanciare tutti i thread neccessari ed acquisire dall'utente i nomi dei file etc.
+
+
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+/// <summary>
+/// ok
+/// </summary>
+void start_aquire_data(string out_ard, string out_kin, string com_port)
+{
+  auto slg = logger::f_init();
+  attr_thread(&slg);
+  logger::attr_thread_name(&slg, "main");
+
+  bounded_buffer<arduino_data> data_FIFO_ard(20);
+  bounded_buffer<kinect_data> data_FIFO_kin(20);
+
+  arduino_class a(&data_FIFO_ard, com_port);
+  kinect_class k(&data_FIFO_kin);
+
+  ard_handler a_h(&data_FIFO_ard, out_ard);
+  kin_handler k_h(&data_FIFO_kin, out_kin);
+
+  BOOST_LOG_SEV(slg, logger::normal) << "costructor end" << std::endl;
+
+  boost::thread ard([&a]() { a.start(); });
+  boost::thread kin([&k]() { k.start(); });
+
+  BOOST_LOG_SEV(slg, logger::normal) << "producer thread launced" << std::endl;
+
+  boost::thread ard_h([&a_h]() { a_h.start(); });
+  boost::thread kin_h([&k_h]() { k_h.start(); });
+
+  BOOST_LOG_SEV(slg, logger::normal) << "consumer thread launched" << std::endl;
+
+  kin.join();
+  ard.join();
+  kin_h.join();
+  ard_h.join();
+}
+\end{lstlisting}
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

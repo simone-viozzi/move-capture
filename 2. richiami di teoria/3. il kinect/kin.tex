@@ -1,5 +1,5 @@
 \documentclass[10pt,a4paper]{article}
-\usepackage[utf8]{inputenc}
+
 \usepackage[italian]{babel}
 \usepackage{amsmath}
 \usepackage{amsfonts}
@@ -7,7 +7,7 @@
 
 \usepackage[left=1cm,right=1cm,top=1cm,bottom=2cm]{geometry}
 
-\usepackage{blindtext}
+\usepackage{txfonts}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 
@@ -21,8 +21,15 @@
 
 \usepackage{wrapfig}
 
+\usepackage{siunitx}
+
 \pagenumbering{arabic}
 \pagestyle{plain}
+
+% per non farlo anadre a capo ovunque
+\usepackage[none]{hyphenat}
+% per togliere gli ident all'inizio dei paragrafi
+\setlength{\parindent}{0pt}
 
 \begin{document}
 
