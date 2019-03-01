@@ -104,6 +104,8 @@
     numbersep=5pt, 
 }
 %%%%%%%%%%%%%%%%%%%%%%%
+
+
 \usepackage{siunitx} %pacchetto per le unita' di misura
 
 %%%%%%%%%%%%%%%%%%%%%% per i flowchart
@@ -866,40 +868,89 @@ Dopo tutte queste classi si hanno 2 funzioni che si occupano di inizializzare le
 
 
 \begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
-/// <summary>
-/// ok
-/// </summary>
 void start_aquire_data(string out_ard, string out_kin, string com_port)
 {
+  // in inizializzo il logger per questa funzione
   auto slg = logger::f_init();
   attr_thread(&slg);
   logger::attr_thread_name(&slg, "main");
 
+  // dichiaro i 2 buffer FIFO
   bounded_buffer<arduino_data> data_FIFO_ard(20);
   bounded_buffer<kinect_data> data_FIFO_kin(20);
 
+  // chiamo i costruttori delle classi che gestiscono il kinect e arduino
+  // al costruttore di arduino gli devo passare la com a cui il bluetooth \`e collegato
   arduino_class a(&data_FIFO_ard, com_port);
   kinect_class k(&data_FIFO_kin);
 
+  // chiamo i costruttori delle classi per la scrittura nei file di testo
   ard_handler a_h(&data_FIFO_ard, out_ard);
   kin_handler k_h(&data_FIFO_kin, out_kin);
 
   BOOST_LOG_SEV(slg, logger::normal) << "costructor end" << std::endl;
 
+  // lancio i thread che "producono i dati"
   boost::thread ard([&a]() { a.start(); });
   boost::thread kin([&k]() { k.start(); });
 
   BOOST_LOG_SEV(slg, logger::normal) << "producer thread launced" << std::endl;
 
+  // lancio i thread che "consumnano dati"
   boost::thread ard_h([&a_h]() { a_h.start(); });
   boost::thread kin_h([&k_h]() { k_h.start(); });
 
   BOOST_LOG_SEV(slg, logger::normal) << "consumer thread launched" << std::endl;
 
+  // aspetto all'infinito (finch\`e il programma non viene chiuso
   kin.join();
   ard.join();
   kin_h.join();
   ard_h.join();
+}
+\end{lstlisting}
+%
+%
+infine c'\`e la funzione che si occupa di acquisire i dati dall'utente e passarli alla funzione appena vista.
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+void acquire_data()
+{
+  string ard_file_mane = "";
+  string kin_file_mane = "";
+  string arduino_com_port = "";
+
+  // acquisisco il nome dei 2 file che conterranno i dati di arduino e i dati del kinect
+  cout << "insert the file names: " << endl << "\t arduino -> ";
+  std::getline(std::cin, ard_file_mane);
+  cout << "\t kinekt -> ";
+  std::getline(std::cin, kin_file_mane);
+
+  // acquisisco il numero della com a cui \`e collegato il bluetooth del computer 
+  cout << "insert the arduino com port -> : ";
+  std::getline(std::cin, arduino_com_port);
+
+  // lancio la funzione passandogli i dati appena acquisiti
+  start_aquire_data(ard_file_mane, kin_file_mane, arduino_com_port);
+}
+\end{lstlisting}
+%
+%
+Infine il main chiama semplicemente la funzione appena trattata.
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+int main()
+{
+  logger::init();
+
+  auto slg = logger::f_init();
+  attr_thread(&slg);
+  attr_time(&slg);
+  logger::attr_thread_name(&slg, "main");
+
+  BOOST_LOG_SEV(slg, logger::normal) << "hello log";
+
+  acquire_data();
+
+  return 0;
 }
 \end{lstlisting}
 
