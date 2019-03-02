@@ -128,18 +128,139 @@ P - potenziale del neurone\\
 \end{figure}
 \\ \\
 
-\subsubsection*{Il problema dello XOR}
- 
 \subsubsection*{Le reti multi-strato e la separazione non lineare} 
-Le reti multi strato sono composte da strati di percettroni, interconnessi tra loro in modo che gli output degli strati precedenti siano connessi con gli input dei percettorini successivi.
- 
+Le reti multi-strato sono composte da strati di percettroni, interconnessi tra loro in modo che gli output degli strati precedenti siano connessi con gli input dei percettroni successivi. Tale struttura "profonda" permette di rappresentare funzioni non linerai molto complesse, tanto più sono gli strati della rete.\\
+Uno degli esempi che meglio chiarisce questa problematica è la funzione xor nel seguente esempio, la quale per semplicità è rappresentata con neuroni binari a soglia.
+
+\subsubsection*{Il problema dello XOR}
+Lo xor è una delle funzioni non lineari più semplice, nella quale diventa evidente l'impossibilità di approssimare tale funzione con un solo strato di neuroni.
+Il grafico illustra come un neurone singolo possa effettuare la separazione lineare che riproduce la funzione and e or, ma come si nota lo xor necessità di due parabole per la separazione e non più di rette, tale separazione si effettua utilizzando una rete ad almeno due strati. 
+%
+\begin{figure}[h!]
+  \centering
+  \begin{subfigure}[t]{0.45\linewidth}
+  	\centering
+  	%\hspace{-120pt}
+    \includegraphics[height=140pt]{SepXor.png}
+    \captionsetup{justification=centering}
+    \vspace{10pt}
+    \caption*{Esempio di linee di separazione per and or e xor}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.45\linewidth}
+    %\hspace{-200pt}
+    \vspace{-130pt}
+  	\centering
+    \includegraphics[height=140pt]{MLPxor.png}
+    \captionsetup{justification=centering}
+    \caption*{MLP in grado di rappresentare la funzione xor}
+  \end{subfigure}
+  \label{fig:graph6}
+\end{figure}
+%
 \subsubsection{La funzione di addestramento: Il back-propagation} 
+Come già detto la struttura della rete neurale deve apprendere una data funzione da dei dati.\\
+Tale operazione si effettua presentando degli input alla rete ai quali questa risponderà con degli output, i quali dovranno essere confrontati con degli output corretti per il set di input presentato, per calcolare l'errore nell'output della rete.\\
+L'errore che la rete commette ad ogni tentativo viene utilizzato per calcolare attraverso una prescelta funzione, nel nostro caso il BP, dei coefficienti di correzione che vanno applicati ai pesi della rete per avvicinare il suo output a quello desiderato. \\
+Come dice il nome "retropropagazione" in italiano, l'errore calcolato dall'output viene applicato ai neuroni precedenti e poi a quelli ancora precedenti fino ad arrivare al primo strato, tale procedura puo essere effettuata in diversi modi, calcolando gli errori su un determinato numero di esempi del dataset, accumulando le correzioni ed applicandole successivamente, tale tecnica è attualmente la più utilizzata ed è detta "mini-batch", ma è possibile anche effettuare la correzione esempio per esempio, e questo è detto addestramento in-line, in fine tra i metodi più comuni c'è anche la possibilità di eseguire tutti gli esempi del dataset e solo alla fine di un'intero ciclo di addestramento applicare le correzioni. questi tre metodi ovviamente risultano validi ma a seconda del problema da risolvere possono avere prestazioni migliori o peggiori in modo difficilmente prevedibile.
+\\
+Dopo questa introduzione generale all'addestramento delle reti passiamo a dare una vista più accurata dell'algoritmo utilizzato nel progetto che è principalmente pensato per reti mlp con neuroni ad ingressi continui e con funzione di trasferimento sigmoidea o ad arcotangente.
+\\
+Il BP cerca di minimizzare l'errore quadratico medio, relativo a un training set di esempi dati, scendendo lungo la superficie d'errore e seguendo la direzione di massima pendenza, in cerca di una "valle" sufficientemente profonda. \\
+Consideriamo una rete con n input $X_i$ (i = 1, 2,.. n), uno strato nascosto di q neuroni $Z_k$ (k = 1, 2..., q) e uno strato output di m neuroni $Y_j$; (j = 1, 2... m).
+Il training set sia costituito da p esempi o casi $C_r$, (r = 1, 2,..,p). Tutti i neuroni abbiano la stessa funzione di trasferimento.\\
+L'errore quadratico medio dello strato output è:\\ \\
+\begin{equation} \label{eq:eqm}
+E = \frac{1}{2} \sum_j{\sum_r{(Y_{rj} - D_{rj})^2}}
+\end{equation}
 
+dove Y, è l'output del neurone $Y_j$ alla presentazione dell'esempio $C_r$ e $D_{rj}$ è il
+suo valore desiderato. Per semplificare la notazione, eliminiamo l'indice r e minimizziamo l'errore quadratico medio ad ogni presentazione di esempio (modalità on-line), anziché dopo ogni ciclo completo di presentazione del training set
+o epoca (modalità batch). Avremo allora:
+\\ \\
+\begin{equation} \label{eq:eq}
+E = \frac{1}{2} \sum_j{(Y_{j} - D_{j})^2}
+\end{equation}
+\\ \\
+Si applica a questo punto la regola del gradiente (fig. Propagazione a):
 
+\begin{equation} \label{eq:grad}
+\Delta W_{jk} = - \eta \frac{\partial E}{\partial W_{jk}} = - \eta \frac{\partial E}{\partial Y_j} \frac{\partial Y_j}{\partial P_j} \frac{\partial P_j}{\partial W_{jk}} = 
+-\eta(Y_j - D_j)f'(P_j)Z_k
+\end{equation} \\
+\begin{equation} \label{eq:dey}
+\frac{\partial E}{\partial Y_j} = (Y_j - D_j)
+\end{equation} \\
+\begin{equation} \label{eq:dyp}
+\frac{\partial Y_j}{\partial P_j} = f'(P_j) 
+\end{equation} \\
+\begin{equation} \label{eq:dpw}
+\frac{\partial P_j}{\partial W_{jk}} = \frac{\partial(\sum W_{jk} Z_k)}{\partial W_{jk}} = Z_k
+\end{equation}
 
-dgaagadgasdgas
-dgg
-g
-dsgasd
+Ponendo a questo punto:
+\begin{equation} \label{eq:cr}
+\delta_j = (Y_j - D_j)f'(P_j) 
+\end{equation}
+\\
+\begin{equation} \label{eq:gradcr}
+\Delta W_{jk} = -\eta \ \delta_j \ Z_k
+\end{equation}
+La formula (\ref{eq:grad}) viene impiegata per aggiornare i pesi sinattici delle connessioni tra strato nascosto e strato output, analogamente, per quanto riguarda le connessioni tra strato input e strato nascosto si utilizza la formula (fig. Propagazione b):
+\begin{equation} \label{eq:dih}
+\Delta W_{ki} = -\eta \frac{\partial E}{\partial W_{ki}} = - \eta \frac{\partial E}{\partial Z_k} \frac{\partial Z_k}{\partial P_k} \frac{\partial P_k}{\partial W_{ki}} = -\eta \frac{\partial E}{\partial Z_k}f'(P_k)X_i
+\end{equation}
+Confrontando questa formula con la precedente formula (\ref{eq:grad}), al posto degli errori noti $(Y_j - D_j)$ troviamo le derivate $\frac{\partial E}{\partial Z_k}$, che dobbiamo ora calcolare retropropagando l'errore dallo strato output a ogni neurone nascosto:
+\begin{equation} 
+\frac{\partial E}{\partial Z_k} = \sum_j \Bigg( \frac{\partial E}{\partial Y_j} \frac{\partial Y_j}{\partial P_j} \frac{\partial P_j}{\partial Z_k} \Bigg) = \sum_j (Y_j - D_j)f'(P_j)W_{jk} 
+\end{equation}
 
+o anche, applicando la formula (\ref{eq:cr}) :
+\begin{equation}
+\frac{\partial E}{\partial Z_k} = \sum_j \ \delta_j \ W_{jk}
+\end{equation}
+\begin{figure}[h!]
+  	\centering
+  	%\hspace{-105pt}
+    \includegraphics[height=300pt]{PropagationGraph.png}
+    \captionsetup{justification=centering}
+    \caption*{Propagazione dell'errore nella rete}
+  \label{fig:graph7}
+\end{figure}
+\\
+In fine otteniamo le equazioni:
+\begin{equation} \label{eq:dih}
+\Delta W_{ki} = -\eta f'(P_k)(\sum_j \delta_j W_{jk})X_i
+\end{equation}
+che ponendo:
+\begin{equation} \label{eq:dbpk}
+\delta_k = f'(P_k)(\sum_j \delta_j W_{jk})
+\end{equation}
+la quale assume la stessa forma della (\ref{eq:gradcr}) :
+\begin{equation} \label{eq:dpk}
+\Delta W_{ki} = -\eta \ \delta_k \ X_i
+\end{equation}
+Le formule (\ref{eq:dih}) (\ref{eq:dbpk}) (\ref{eq:dpk}) sono valide non solo per aggiornare i pesi sinattici tra strato nascosto (l’unico nella rete che abbiamo ipotizzato) e strato input ma anche, in reti più generali, per le connessioni tra due strati nascosti consecutivi.
+Se si adotta la funzione di trasferimento sigmoide si ha:
+
+\begin{equation}
+Y = f(P) = \frac{1}{1+e^{kP}}
+\end{equation}
+\begin{equation}
+f'(P) = kf(P)(1-f(P)) = kY(1-Y)
+\end{equation}
+Dove k è proporzionale alla pendenza della sigmoide nel suo punto di flessione, normalmente si pone k = 1.
+A questo punto otteniamo la rielaborazione delle formule (\ref{eq:gradcr}) (\ref{eq:dih}):
+\begin{equation}
+\Delta W_{jk} = -\eta k (Y_J - D_j)Y_j(1-Y_j)Z_k
+\end{equation} 
+\begin{equation}
+\Delta W_{ki} = -\eta k Z_k (1-Z_k)(\sum_j \delta_j W_{jk})X_i
+\end{equation} 
+infine i pesi sinattici vengono aggiornati, ad ogni tempo t dell'intervallo 1, 2, ..., (t-1), t, (t+1), ...ecc con:
+\begin{equation}
+W_{jk}(t+1) = W_{jk}(t) + \Delta W_{jk}
+\end{equation}
+\begin{equation}
+W_{ki}(t+1) = W_{ki}(t) + \Delta W_{ki}
+\end{equation} 
 \end{document}
