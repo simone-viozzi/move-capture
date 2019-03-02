@@ -1,0 +1,321 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[italian]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+\usepackage[left=1cm,right=1cm,top=1cm,bottom=2cm]{geometry}
+
+\usepackage{txfonts}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage{titlesec}
+\setcounter{secnumdepth}{4}
+\titleformat{\paragraph}{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+%per le immagini
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{wrapfig}
+
+%per i link
+\usepackage{hyperref} 
+
+%%%%%%%% per il codice c++
+\usepackage{textcomp}
+\usepackage{listings}          % for creating language style
+\usepackage{listingsutf8}
+\input{arduinoLanguage.tex}    % adds the arduino language listing
+\definecolor{commentgreen}{RGB}{2,112,10}
+\definecolor{eminence}{RGB}{108,48,130}
+\definecolor{weborange}{RGB}{255,165,0}
+\definecolor{frenchplum}{RGB}{129,20,83}
+
+
+%% Define an Arduino style fore use later %%
+\lstdefinestyle{myArduino}{
+  language=Arduino,
+    %% Add other words needing highlighting below %%
+    morekeywords=[1]{},                  % [1] -> dark green
+    morekeywords=[2]{FILE_WRITE},        % [2] -> light blue
+    morekeywords=[3]{SD, File},          % [3] -> bold orange
+    morekeywords=[4]{open, exists, write, SoftwareSerial},      % [4] -> orange
+    frame=tb,    
+    inputencoding=utf8,
+    extendedchars=true,
+    literate={è}{{\`{e}}}{1},
+    breaklines=true,  
+}
+
+\lstdefinestyle{mycpp}{
+    language=C++,
+    inputencoding=utf8,
+    extendedchars=true,
+    literate={è}{{\`{e}}}{1},
+    %escapeinside={(*******}{*******)}
+    escapechar=\£,
+    %escapeinside=~~,
+    frame=tb,
+    tabsize=2,
+    mathescape=false,
+    breaklines=true,                    % wordwrapping
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},         
+    basicstyle=\fontsize{9}{11}\ttfamily,
+    backgroundcolor=\color{light-gray},
+    xleftmargin=.25in,
+    showstringspaces=false,
+    numbers=left,                    
+    numbersep=5pt,                   
+    %numberstyle=\color{arduinoGrey},    
+    %stepnumber=2, 
+    %upquote=true,
+    commentstyle=\color{commentgreen},
+    keywordstyle=\color{eminence},
+    stringstyle=\color{red},
+    basicstyle=\small\ttfamily, % basic font setting
+    emph={int,char,double,float,unsigned,void,bool},
+    emphstyle={\color{blue}},
+    % keyword highlighting
+    classoffset=1, % starting new class
+    otherkeywords={>,<,.,;,-,!,=,~},
+    morekeywords={>,<,.,;,-,!,=,~},
+    keywordstyle=\color{weborange},
+    classoffset=0,
+}
+
+
+\lstdefinestyle{myoutput}
+{
+    inputencoding=utf8,
+    extendedchars=true,
+    literate={è}{{\`{e}}}{1},
+    tabsize=2,
+    frame=tb,
+    breaklines=true,                    % wordwrapping
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},         
+    basicstyle=\fontsize{9}{11}\ttfamily,
+    backgroundcolor=\color{light-gray},
+    xleftmargin=.25in,
+    showstringspaces=false,
+    numbers=left,                    
+    numbersep=5pt, 
+}
+%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\usepackage{siunitx} %pacchetto per le unita' di misura
+
+%%%%%%%%%%%%%%%%%%%%%% per i flowchart
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{positioning}
+\usetikzlibrary{shapes.geometric}
+\usepgflibrary{shapes.symbols}
+\usetikzlibrary{shapes.multipart}
+
+\tikzset{%
+  >={Latex[width=2mm,length=2mm]},
+  % Specifications for style of nodes:
+            rect/.style = {rectangle, rounded corners, draw=black,
+                           minimum width=4cm, minimum height=1cm,
+                           text centered, font=\sffamily},
+           round/.style = {ellipse, draw, draw=black,
+                           minimum width=4cm, minimum height=1cm,
+                           text centered, font=\sffamily},
+       smallrect/.style = {rectangle, rounded corners, draw=black,
+                           minimum width=2cm, minimum height=1cm,
+                           text centered, font=\sffamily},
+ smallrectsplit4/.style = {rectangle split, rectangle split parts=4, 
+	                       rectangle split part fill={green!30, none, none, none},
+	                       align=center,
+	                       rounded corners, draw=black,
+                           minimum width=2cm, minimum height=1cm,
+                           text centered, font=\sffamily},
+}
+
+%\tikzset{%
+%    >={Latex[width=2mm,length=2mm]},
+%      % Specifications for style of nodes:
+%         declare/.style = {trapezium,draw=black, minimum width=4cm, minimum height=1cm, 
+%                                trapezium right angle=-70, trapezium left angle=70,
+%                                minimum width=4cm, minimum height=1cm,
+%                                text centered, font=\sffamily},
+%           start/.style = {ellipse, draw, draw=black, minimum width=4cm, 
+%                                minimum height=1cm, text centered, font=\sffamily},
+%            cond/.style = {diamond, aspect=2, draw, draw=black,
+%                                minimum width=4cm, minimum height=1cm,
+%                                text centered, font=\sffamily},
+%            rect/.style = {rectangle, draw, draw=black,
+%                                minimum width=4cm, minimum height=1cm,
+%                                text centered, font=\sffamily},
+%}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+
+\pagenumbering{arabic}
+\pagestyle{plain}
+
+% per non farlo anadre a capo ovunque 
+% va in conflitto con quello che lo fa andare a capo nel codice quindi attenzione <--------
+%\usepackage[none]{hyphenat}
+
+
+% per togliere gli ident all'inizio dei paragrafi
+\setlength{\parindent}{0pt}
+
+
+
+
+
+
+\begin{document}
+
+\subsection{programma che si occupa di post-elaborare i dati}
+Dopo aver acquisito i dati di arduino e del kinect bisogna effettuare una post elaborazione per ottenere coppie di valori riferiti allo stesso istante temporale. 
+(altro da dire?)
+Il programma usato per fare ci\`o riprende molte cose dal codice del programma "prg\_get\_data", le librerie usate sono le stesse ed anche le classi "kin\_file\_manager", "kin\_file\_manager" e "data\_structure.h".
+L'unica classe nuova \`e "make\_dataset":
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+class make_dataset
+{
+private:
+  // dichiaro i puntatori alle classi per la gestione dei file cos\`i da renderle disponibili per tutta la classe
+  ard_file_manager *f_a;
+  kin_file_manager *f_k;
+
+  // delta di accettazione in millisecondi
+  const int range = 35; 
+
+  // dichiaro 2 liste per conservare i dati 
+  list<arduino_data> a_dat;
+  list<kinect_data> k_dat;
+
+  // devo dichiararare il numero di ingressi e di uscite della rete
+  static const std::size_t n_in = 9;
+  static const std::size_t n_out = 4;
+
+  // dichiaro una lista di tipo dataset_data che verr\`a riempita con i dati accoppiati
+  list<dataset_data<float, n_in, float, n_out>> dataset;
+
+  // questa funzione si occupa di scrivere il dataset sul file
+  void write_dataset(string dataset_file_name){...}
+
+  // restituisce 1 solo se i 2 tempi che gli vengono passati differiscono meno della soglia impostata sopra
+  bool check_sync(uint64_t t1, uint64_t t2){...}
+
+  // questo metodo sposta i dati dalle strutture "arduino_data" e "kinect_data" alla struttura "dataset" dichiarata globalmente nella classe
+  void transfer_data_to_dataset(arduino_data* ard_iter, kinect_data* kin_iter){...}
+
+  // restituisce la differenza temporale tra i tempi passati alla funzione
+  uint32_t time_distance(uint32_t t1, uint32_t t2){...}
+
+  // sincronizza i dati caricati in "a_dat", "k_dat" e li sposta in "dataset" attraverso la funzione "transfer_data_to_dataset". Questa funzione non tiene conto dei "cloni", nella sezione successiva vi \'e una spiegazione pi\'u dettagliata. 
+  void sync_with_clones(){...}
+
+  // stessa cosa della funzione precedente ma eliminando i cloni.
+  void sync_without_clones(){...}
+
+  // carica i dati dai file usando "f_a" e "f_k", sposta i dati acquisiti in "a_dat" e k_dat"
+  void load_data(){...}
+
+public:
+  // l'unica funzione accessibile \`e il costruttore che provvede ad inizializzare i  file manager, caricare i dati, sincronizzarli (con o senza cloni) e scrivere il file del dataset con i dati appena generati.
+  make_dataset(string ard_file_name, string kin_file_name, string dataset_file_name, bool want_clones)
+  {
+    f_a = new ard_file_manager(ard_file_name, std::ios::in);
+    f_k = new kin_file_manager(kin_file_name, std::ios::in);
+
+    load_data();
+    
+    if (want_clones)
+    {
+      sync_with_clones();
+    }
+    else
+    {
+      sync_without_clones();
+    }
+
+    write_dataset(dataset_file_name);
+
+  }
+
+  // distruttore della classe
+  ~make_dataset(){...}
+
+};
+\end{lstlisting}
+La funzione che si occupa di acquisire i nomi dei file e altro dall'utente \`e "post\_elaborate":
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+void post_elaborate()
+{
+  string ard_file_mane = "";
+  string kin_file_mane = "";
+  string dataset_file_name = "";
+  string tmp = "";
+  bool clones = false;
+  
+  // acquisisco i nomi dei file dei dati di arduino e del kinect
+  cout << "insert the input file names: " << endl
+    << "\t arduino -> ";
+  std::getline(std::cin, ard_file_mane);
+  cout << "\t kinekt -> ";
+  std::getline(std::cin, kin_file_mane);
+
+  // acquisisco il nome del file in cui verr\`a scritto il dataset
+  cout << "insert the ouptut file name -> : ";
+  std::getline(std::cin, dataset_file_name);
+
+  // chiedo se si vuole il dataset con o senza cloni
+  cout << "do you want clones in the data? [y/n] -> : ";
+  std::getline(std::cin, tmp);
+
+  if (tmp == "y")
+  {
+    clones = true;
+  }
+  
+  // chiamo la classe make_dataset passandogli i dati appena acquisiti
+  make_dataset(ard_file_mane, kin_file_mane, dataset_file_name, clones);
+}
+\end{lstlisting}
+
+
+
+
+
+
+
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
