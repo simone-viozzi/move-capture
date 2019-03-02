@@ -113,22 +113,47 @@
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows}
 \usetikzlibrary{arrows.meta}
+\usetikzlibrary{positioning}
+\usetikzlibrary{shapes.geometric}
+\usepgflibrary{shapes.symbols}
+\usetikzlibrary{shapes.multipart}
+
 \tikzset{%
-    >={Latex[width=2mm,length=2mm]},
-      % Specifications for style of nodes:
-         declare/.style = {trapezium,draw=black, minimum width=4cm, minimum height=1cm, 
-                                trapezium right angle=-70, trapezium left angle=70,
-                                minimum width=4cm, minimum height=1cm,
-                                text centered, font=\sffamily},
-           start/.style = {ellipse, draw, draw=black, minimum width=4cm, 
-                                minimum height=1cm, text centered, font=\sffamily},
-            cond/.style = {diamond, aspect=2, draw, draw=black,
-                                minimum width=4cm, minimum height=1cm,
-                                text centered, font=\sffamily},
-            rect/.style = {rectangle, draw, draw=black,
-                                minimum width=4cm, minimum height=1cm,
-                                text centered, font=\sffamily},
+  >={Latex[width=2mm,length=2mm]},
+  % Specifications for style of nodes:
+            rect/.style = {rectangle, rounded corners, draw=black,
+                           minimum width=4cm, minimum height=1cm,
+                           text centered, font=\sffamily},
+           round/.style = {ellipse, draw, draw=black,
+                           minimum width=4cm, minimum height=1cm,
+                           text centered, font=\sffamily},
+       smallrect/.style = {rectangle, rounded corners, draw=black,
+                           minimum width=2cm, minimum height=1cm,
+                           text centered, font=\sffamily},
+ smallrectsplit4/.style = {rectangle split, rectangle split parts=4, 
+	                       rectangle split part fill={green!30, none, none, none},
+	                       align=center,
+	                       rounded corners, draw=black,
+                           minimum width=2cm, minimum height=1cm,
+                           text centered, font=\sffamily},
 }
+
+%\tikzset{%
+%    >={Latex[width=2mm,length=2mm]},
+%      % Specifications for style of nodes:
+%         declare/.style = {trapezium,draw=black, minimum width=4cm, minimum height=1cm, 
+%                                trapezium right angle=-70, trapezium left angle=70,
+%                                minimum width=4cm, minimum height=1cm,
+%                                text centered, font=\sffamily},
+%           start/.style = {ellipse, draw, draw=black, minimum width=4cm, 
+%                                minimum height=1cm, text centered, font=\sffamily},
+%            cond/.style = {diamond, aspect=2, draw, draw=black,
+%                                minimum width=4cm, minimum height=1cm,
+%                                text centered, font=\sffamily},
+%            rect/.style = {rectangle, draw, draw=black,
+%                                minimum width=4cm, minimum height=1cm,
+%                                text centered, font=\sffamily},
+%}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 
 
@@ -953,9 +978,84 @@ int main()
   return 0;
 }
 \end{lstlisting}
+Riassumendo la struttura generale di questo programma si ha:
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[node distance=2cm, every node/.style={font=\sffamily}, align=center]
+%	\draw[help lines] (-10,-10) grid (1,1);
+% ora vanno specificate le posizioni 
+%	\node (nome_blocco) 	[tipo_blocco, parentela] 		
+%								{testo_blocco};
+	\node (main)			    [rect, fill=yellow!30] 							
+								    {main};
+	\node (aquire_data)	        [rect, below of=main, fill=yellow!30] 
+								    {aquire\_data};
+	\node (start_aquire_data)	[rect, below of=aquire_data, fill=yellow!30]	
+								    {start\_aquire\_data};
+	\coordinate[below=of start_aquire_data, yshift=-1cm] (c);
+	\node (ard_handler)	    [smallrect, left of=c, 
+	                            xshift=0.5cm, fill=yellow!30]	
+								{ard\_handler};
+	%\node (data_FIFO_ard)	[smallrect, left of=ard_handler, 
+	%                            xshift=-1.5cm, fill=green!30]	
+	%							{data\_FIFO\_ard};	
+	\node (data_FIFO_ard) [smallrectsplit4, 
+	                            left of=ard_handler, xshift=-1.5cm]	
+								{
+									data\_FIFO\_ard
+									\nodepart{two}
+									    dato 1
+									\nodepart{three}
+									    \vdots
+									\nodepart{four}
+									    dato n
+								};						
+	\node (arduino_class)	    [smallrect, left of=data_FIFO_ard, 
+	                                xshift=-1.5cm, fill=yellow!30]	
+								    {arduino\_class};
+	\node (kinect_class)	[smallrect, right of=c, 
+	                            xshift=-0.5cm, fill=yellow!30]
+								{kinect\_class};
+	\node (data_FIFO_kin) [smallrectsplit4, 
+	                            right of=kinect_class, xshift=1.5cm]	
+								{
+									data\_FIFO\_kin
+									\nodepart{two}
+									    dato 1
+									\nodepart{three}
+									    \vdots
+									\nodepart{four}
+									    dato n
+								};
+	\node (kin_handler)		[smallrect, right of=data_FIFO_kin, 
+	                            xshift=1.5cm, fill=yellow!30]
+								{kin\_handler};
+							
+% per le freccie si fa
+%	\daraw[tipo_freccia] (origine) "tipo connessione" "eventuale scritta" (destinazione)			
+	\draw[->]	(main)	            --                	(aquire_data);
+	\draw[->]	(aquire_data)	    --                	(start_aquire_data);
+	\draw[->]	(start_aquire_data)	to [in=90,out=-140]	(ard_handler);
+	\draw[->]	(start_aquire_data)	to [in=90,out=-140] (arduino_class);
+	\draw[->]	(start_aquire_data)	to [in=90,out=-40]	(kin_handler);
+	\draw[->]	(start_aquire_data)	to [in=90,out=-40]	(kinect_class);
+	%
+	\draw[->]	(arduino_class)	    to [in=165,out=0]	(data_FIFO_ard);
+	\draw[->]	(data_FIFO_ard)	    to [in=180,out=-35]	(ard_handler);
+	\draw[->]	(kinect_class)	    to [in=165,out=0]	(data_FIFO_kin);
+	\draw[->]	(data_FIFO_kin)	    to [in=180,out=-35]	(kin_handler);
+\end{tikzpicture}
+\caption{i programmi usati per ottenere i pesi della rete addestrata (?)}
+\end{figure}
+\\
+Cio\`e il "main" chiama "aquire\_data" che chiama a sua volta "start\_aquire\_data". Dopodich\`e vengono lanciati i 4 thread ("arduino\_class", "ard\_handler", "kinect\_class", "kin\_handler"). I thread che si occupano di prelevare i dati dai dispositivi sono "arduino\_class" e "kinect\_class", che inseriscono i dati nel corrispettivo buffer FIFO. Infine i thread che si occupano di scrivere i dati su i file di testo sono "ard\_handler" e "kin\_handler", che scrivono i dati prelevati dal buffer nel corrispettivo file di testo.
+
+
+
 
 
 \end{document}
+
 
 
 
