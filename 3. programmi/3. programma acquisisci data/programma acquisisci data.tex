@@ -393,7 +393,6 @@ La libreria "data\_structure.h" \`e fondamentale e definisce le strutture dati u
 #include <string>
 #include <boost/array.hpp>
 
-////////// massiiiiiiiiiiiiiiiiii <------------------------------------------------
 // struttura dati per gestire i dati provenienti dal kinect
 struct kinect_data
 {
@@ -408,7 +407,9 @@ struct kinect_data
     float angle[3] = { 0, 0, 0 };
   };
 
-  // <-------------------------------------------------------massiiii
+  //Tabelle ad accesso diretto utilizzate per ottimizzare la procedura di estrazione dati dalla
+  //classe kinect_class e la conversione dai punti nello spazio dello scheletro ad angoli 
+  //del braccio. 
   int needed_joint[number_of_joints] = { 8, 9, 10 };
   int to_joint[24] = { -1, -1, -1, -1, -1, -1, -1, -1, 9, 10, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
   int to_ref_joint[24] = { -1, -1, -1, -1, -1, -1, -1, -1, 0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }; // tabella di accesso (chiave numero joint kinect) -> (restituisce l-indice del numero del giunto in needed_joint)    
@@ -419,22 +420,12 @@ struct kinect_data
   float mul_fctor_y[number_of_joints] = { 1, 1, 0 }; //per 8, 9
   float mul_fctor_z[number_of_joints] = { 1, 1, 0 }; //per 8, 9
 
-  //int needed_joint[number_of_joints] = { 4, 5, 6, 8, 9, 10, 1, 20 };
-  //int to_joint[24] = { -1, 20, -1, -1, 5, 6, -1, -1, 9, 10, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, };
-  //int to_ref_joint[24] = { -1, 6, -1, -1, -1, 1, 2, -1, 3, 4, 5, -1, -1, -1, -1, -1, -1, -1, -1, -1, 7, -1, -1, -1 }; // tabella di accesso (chiave numero joint kinect)  
-  //float ref_Ang_x[number_of_joints] = { 0, 0, 0, 0, 0, 0, -90, 0 }; //per 4, 5, 8, 9
-  //float ref_Ang_y[number_of_joints] = { 0, 0, 0, 0, 0, 0, 90, 0 }; //per 4, 5, 8, 9
-  //float ref_Ang_z[number_of_joints] = { 180, 180, 0, 180, 180, 0, 270, 0 }; //per 4, 5, 8, 9
-  //float mul_fctor_x[number_of_joints] = { 0, 0, 0, 0, 0, 0, 0, 0 }; //per 4, 5, 8, 9
-  //float mul_fctor_y[number_of_joints] = { 1, 1, 0, 1, 1, 0, 0, 0 }; //per 4, 5, 8, 9
-  //float mul_fctor_z[number_of_joints] = { 1, 1, 0, 1, 1, 0, 0, 0 }; //per 4, 5, 8, 9
-
   joit_data needed_joints[number_of_joints];
 
   // tempo esatto in cui i dati sono stati acquisiti
   uint64_t frame_time = 0;
 
-  // questo che era? <-----------------------------------
+  // TODO
   uint64_t contatore = 0;
 
   // funzione per verificare se il frame acquisito \`e parziale o completo 
