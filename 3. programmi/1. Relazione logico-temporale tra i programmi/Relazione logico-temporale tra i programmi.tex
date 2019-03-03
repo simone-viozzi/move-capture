@@ -90,11 +90,11 @@ per prima cosa abbiamo dovuto acquisire un dataset ed usarlo per addesrare la re
 	\node (prg_elab_data)	[rect, below of=prg_get_data, yshift=-3.5cm, fill=yellow!30]
 								{programma di post\\ elaborazione dei dati};
 	\node (file_dataset)	[round, below of=prg_elab_data, fill=gray!30]	
-								{file del dataset};
+								{dataset};
 	\node (prg_addesr)		[rect, below of=file_dataset, fill=yellow!30]
-								{programma di addestramento\\ della rete};
+								{programma di addestramento\\ della rete (OpenLearn)};
 	\node (file_pesi_rete)	[round, below of=prg_addesr, fill=gray!30]	
-								{file dei pesi della\\ rete addestrata};
+								{modello addestrato};
 % per le freccie si fa
 %	\daraw[tipo_freccia] (origine) "tipo connessione" "eventuale scritta" (destinazione)			
 	\draw[blue, line width=1mm, arrows={[scale=1.75,blue]<->[scale=1.75,blue]}]	
@@ -132,17 +132,17 @@ una volta addestrata la rete si possono usare i pesi cos\`i ottenuti per visuali
 								{programma arduino};
 	\node (prg_main)	[rect, right of=prg_ard, fill=yellow!30, xshift=4cm] 
 								{main (??)};
-	\node (file_dataset)	[round, above of=prg_main, fill=gray!30]	
-								{file del dataset};	
+	\node (Modello)	[round, above of=prg_main, fill=gray!30]	
+								{Modello addestrato};	
 	\node (prg_unity)	[rect, right of=prg_main, fill=yellow!30, xshift=4cm]
-								{programma per la\\ visualizzazione del pupo};
+								{Interfaccia grafica (Unity3D)};
 % per le freccie si fa
 %	\daraw[tipo_freccia] (origine) "tipo connessione" "eventuale scritta" (destinazione)			
 	\draw[blue, line width=1mm, arrows={[scale=1.75,blue]<->[scale=1.75,blue]}]	
 					(prg_ard)		-- 	(prg_main);
 	\draw[blue, line width=1mm, arrows={[scale=1.75,blue]<->[scale=1.75,blue]}]	
 					(prg_main)		-- 	(prg_unity);
-	\draw[->, cyan]	(file_dataset)	--	(prg_main);
+	\draw[->, cyan]	(Modello)		--	(prg_main);
 \end{tikzpicture}
 \caption{una volta addestrata la rete si pu\`o vedere il pupo muoversi in tempo reale}
 \end{figure}
