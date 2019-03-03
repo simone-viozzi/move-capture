@@ -42,12 +42,15 @@
 \pagestyle{plain}
 
 % per non farlo anadre a capo ovunque
-\usepackage[none]{hyphenat}
+%\usepackage{microtype}
+\usepackage[italian=nohyphenation,english=nohyphenation]{hyphsubst}
+%\usepackage[italiano]{hyphenat}
 % per togliere gli ident all'inizio dei paragrafi
 \setlength{\parindent}{0pt}
 
 
 \begin{document}
+%\microtypesetup{activate=true}
 \subsection{Scheda enbedded}
 Per questo progetto abbiamo realizzato una scheda enbedded che comprendesse l'imu, un modulo bluetooth, la batteria con il suo regolatore e un arduino.
 
@@ -57,11 +60,21 @@ Per questo progetto abbiamo realizzato una scheda enbedded che comprendesse l'im
 	\includegraphics[width=0.80\textwidth]{scheda.png}
 	\vspace{-10pt}
 	\caption{Schema scheda enbedded}
-	\label{fig:scheda}
+	\label{fig:schema_scheda}
 \end{figure}
 
-foto scheda
-
+\begin{figure}[h]
+	\centering
+	\vspace{-10pt}
+	\includegraphics[width=0.50\textwidth]{scheda.jpg}
+	\vspace{-10pt}
+	\caption{Scheda enbedded}
+	\label{fig:scheda}
+\end{figure}
+La scheda \`e stata realizzata su millefori saldando e wrappando i diversi componenti.
+\\
+\\
+TODO
 (..c'e' da dire altro?)
 
 \subsubsection{Arduino}
@@ -73,16 +86,19 @@ foto scheda
 	\vspace{-30pt}
 	\caption{Arduino nano}
 	\label{fig:arduino_nano}
-	\vspace{-30pt}
+	\vspace{0pt}
 \end{wrapfigure}
 
-Arduino \`e una piattaforma hardware open-source dotata di microcontrollore e tutto il suo ecosistema. Questo la rendono un ottima scheda per la prototipazione rapida (..da ristrutturare la frase). Nel nostro progetto abbiamo usato la scheda "Arduino nano" (fig.\ref{fig:arduino_nano}).
-(..da aggiunge che e' alimentata a \SI{5}{\volt})
-La scheda si interfaccia al pc per essere programmata, tramite "Arduino IDE", e ha al suo interno un regolatore di tensione da \SI{5}{\volt} a \SI{3.3}{\volt}, utile per alimentare accelerometro e magnetometro. Inoltre ha, una sola seriale, l'I2C, ed altri pin GPIO di cui ne abbiamo usato uno per controllare il pin state del'HC-05.
+Arduino \`e una piattaforma hardware open-source dotata di microcontrollore e tutto il suo ecosistema, questo lo rendono estremamente utile per realizzare progetti che non richiedono specifiche particolari senza doveresi realizzare una scheda apposita. Le schede arduino possono essere programmate attraveso l'ide proprietario "Arduino IDE", che oltre ad includere la compatibilit\`a con tutte le schede arduino offre alcuni strumenti utili come il motitor seriale.
+%
+\\
+Nel nostro progetto abbiamo usato la scheda "Arduino nano" (fig.\ref{fig:arduino_nano}), si alimenta a \SI{5}{\volt} e include un regolatore di tensione da \SI{5}{\volt} a \SI{3.3}{\volt}, una seriale, l'I2C ed altri pin general purpose.
+%
+\\
+Il regolatore interno \`e stato usato per alimentare i moduli HMC5883L e MPU-6050 che costituiscono l'imu della scheda, la seriale \`e stata utilizzata per comunicare con il modulo bluetooth HC-05, il bus di comunicazione I2C \`e stato usato per interfacciarsi con l'imu ed un pin GPIO \`e stato usato per controllare lo stato del modulo bluetooth.
 
-(altro ????????)
+\vspace{70pt}
 
-\vspace{10pt}
 
 \subsubsection{Bluetooth}
 \begin{wrapfigure}{r}{0.2\textwidth}
@@ -94,9 +110,26 @@ La scheda si interfaccia al pc per essere programmata, tramite "Arduino IDE", e 
 	\label{fig:HC-05}
 	%\vspace{-30pt}
 \end{wrapfigure}
-Il modulo bluetooth ulilizzato \`e "HC-05", ha 6 pin per interfacciarsi con le atre periferiche: 2 di alimentazione, 2 per la seriale, state e key. Questo modulo ha un regolatore da \SI{5}{\volt} a \SI{3.3}{\volt} integrato, quindi va alimentato a \SI{5}{\volt}.
-Per comunicare con arduino usa la seriale (RS-232) con livello logico \SI{3.3}{\volt}, ci\`o comporta la necessit\`a di inserire un partitore sul pin rx del modulo (quindi il pin tx di arduino). Il pin state e\` stato usato per far conoscere ad arduino quando il modulo ha stabilito la connessione con il computer. Il pin key svolge una funzione particolare poich\`e permette di avviare il modulo in modalit\`a "command mode", in questa modalit\`a si possono usare gli AT commands per programmare il modulo (es. cambiare nome al dispositivo, oppure cambiare il baud rate della seriale).
-I comandi AT e la loro descrizione si trovano sul datasheet. Per avviare l'HC-05 in modalit\`a AT si deve collegare il modulo all'alimentazione tenendo premuto il pulsante che si trova sulla scheda, dopodiche si pu\`o procedere ad inviare gli at command tramite seriale con un baud rate di 38400Bd. Per fare ci\`o abbiamo collegato la seriale del modulo con 2  pin di arduino con supporto PWM ed abbiamo usato la libreria software serial per poter avere un'altra seriale (la principale connessa al pc e la secondaria connessa al modulo). Dopodich\`e basta programmare arduino in modo che reindirizzi ci\`o che gli viene scritto dal pc al modulo, e viceversa. il programma usato \`e il seguente:
+
+TODO sistemare
+\\
+
+Il modulo bluetooth ulilizzato \`e "HC-05", ha 6 pin per interfacciarsi con le atre periferiche: 2 di alimentazione, 2 per la seriale, state e key. 
+\\
+Questo modulo ha un regolatore da \SI{5}{\volt} a \SI{3.3}{\volt} integrato, quindi va alimentato a \SI{5}{\volt}.
+\\
+Per comunicare con arduino usa la seriale (RS-232) con livello logico \SI{3.3}{\volt}, ci\`o comporta la necessit\`a di inserire un partitore sul pin rx del modulo (quindi il pin tx di arduino). 
+\\
+Il pin state e\` stato usato per far conoscere ad arduino quando il modulo ha stabilito la connessione con il computer. 
+\\
+Il pin key svolge una funzione particolare poich\`e permette di avviare il modulo in modalit\`a "command mode", in questa modalit\`a si possono usare gli AT commands per programmare il modulo (es. cambiare nome al dispositivo, oppure cambiare il baud rate della seriale).
+\\
+I comandi AT e la loro descrizione si trovano sul datasheet del modulo. 
+\\
+Per avviare l'HC-05 in modalit\`a AT si deve collegare il modulo all'alimentazione tenendo premuto il pulsante che si trova sulla scheda, dopodiche si pu\`o procedere ad inviare gli at command tramite seriale con un baud rate di 38400Bd. Per fare ci\`o abbiamo collegato la seriale del modulo con 2  pin di arduino con supporto PWM ed abbiamo usato la libreria software serial per poter avere un'altra seriale (la principale connessa al pc e la secondaria connessa al modulo). 
+\\
+Dopodich\`e basta programmare arduino in modo che reindirizzi ci\`o che gli viene scritto dal pc al modulo, e viceversa. il programma usato \`e il seguente:
+%
 \begin{lstlisting}[style=myArduino]
 #include <SoftwareSerial.h>
 

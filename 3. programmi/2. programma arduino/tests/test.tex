@@ -1,0 +1,68 @@
+\documentclass{article}
+
+\usepackage{xcolor}
+\usepackage{subfig}
+\usepackage{listings}
+
+\lstset{%
+language=C,
+frame=single,
+numbers=left,
+numberstyle=\footnotesize,
+tabsize=2,
+keepspaces=true,
+columns=fullflexible,
+basicstyle=\ttfamily\scriptsize,
+keywordstyle=\color{blue}
+}
+
+\newsavebox{\mylistingbox}
+
+\begin{document}
+
+\begin{figure}
+
+\begin{lrbox}{\mylistingbox}%
+\begin{minipage}{.45\linewidth}%
+\begin{lstlisting}
+for(int i = 0 ; i < N ; i++)
+ for(int j = 0 ; j < N ; j++)
+  for(int k = 0 ; k < N ; k++)
+   c[i][j] += a[i][k] * b[k][j];
+\end{lstlisting}%
+\end{minipage}%
+\end{lrbox}%
+%
+\subfloat[small code]{\usebox{\mylistingbox}}%
+%
+\hfill
+%
+\begin{lrbox}{\mylistingbox}%
+\begin{minipage}{.45\linewidth}%
+\begin{lstlisting}
+for(int ii = 0 ; ii < N ; ii+=B) {
+ for(int jj = 0 ; jj < N ; jj+=B) {
+  for(int kk = 0 ; kk < N ; kk+=B) {
+   for(int i = ii ; i < ii + B ; i++) {
+    for(int k = kk ; k < kk + B ; k++){
+     c_i = c[i];
+     a_ik = a[i][k];
+     b_k = b[k];
+     for(int j = jj ; j < jj + B ; j+=2){
+      c_i[j] += a_ik * b_k[j];
+      c_i[j+1] += a_ik * b_k[j+1];
+     }
+    }
+   }
+  }
+ }
+}
+\end{lstlisting}%
+\end{minipage}%
+\end{lrbox}%
+%
+\subfloat[Larger code]{\usebox{\mylistingbox}}%
+
+\end{figure}
+
+\end{document}

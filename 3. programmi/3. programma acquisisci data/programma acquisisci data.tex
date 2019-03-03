@@ -163,7 +163,7 @@
 % per non farlo anadre a capo ovunque 
 % va in conflitto con quello che lo fa andare a capo nel codice quindi attenzione <--------
 %\usepackage[none]{hyphenat}
-
+\usepackage[italian=nohyphenation,english=nohyphenation]{hyphsubst}
 
 % per togliere gli ident all'inizio dei paragrafi
 \setlength{\parindent}{0pt}
@@ -382,6 +382,7 @@ Questa libreria \`e strutturata in modo totalmente simile alla precedente con l'
 %
 %
 La libreria "data\_structure.h" \`e fondamentale e definisce le strutture dati utilizzate nel resto del programma:
+TODO massiiiiii
 \begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
 #pragma once
 
@@ -677,7 +678,7 @@ private:
 %
 %
 Di seguito troviamo i thread producer "kinect\_class" e "arduino\_class".
-La classe "kinect\_class" provvede a leggere i dati dal kinect ed aggiungerli al suo corrispettivo registro FIFO. L'estrazione dei dati dal kinect \`e stata per la maggior parte copiata dall'esempio body basic D2D integrato nell'\href{https://www.microsoft.com/en-us/download/details.aspx?id=44561}{sdk browser} fornito da microsoft. Il codice relativo a questa classe \`e:
+La classe "kinect\_class" provvede a leggere i dati dal kinect ed aggiungerli al suo corrispettivo registro FIFO. L'estrazione dei dati dal kinect \`e stata realizzata sulla base dell'esempio body basic D2D integrato nell'\href{https://www.microsoft.com/en-us/download/details.aspx?id=44561}{sdk browser} fornito da microsoft. Il codice relativo a questa classe \`e:
 \begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
 class kinect_class
 {
