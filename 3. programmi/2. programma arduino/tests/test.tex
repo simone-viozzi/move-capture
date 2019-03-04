@@ -1,68 +1,300 @@
-\documentclass{article}
+\documentclass[10pt,a4paper]{article}
 
-\usepackage{xcolor}
-\usepackage{subfig}
-\usepackage{listings}
+\usepackage[italian]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
 
-\lstset{%
-language=C,
-frame=single,
-numbers=left,
-numberstyle=\footnotesize,
-tabsize=2,
-keepspaces=true,
-columns=fullflexible,
-basicstyle=\ttfamily\scriptsize,
-keywordstyle=\color{blue}
+\usepackage[left=1cm,right=1cm,top=1cm,bottom=2cm]{geometry}
+
+\usepackage{txfonts}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage{titlesec}
+\setcounter{secnumdepth}{4}
+\titleformat{\paragraph}{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+%per le immagini
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{wrapfig}
+%\usepackage{subfig}
+
+%per i link
+\usepackage{hyperref} 
+
+%%%%%%%% per il codice c++
+\usepackage{textcomp}
+\usepackage{listings}          % for creating language style
+\usepackage{listingsutf8}
+\input{arduinoLanguage.tex}    % adds the arduino language listing
+\definecolor{commentgreen}{RGB}{2,112,10}
+\definecolor{eminence}{RGB}{108,48,130}
+\definecolor{weborange}{RGB}{255,165,0}
+\definecolor{frenchplum}{RGB}{129,20,83}
+
+
+%% Define an Arduino style fore use later %%
+\lstdefinestyle{myArduino}{
+  language=Arduino,
+    %% Add other words needing highlighting below %%
+    morekeywords=[1]{},                  % [1] -> dark green
+    morekeywords=[2]{FILE_WRITE},        % [2] -> light blue
+    morekeywords=[3]{SD, File},          % [3] -> bold orange
+    morekeywords=[4]{open, exists, write, SoftwareSerial},      % [4] -> orange
+    frame=tb,    
+    inputencoding=utf8,
+    extendedchars=true,
+    literate={è}{{\`{e}}}{1},
+    breaklines=true,  
 }
 
-\newsavebox{\mylistingbox}
+\lstdefinestyle{mycpp}{
+    language=C++,
+    inputencoding=utf8,
+    extendedchars=true,
+    literate={è}{{\`{e}}}{1},
+    %escapeinside={(*******}{*******)}
+    escapechar=\£,
+    %escapeinside=~~,
+    frame=tb,
+    tabsize=2,
+    mathescape=false,
+    breaklines=true,                    % wordwrapping
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},         
+    basicstyle=\fontsize{9}{11}\ttfamily,
+    backgroundcolor=\color{light-gray},
+    xleftmargin=.25in,
+    showstringspaces=false,
+    numbers=left,                    
+    numbersep=5pt,                   
+    %numberstyle=\color{arduinoGrey},    
+    %stepnumber=2, 
+    %upquote=true,
+    commentstyle=\color{commentgreen},
+    keywordstyle=\color{eminence},
+    stringstyle=\color{red},
+    basicstyle=\small\ttfamily, % basic font setting
+    emph={int,char,double,float,unsigned,void,bool},
+    emphstyle={\color{blue}},
+    % keyword highlighting
+    classoffset=1, % starting new class
+    otherkeywords={>,<,.,;,-,!,=,~},
+    morekeywords={>,<,.,;,-,!,=,~},
+    keywordstyle=\color{weborange},
+    classoffset=0,
+}
+
+
+\lstdefinestyle{myoutput}
+{
+    inputencoding=utf8,
+    extendedchars=true,
+    literate={è}{{\`{e}}}{1},
+    tabsize=2,
+    frame=tb,
+    breaklines=true,                    % wordwrapping
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},         
+    basicstyle=\fontsize{9}{11}\ttfamily,
+    backgroundcolor=\color{light-gray},
+    xleftmargin=.25in,
+    showstringspaces=false,
+    numbers=left,                    
+    numbersep=5pt, 
+}
+%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\usepackage{siunitx} %pacchetto per le unita' di misura
+
+%%%%%%%%%%%%%%%%%%%%%% per i flowchart
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{positioning}
+\usetikzlibrary{shapes.geometric}
+\usepgflibrary{shapes.symbols}
+\usetikzlibrary{shapes.multipart}
+
+\tikzset{%
+  >={Latex[width=2mm,length=2mm]},
+  % Specifications for style of nodes:
+            rect/.style = {rectangle, rounded corners, draw=black,
+                           minimum width=4cm, minimum height=1cm,
+                           text centered, font=\sffamily},
+           round/.style = {ellipse, draw, draw=black,
+                           minimum width=4cm, minimum height=1cm,
+                           text centered, font=\sffamily},
+       smallrect/.style = {rectangle, rounded corners, draw=black,
+                           minimum width=2cm, minimum height=1cm,
+                           text centered, font=\sffamily},
+ smallrectsplit4/.style = {rectangle split, rectangle split parts=4, 
+	                       rectangle split part fill={green!30, none, none, none},
+	                       align=center,
+	                       rounded corners, draw=black,
+                           minimum width=2cm, minimum height=1cm,
+                           text centered, font=\sffamily},
+}
+
+%\tikzset{%
+%    >={Latex[width=2mm,length=2mm]},
+%      % Specifications for style of nodes:
+%         declare/.style = {trapezium,draw=black, minimum width=4cm, minimum height=1cm, 
+%                                trapezium right angle=-70, trapezium left angle=70,
+%                                minimum width=4cm, minimum height=1cm,
+%                                text centered, font=\sffamily},
+%           start/.style = {ellipse, draw, draw=black, minimum width=4cm, 
+%                                minimum height=1cm, text centered, font=\sffamily},
+%            cond/.style = {diamond, aspect=2, draw, draw=black,
+%                                minimum width=4cm, minimum height=1cm,
+%                                text centered, font=\sffamily},
+%            rect/.style = {rectangle, draw, draw=black,
+%                                minimum width=4cm, minimum height=1cm,
+%                                text centered, font=\sffamily},
+%}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+
+\pagenumbering{arabic}
+\pagestyle{plain}
+
+% per non farlo anadre a capo ovunque 
+% va in conflitto con quello che lo fa andare a capo nel codice quindi attenzione <--------
+%\usepackage[none]{hyphenat}
+
+
+% per togliere gli ident all'inizio dei paragrafi
+\setlength{\parindent}{0pt}
+
+
+
+
+
+
 
 \begin{document}
 
-\begin{figure}
 
-\begin{lrbox}{\mylistingbox}%
-\begin{minipage}{.45\linewidth}%
-\begin{lstlisting}
-for(int i = 0 ; i < N ; i++)
- for(int j = 0 ; j < N ; j++)
-  for(int k = 0 ; k < N ; k++)
-   c[i][j] += a[i][k] * b[k][j];
-\end{lstlisting}%
-\end{minipage}%
-\end{lrbox}%
-%
-\subfloat[small code]{\usebox{\mylistingbox}}%
-%
-\hfill
-%
-\begin{lrbox}{\mylistingbox}%
-\begin{minipage}{.45\linewidth}%
-\begin{lstlisting}
-for(int ii = 0 ; ii < N ; ii+=B) {
- for(int jj = 0 ; jj < N ; jj+=B) {
-  for(int kk = 0 ; kk < N ; kk+=B) {
-   for(int i = ii ; i < ii + B ; i++) {
-    for(int k = kk ; k < kk + B ; k++){
-     c_i = c[i];
-     a_ik = a[i][k];
-     b_k = b[k];
-     for(int j = jj ; j < jj + B ; j+=2){
-      c_i[j] += a_ik * b_k[j];
-      c_i[j+1] += a_ik * b_k[j+1];
-     }
-    }
-   }
-  }
- }
+
+\newsavebox{\mylistingboxone}
+\newsavebox{\mylistingboxtwo}
+
+\newsavebox{\mytikzboxone}
+\newsavebox{\mytikzboxtwo}
+
+
+\begin{figure}[h]
+	\centering
+	\begin{lrbox}{\mylistingboxone}%
+		\begin{minipage}{.30\linewidth}%
+			\centering
+			\begin{lstlisting}[style=mycpp]
+struct
+{
+  int a;
+  unsigned char b[4];
 }
-\end{lstlisting}%
-\end{minipage}%
-\end{lrbox}%
-%
-\subfloat[Larger code]{\usebox{\mylistingbox}}%
+			\end{lstlisting}%
+		\end{minipage}%
+	\end{lrbox}%
+	
+	
+	\begin{lrbox}{\mylistingboxtwo}%
+		\begin{minipage}{.30\linewidth}%
+			\centering
+			\begin{lstlisting}[style=mycpp]
+union
+{
+  int a;
+  unsigned char b[4];
+}
+			\end{lstlisting}%
+		\end{minipage}%
+	\end{lrbox}%
+	
+	\begin{lrbox}{\mytikzboxone}%
+		\begin{minipage}{.50\linewidth}%
+			\centering
+			\begin{tikzpicture}[node distance=2cm, align=center]
+			\node at (0,0) (A) {};
+	        \node [anchor=south, rect, outer sep=0pt] at (A.south) (B) {};
+	        \node [anchor=south, rect, outer sep=0pt] at (B.south) (C) {1};
+	        \node [anchor=south, rect, outer sep=0pt] at (C.south) (D) {2};
+	        \node [anchor=south, rect, outer sep=0pt] at (D.south) (E) {3};
+	        \node [anchor=south, rect, outer sep=0pt] at (E.south) (F) {};
+	        \node [anchor=south, rect, outer sep=0pt] at (F.south) (G) {};
+			\end{tikzpicture}%
+		\end{minipage}%
+	\end{lrbox}%
+	
+	
+	\begin{lrbox}{\mytikzboxtwo}%
+		\begin{minipage}{.50\linewidth}%
+			\centering
+			\begin{tikzpicture}[node distance=2cm, align=center]
+			\node (prg_ard)			[rect, fill=green!30] 							
+											{programma arduino};
+			\end{tikzpicture}%
+		\end{minipage}%
+	\end{lrbox}%
+	
+	\begin{tabular}{@{}cc@{}}
+		%
+		\begin{tabular}{@{}c@{}}
+		
+			\begin{subfigure}[b]{.40\textwidth}
+				\centering
+				\usebox{\mylistingboxone}
+				\vspace{-10pt}
+				\caption{Another subfigure}
+	  			\label{fig:1b}
+	  			\vspace{10pt}
+	 		\end{subfigure} \\
+	 		
+	 		\begin{subfigure}[b]{.45\textwidth}
+				\centering
+				\usebox{\mytikzboxone}
+				\vspace{0pt}
+				\caption{Another subfigure}
+	  			\label{fig:1b}
+	  			\vspace{0pt}
+	 		\end{subfigure}  
+			%
+			
+		\end{tabular}
 
+		\hspace{-50pt}		
+		
+		\begin{tabular}{@{}c@{}}
+			
+			\begin{subfigure}[b]{.40\textwidth}
+				\centering
+				\usebox{\mylistingboxtwo}
+				\vspace{-10pt}
+				\caption{Another subfigure}
+	  			\label{fig:1b}
+	  			\vspace{10pt}
+	 		\end{subfigure} \\
+			
+			
+			\begin{subfigure}[b]{.45\textwidth}
+				\centering
+				\usebox{\mytikzboxtwo}
+				\vspace{0pt}
+				\caption{Another subfigure}
+	  			\label{fig:1b}
+	  			\vspace{0pt}
+	 		\end{subfigure} 
+	 		
+		\end{tabular}
+		
+	\end{tabular}
+	
+	\caption{A figure}
+	\label{fig:1}
 \end{figure}
 
 \end{document}
