@@ -265,11 +265,16 @@ la libreria windows per l'utilizzo delle funzioni di timing ad alta precisione.\
 
 \end{lstlisting}
 
+\subsubsection{classi di creazione e addestramento modelli su CPU}
+Di seguito sono illustrate le strutture che formano lo scheletro dei modelli, tali strutture sono state pensate per essere completamente modulari e per permettere la realizzazione di diversi modelli, dalle più semplici feed-forward, alle più complesse ricorrenti. Tale approccio permette la massima maneggevolezza della struttura sacrificando l'efficienza che deriva da una computazione matriciale.
 \begin{lstlisting}[style=mycuda, caption=struct strutturali del modello, captionpos=b]
-
-struct Neuron;
+//prototipo struttura neuron
+struct Neuron; 
+//dichiarazione puntatore a neuron
 typedef Neuron *ptNeuron;
 
+//La struttura arc, presente in array nella struttura Neuron
+//conserva i dati delle connessioni e il puntatore alla struttura Neuron puntata 
 struct arc {
 	ptNeuron target = nullptr;
 	float weight = 0;
@@ -277,40 +282,62 @@ struct arc {
 	//bool enabled = true;
 };
 
+//La struttura interArc è stata creata per l'addestramento MLP supportato da un rete ricorrente
+//fornisce un arco di interconnessione tra i neuroni di 2 reti
 struct interArc {
 	ptNeuron target = nullptr;
 	ptNeuron base = nullptr;
 };
 
+//La struttura Neuron è l'unità base delle strutture delle reti e ne conserva tutti i parametri
 struct Neuron {
-	vector<arc> OutArcs; // to inizialize: = new vector<arc>(10);
-	u_int numOutArcs = 0; // numero di archi in uscita
-	u_int numInArcs = 0; //numero di archi in ingresso
-	u_int layer = 0; //indice riga del neurone
-	u_int column = 0; //indice della colonna del neurone
-	float bayes = 0.01f; //peso del bayes
-	float oldBayesDelta = 0; //ultima variazione del peso
-	//vector<float> timeBayes; // vettore delle interconnessioni temporali
-	vector<float> influenceInput; // vettore contenente la percentuale di influenza relativa ad ogni input
-	vector<float> influenceOutput; // vettore contenente la percentuale di influenza relativa all'errore retropropagato da ogni output
-	float output = 0; //potenziale attuale del neurone
-	float absOutSum = 0; //somma in valore assoluto degli input del neurone
-	float absDeltaSum = 0; //somma in valore assoluto delle variazioni dei pesi
-	float BPerr = 0; //errore di retropropagazione
-	int neurIdx = 0; //ogni neurone è contraddistinto da un indice unico che si riferisce alla sua posizione
+	//OutArcs è il vettore di connessioni ai neuroni degli strati successivi 
+	// to inizialize: = new vector<arc>(10);
+	vector<arc> OutArcs; 
+	// numero di archi in uscita
+	u_int numOutArcs = 0; 
+	//numero di archi in ingresso
+	u_int numInArcs = 0; 
+	//indice riga del neurone	
+	u_int layer = 0; 
+	//indice della colonna del neurone
+	u_int column = 0; 
+	//peso del bayes
+	float bayes = 0.01f; 
+	//ultima variazione del peso
+	float oldBayesDelta = 0; 
+	// vettore delle interconnessioni temporali
+	//vector<float> timeBayes; 
+	// vettore contenente la percentuale di influenza relativa ad ogni input
+	vector<float> influenceInput; 
+	// vettore contenente la percentuale di influenza relativa all'errore  retropropagato da ogni output
+	vector<float> influenceOutput; 
+	//potenziale attuale del neurone
+	float output = 0; 
+	//somma in valore assoluto degli input del neurone
+	float absOutSum = 0; 
+	//somma in valore assoluto delle variazioni dei pesi
+	float absDeltaSum = 0; 
+	//errore di retropropagazione
+	float BPerr = 0; 
+	//ogni neurone è contraddistinto da un indice unico che si riferisce alla sua posizione
+	int neurIdx = 0; 
 };
 
+//La struct Layer è stata realizzata per contenere un layer di neuroni
 struct Layer {
 	vector<Neuron> Neurons;
 	u_int numNeurons = 0;
 };
 
+//Omap conserva la scala di conversione tra l'output
 struct Omap {
 	float maxValue = 1;
 	float minValue = 0;
 };
 
-struct conMap { // struttura necessaria per l'inserimento di un nuovo neurone
+// struttura necessaria per l'inserimento di un nuovo neurone
+struct conMap { 
 	u_int startLyr;
 	u_int startCol;
 	u_int arcRef;
@@ -318,82 +345,105 @@ struct conMap { // struttura necessaria per l'inserimento di un nuovo neurone
 	u_int targetCol;
 };
 
+//conserva una serie temporale prima dell'accomulazione in una struct Dataset 
 struct timeSeries {
 	list<float> evento;
 };
 
+//struttura contenente il singolo esempio
 struct example {
 	vector<float> input;
 	vector<float> Doutput;
 };
 
+//Struttura contenente l'intero Dataset di una rete
 struct Dataset {
-	vector<example> trainingSet;
-	vector<example> validationSet;
-	float triningErr = 0;
-	float validationErr = 0;
+	vector<example> trainingSet; // vettore esempi del training set
+	vector<example> validationSet; // vettore esempi del validation set
+	float triningErr = 0; //percentuale di errore training set
+	float validationErr = 0; //percentuale di errore validation set
 };
 
 \end{lstlisting}
 
+La classe DatasetCore è stata realizzata per permettere l'estrazione dei dataset da vari formati, riportandoli nello standard di utilizzato dalle classi che li utilizzano per effettuare gli addestramenti.
 \begin{lstlisting}[style=mycuda, caption=class DatasetCore, captionpos=b]
 class DatasetCore {
 public:
-	list<Dataset> Datasets;
-
+	// lista dei dataset
+	list<Dataset> Datasets; 
+	
+	// costruttore DatasetCore
 	DatasetCore() { ... }
+	
 	//////////////////////MANIPOLAZIONE DATASET////////////////////////////////////
+	//funzione che consente la lettura di serie temporali da csv e le ristruttura in un dataset
 	void readTimeSeriesCsv(string filename, int outStep, int inEx, float trainingPerc) { ... }
 	
+	//estrae un dataset dalla lista interna della classe, la parte training se il flag e true
+	// o la parte validation se il flag è false
 	vector<example> getDataset(int n, bool training = true) { ... }
 	//////////////////////////////////////////////////////////////////////////////////////
 	
 	//////////////////////////ALTRE FUNZIONI//////////////////////////////////////////////
+	//metodo interno per contare le righe di un file
 	int coutnRow(string filename) { ... }
-	//////////////////////////////////////////////////////////////////////////////////////
-};
-
 \end{lstlisting}
 
+La classe network fornisce le variabili e i metodi generali che la maggior parte degli oggetti rete utilizza. 
 \begin{lstlisting}[style=mycuda, caption=class Network, captionpos=b]
-
 class Network {
 
 public:
-	vector<Layer> Layers; // vettore di struct layer
-	vector<example> examples; // vettore di esempi per l'apprendimento
-	vector<Omap> map; // vettore contenente i valori di rimappatura del'output della rete
+	// vettore di struct layer
+	vector<Layer> Layers; 
+	// vettore di esempi per l'apprendimento
+	vector<example> examples; 
+	// vettore contenente i valori di rimappatura del'output della rete
+	vector<Omap> map; 
 
-	string genoma = ""; // nome del file
-	u_int nLayers = 0; // Layer nella rete compresi input output
-	u_int nNeurons = 0; // numero totale neuroni nella rete
-	u_int nArc = 0; //numero totale di tutti gli archi presenti nella rete
-
+	// nome del file contenente la struttura della rete
+	string genoma = ""; 
+	// Layer nella rete compresi strato input e strato output
+	u_int nLayers = 0; 
+	// numero totale neuroni nella rete
+	u_int nNeurons = 0; 
+	//numero totale di tutti gli archi presenti nella rete
+	u_int nArc = 0;
+	
+	//costruttore
 	Network(string filename) {
 		genoma = filename;
 	}
 
 	////////////////FUNZIONE COSTRUZIONE RETE DA FILE////////////////////////////////////
+	//dato il nome del file contenete la struttura carica l'oggetto corrispondente
 	void getNetParams() { ... }
 	//////////////////////////////////////////////////////////////////////////////////////
 	
 	////////////////////FUNZIONE COSTRUZIONE DATASET DA FILE//////////////////////////////
+	//dato il file contenente un dataset prestrutturato correttamente lo carica nel modello
 	void getDataset(string filename) { ... }
 	//////////////////////////////////////////////////////////////////////////////////////
 	
 	////////////////////SALVA RETE SU FILE////////////////////////////////////////////////
+	//salva la rete sul file specificato
 	void saveNet(string filename = "") { ... }
 	//////////////////////////////////////////////////////////////////////////////////////
 	
 	////////////////////////SALVA DATASET SU FILE/////////////////////////////////////////
+	//salva il datset sul file specificato
 	void saveDataset(string filename) { ... }
 	//////////////////////////////////////////////////////////////////////////////////////
 	
 	////////////////////// FUNZIONI MODIFICA RETE/////////////////////////////////////////
+	//elimina un arco dati i parametri diriferimento
 	void deleteArc(int Nlayer, int Ncolumn, int targetLayer, int targetColumn) { ... }
 	
+	//elimina un neurone, compresi tutti gli archi ad esso connesso
 	void deleteNeuron(int Nlayer, int Ncolumn) { ... }
 	
+	//aggiunge un arco dati i riferimenti al neurone di partenza e di arrivo
 	void addArc(int Nlayer, int Ncolumn, int targetLayer, int targetColumn) { ... }
 	//////////////////////////////////////////////////////////////////////////////////////
 	
@@ -408,45 +458,58 @@ public:
 		//w - stampa tutti i pesi con il riferimento riga colonna al target
 		//fc - stampa le medie dei gruppi di pesi tra due layer 	
 		
+	//funzione sigmoide	
 	void sigLayer(int lyr) { ... }
-	void bayesLayer(int lyr, bool absSum = false) { ... }
-	//applica il bayes all'output di ogni neurone del dato layer
 	
-	void resetPotential() { ... }
+	//applica il bayes all'output di ogni neurone del dato layer
+	void bayesLayer(int lyr, bool absSum = false) { ... }
+	
 	// esegue il reset del potenziale di tutti i neuroni della rete
-		
+	void resetPotential() { ... }
+	
+	// esegue il reset della sommatoria di ogni input in valore assoluto di ogni neurone
 	void resetAbsSumPotenzial() { ... }
+	
 	// esegue il reset della sommatoria di ogni input in valore assoluto di ogni neurone
-		
 	void resetAbsSumDelta() { ... }
-	// esegue il reset della sommatoria di ogni input in valore assoluto di ogni neurone
-		
-	void resetBPerr() { ...}
+	
 	// esegue il reset dell'errore retropropagato in ogni neurone
-		
+	void resetBPerr() { ...}
+	
+	//resetta il valore ID nei neuroni di una rete (necessario per modifiche strutturali)	
 	void resetNeuronsID() { ... }
-	vector<conMap> saveConsTowardsLyr(int Layer) { ... }
+	
 	// salva su vettore i riferimenti numerici delle connesioni verso il layer specificato
-		
+	vector<conMap> saveConsTowardsLyr(int Layer) { ... }
+	
+	// ricarica i riferimenti numerici delle connesioni verso il layer specificato	
 	void loadConsTowardsLyr(vector<conMap> con) { ... } 
-	// ricarica i riferimenti numerici delle connesioni verso il layer specificato
-		
+	
+	//elimina il contenuto l'oggetto dataset dell'oggetto rete
 	void ClearDataset() { ... }
-	void genTestDataset(int nExe, int nIn, int nOut, float step, int type, float offset) { ... }
+	
 	//generazione di una serie storica del seno (DEBUG)
-		
+	void genTestDataset(int nExe, int nIn, int nOut, float step, int type, float offset) { ... }
+	
+	//esegue il settaggio della mappatura di output dell'oggetto
 	void setNetMap(float max, float min) { ... }
+	
+	//restituisce il valore normalizzato dell'output della rete
 	float reverseMap(int neur, float val) { ... }
+	
+	// crea un vettore di n elementi successivi e li disordina
+	// creazione di una tabella di accesso casuale per un secondo vettore
 	vector<u_int> casualVector(int in, int start = 0) { ... }
-		// crea un vettore di n elementi successivi e li disordina
-		// creazione di una tabella di accesso casuale per un secondo vettore
 		
+	//esegue il mescolamento degli elementi all'interno di un oggetto vector 
 	/*vector<T, A>*/
 	template<typename T, typename A>
 	void shackeVector(vector<T, A> const& vec) { ... }
-		//esegue il mescolamento degli elementi all'interno di un oggetto vector 
 		
+	//ricalcola gli ID dei neuroni dopo il reset (da eseguire dopo delle modifiche strutturali)	
 	void refreshNeurIdx() { ... }
+	
+	//applica all'intero dataset un valore di offset
 	void datasetOffset(float offset) { ... }
 	//////////////////////////////////////////////////////////////////////////////////////
 	
@@ -466,7 +529,7 @@ public:
 	int getOutConTargetID(ptNeuron base, ptNeuron target) { ... }
 	//////////////////////////////////////////////////////////////////////////////////////
 	
-	/////////////////////////WINDOWS HIGH SPEED TIMING////////////////////////////////////
+	/////////////////////////WINDOWS HIGH PRECISION TIMING////////////////////////////////////
 	BOOL WINAPI QueryPerformanceCounter(_Out_ LARGE_INTEGER *lpPerformanceCount);
 	BOOL WINAPI QueryPerformanceFrequency(_Out_ LARGE_INTEGER *lpFrequency);
 	inline long long PerformanceCounter() noexcept
@@ -478,45 +541,59 @@ public:
 
 \end{lstlisting}
 
+La classe MLP (multi-layer perceptron) figlia della classe Network completa il corredo della madre con tutta una serie di strumenti e variabili che supporta l'addestramento e l'utilizzo di questa tipologia di reti.
 \begin{lstlisting}[style=mycuda, caption=class MLP, captionpos=b]
 
 class MLP : public Network {
 
 public:
-
-	float NetPerformance = 0; // tempo di esecuzione medio in millisecondi
-	float NetErrPercent = 0; //errore percentuale medio associato alla rete
-
+	// tempo di esecuzione medio in millisecondi
+	float NetPerformance = 0; 
+	
+	//errore percentuale medio associato alla rete
+	float NetErrPercent = 0; 
+	
+	//costruttore
 	MLP(string filename) :Network(filename) {};
 
 	/////////////////////FUNZIONI CREAZIONE RETE/////////////////////////////////////////
+	//permette la costruzione rapida di una rete MLP quadrata con dimensioni date
 	void qubeNet(int Nlayers, int Ncolumns, int input, int output, bool c, float initValue = 0.01f) { ... }
 	
 	//CREAZIONE RETE QUADRATA COMPLETAMENTE CONNESSA
+	//permette la costruzione di una rete MLP quadrata con dimensioni date in cui ogni neurone
+	//è connesso a tutti i neuroni di tutti gli strati successivi.
+	//(a parità di neuroni tale modello è più pesante ma tipicamente ha un aprrendimento più rapido)
 	void qubeNetFC(int Nlayers, int Ncolumns, int input, int output, bool c, float initValue = 0.01f) { ... }
 	
 	//CREAZIONE RETE CUSTOM
+	//permette la creazione di una rete MLP con la larghezza di ogni layer variabile
+	//indicando tali larghezze con un apposito vettore dato come argomento
 	void customNet(int Nlayers, vector<int> Ncolumns, float conFill) { ... }
 	//////////////////////////////////////////////////////////////////////////////////////
 	
 	/////////////////////STIMOLAZIONE RETE////////////////////////////////////////////////
 	//procedura di propagazione dell'informazione
+	//dati i riferimenti al vettore contenete gli input e ad un vettore di output esegue
+	//il processamento degli input e carica l'output derivante sul vettore indicato
 	void inputNet(vector<float> &input, vector<float> &output) { ... }
 	
 	//esegue una propagazione dell'informazione salvando lo storico di propagazione degli input
+	//tale funzione viene utilizzata per l'apprendiment strutturale
 	void inputNetProfiler(vector<float> &input, vector<float> &output) { ... }
 	//////////////////////////////////////////////////////////////////////////////////////
 	
 	////////////////////////FUNZIONI DI ADDESTRAMENTO MLP/////////////////////////////////
-	//Algoritmo di addestramento Back-propagation
+	//Algoritmo di addestramento Back-propagation su tutto il dataset caricato
 	void BP(int iter, float eps, float beta, float ErrPercent) { ... }
 	
-	//esecuzione del backpropagation per un solo esempio
+	//esecuzione del backpropagation per un solo esempio 
+	//specificando il particolare esempio
 	void oneBP(float eps, float beta, example e) { ... }
 	//////////////////////////////////////////////////////////////////////////////////////
 	
 	///////////////////////ALTRE FUNZIONI MLP/////////////////////////////////////////////
-	//inizializza i vettori di benchmark presenti nei neuroni
+	//inizializza i vettori di benchmark presenti nei neuroni per l'apprendimento strutturale
 	void initVectorsProfiler() { ... }
 	
 	//resetta a zero tutti i vettori di profilazione esclusi layer input e output
@@ -531,19 +608,28 @@ public:
 	//dal riferimento al nodo target e dall'indice del vettore restituisce il puntatore al neurone base
 	ptNeuron basePosfromtarget(ptNeuron target, int k) { ... }
 	
-	//dato un neurone e l'indice di un suo arco restituisce l'indice di quella connessione all'interno del vettore influenceInput all'interno del neurone target
+	//dato un neurone e l'indice di un suo arco restituisce l'indice di quella connessione all'interno del 				//vettore influenceInput all'interno del neurone target
 	int idBaseConReftoTargetInfl(ptNeuron base, int arc) { ... }
 	//////////////////////////////////////////////////////////////////////////////////////
 
 };
 
 \end{lstlisting}
-
+\clearpage
+\subsubsection{altre classi non utilizzate nel progetto}
+Le seguenti classi sono state iniziate e verranno completate in futuro, La classe Hopfield supporta (ancora in parte) la creazione l'addetramento e l'utilizzo delle reti ricorrenti, ovvere reti con connessioni tra i neuroni che si retropropagano, ovvero che portano potenziali di uscita di neuroni nello strato output e hidden al tempo (t), ad altri neuroni nel tempo (t+1).\\
+La classe structural learning è stata realizzata e testa, ma presenta notevoli inefficienze che non permettono di utilizzarla in questa forma su modelli di grandi dimensioni, tale classe comunque è stata realizzata per effettuare un addestramento che mira a modificare la struttura della rete durante l'addestramento eliminando le connessioni che risultano essere mediamente quelle che persistono nell'introduzione di errore rispetto alle altre.
 \begin{lstlisting}[style=mycuda, caption=altre classi, captionpos=b]
 class Hopfield : public Network { ... };
 
 class StructuralLearning { ... };
 \end{lstlisting}
+
+\subsubsection{Classi e kernel per l'interfacciamento con la GPU}
+In questa sezione sono stati implementati i kernel della GPU, ovvero le funzioni scritte in C/CUDA, che vengono eseguite sulla scheda grafica. tali funzioni sono contraddistinte dalla keyword \_\_global\_\_,  e richiedono come argomenti gli indirizzi di memoria corrispondenti ai dati precaricati sulla global memory della GPU.
+Il richiamo dei kernel dal codice C++ richiedono la sintassi speciale: \\
+\textbf{CUDAapplyWeightCorrections <<<numOfBlocksA, ThxBlock >>> (...);} \\
+si vede infatti la sequenza di caratteri <<<A,B>>> dove A è il numero di blocchi su cui deve essere eseguita la funzione mentre B rappresenta il numero di thread per ogni blocco.
 
 \begin{lstlisting}[style=mycuda, caption=cuda kernels, captionpos=b]
 //////////////////////////////////////CUDA Kernels/////////////////////////////////////
@@ -552,6 +638,7 @@ class StructuralLearning { ... };
 __global__ void CUDAresetVar(float *val) {
 	*val = 0;
 }
+
 //applica ad ogni arco della rete la correzione del peso
 __global__ void CUDAapplyWeightCorrections(float eps, float *NeuronOut, float *BPerr, float *weights, int *ArcIn, int *ArcOut, int nArcs) {
 	unsigned int i = (blockIdx.x * blockDim.x) + threadIdx.x;
@@ -559,20 +646,15 @@ __global__ void CUDAapplyWeightCorrections(float eps, float *NeuronOut, float *B
 		weights[i] += -eps * BPerr[ArcIn[i]] * NeuronOut[ArcOut[i]];
 	}
 }
+
+//applica le correzioni hai bayes dei neuroni
 __global__ void CUDAapplyBayesCorrections(float eps, float *BPerr, float *Bayes, int startN, int endN) {
 	unsigned int i = startN + (blockIdx.x * blockDim.x) + threadIdx.x;
 	if (i <= endN) {
 		Bayes[i] += -eps * BPerr[i];
 	}
 }
-//applica alla sommatoria degli errori pesati e retropropagati ad ogni neurone la derivata puntuale della sigmoide 
-//DEPRECATED!!!
-/*__global__ void CUDAapplayDsigToBPerr(float *NeuronOut, float *BPerr, int nNeuron) {
-	unsigned int i = (blockIdx.x * blockDim.x) + threadIdx.x;
-	if (i < nNeuron) {
-		BPerr[i] *= NeuronOut[i] * (1 - NeuronOut[i]);
-	}
-}*/
+
 //retropropaga l'errore nella rete 
 __global__ void CUDAPropagationErr(float *BPerr, float *weights, float *NeuronOut, int *ArcIn, int *ArcOut, int startA, int endA) {
 	unsigned int i = startA + (blockIdx.x * blockDim.x) + threadIdx.x;
@@ -583,14 +665,18 @@ __global__ void CUDAPropagationErr(float *BPerr, float *weights, float *NeuronOu
 		atomicAdd(&BPerr[ArcOut[i]], BPerr[ArcIn[i]] * weights[i]);
 	}
 }
+
+//moltiplica l'errore delle uscite per la derivata puntuale della sigmoide
 __global__ void CUDAoutDiff(float *BPerr, float *NeuronOut, int startN, int endN) {
 	int i = startN + (blockIdx.x * blockDim.x) + threadIdx.x;
 	if (i <= endN) {
 		BPerr[i] *= NeuronOut[i] * (1 - NeuronOut[i]);
 	}
 }
+
 //calcola l'errore dei neuroni dello strato output
 __global__ void CUDAoutputErr(float *NeuronOut, int OutputRef, int numNeurons, int inputN, float *BPerr, float *examples, int exampleRef, float *mapMaxOut, float *mapMinOut, float *MeanErr) {
+
 	unsigned int i = (OutputRef) + (blockIdx.x * blockDim.x) + threadIdx.x; //indice di scorrimento vettori: NeuronOut, BPerr, 
 	unsigned int e = (exampleRef + inputN) + (blockIdx.x * blockDim.x) + threadIdx.x; //indice di scorrimento vettori: examples
 	unsigned int m = (blockIdx.x * blockDim.x) + threadIdx.x; // indice di scorrimento vettori: mapMaxOut, mapMinOut
@@ -601,24 +687,33 @@ __global__ void CUDAoutputErr(float *NeuronOut, int OutputRef, int numNeurons, i
 		BPerr[i] = (NeuronOut[i] - ((examples[e] - mapMinOut[m]) / delta)) * NeuronOut[i] * (1 - NeuronOut[i]); // formula valida solo per i neuroni di uscita
 		//atomicAdd(MeanErr, (abs((((NeuronOut[i] * delta) + mapMinOut[m]) - examples[e]) / examples[e]))*100.0f);
 		atomicAdd(MeanErr, abs((((NeuronOut[i] * delta) + mapMinOut[m]) - examples[e])/ examples[e]) * 100.0f);
-		//*MeanErr += abs((examples[e] - ((NeuronOut[i] * delta) + mapMinOut[m])) / examples[e]); // calcolo l'errore percentuale sulla singola uscita e lo sommo 
+		// calcolo l'errore percentuale sulla singola uscita e lo sommo 
+		//questo rappresenta uno dei punti più inefficienti dell'algoritmo, 
+		//la funzione AtomicAdd infatti blocca la parallizazzione dell'algoritmo per tutti
+		//i thread che cercheranno di accedere a tale variabile riportando solo per questi
+		//l'esecuzione ad un modello sequenziale mettendoli in attesa
 	}
 }
+
 //resetta un dato vettore 
 __global__ void CUDAresetVector(float *vect, int size) {
 	unsigned int i = (blockIdx.x * blockDim.x) + threadIdx.x;
 	if (i < size) vect[i] = 0.0f;
 }
-//imposta i valori di output dei neuroni di input al valore dell'esempio
+
+//imposta i valori di output dei neuroni di input al valore dell'esempio del dataset
 __global__ void CUDAsetInput(float *NeuronOut, int inputN, int exampleRef, float *example) {
 	unsigned int i = (blockIdx.x * blockDim.x) + threadIdx.x;
 	if (i < inputN)NeuronOut[i] = example[exampleRef + i];
 }
+
+//imposta i valori di output dei neuroni di input al valore specificato
 __global__ void CUDAsetSingleInput(float *NeuronOut, int inputN, float *example) {
 	unsigned int i = (blockIdx.x * blockDim.x) + threadIdx.x;
 	if (i < inputN)NeuronOut[i] = example[i];
 }
-//applica la sigmoide ai potenziali dei neuroni in un dato intervallo
+
+//applica la sigmoide ai potenziali dei neuroni in un dato intervallo (uno strato)
 __global__ void CUDAsigLayer(float *NeuronOut, int start, int end) {
 	unsigned int i = start + (blockIdx.x * blockDim.x) + threadIdx.x;
 	if (i <= end) {
@@ -632,28 +727,27 @@ __global__ void CUDAbayesInput(float *NeuronOut, float *Bayes, int start, int en
 		NeuronOut[i] += Bayes[i];
 	}
 }
+
 //propaga l'informazione dai neuroni dello strato input a quello di output
-//TODO sostituire l'utilizzo di atomicAdd con la riduzione delle somme (utilizando atomicAdd il minor numero possibile di volte per ogni neurone)
 __global__ void CUDAlayerInput(float *weights, int *ArcIn, int *ArcOut, float *NeuronOut, int start, int end) {
 	unsigned int i = start + (blockIdx.x * blockDim.x) + threadIdx.x;
 	if (i <= end) {
-		atomicAdd(&NeuronOut[ArcIn[i]], NeuronOut[ArcOut[i]] * weights[i]); //addizione bloccante non permette ad altri thread di sovrascrivere il falore finche l'operazione non è completata
-		//printf("Neurone %d ( %f ) += Neuron %d ( %f ) * peso ( %f ) \n", ArcIn[i], NeuronOut[ArcIn[i]], ArcOut[i], NeuronOut[ArcOut[i]], weights[i]);
-		//NeuronOut[ArcIn[i]] += NeuronOut[ArcOut[i]] * weights[i];
+		atomicAdd(&NeuronOut[ArcIn[i]], NeuronOut[ArcOut[i]] * weights[i]); 
+		//addizione bloccante non permette ad altri thread di sovrascrivere il falore
+		// finche l'operazione non è completata
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
-
 \end{lstlisting}
 
-\begin{lstlisting}[style=mycuda, caption=librerie usate, captionpos=b]
+Questa classe è l'interfaccia di collegamento con la GPU, la quale conserva i metodi di caricamento dei dati strutturali della rete, e gli esempi di addestramento sulla GPU.
+\begin{lstlisting}[style=mycuda, caption= classe di interfaccia alla GPU, captionpos=b]
 //api di interfacciamento alla GPU
 class CUDAcore {
 public:
-	//TODO aggiungere il vettore dei bayes e relativa funzione di applicazione e correzione
-
-	cudaDeviceProp prop; //Device specs struct
+	//Device specs struct (contiene le specifiche della GPU)
+	cudaDeviceProp prop; 
 	int GpuID = 0;
 
 	//struttura contenente i puntatori alle aree di memoria conenenti i parametri della rete nella GPU
@@ -673,7 +767,7 @@ public:
 		float *InputRT = 0;
 	}gpuNetParams;
 
-	vector<float> weights; //pei della rete
+	vector<float> weights; //pesi della rete
 	vector<int> ArcIn; //target dell'n-esimo arco
 	vector<int> ArcOut; //base dell'n-esimo arco
 	vector<float> NeuronOut; //vettore contenente l'output dei neuroni
@@ -691,11 +785,15 @@ public:
 		GpuID = nGpu;
 		checkCuda(cudaGetDeviceProperties(&prop, nGpu)); // carica lo struct cudaDeviceProp prop con le caratteristiche della GPU con indice 0
 	}
-	/*per convertire gli oggetti vector in Array
-	std::vector<double> v;
-	double* a = &v[0];
-	*/
+	
+\end{lstlisting}
 
+La seguenti funzioni interne della classe di interfaccia alla GPU, rappresentano il metodo di conversione della struttura della rete dalla classe MLP alla classe CudaCore, e viceversa, tale conversione porta il modello da una struttura reticolare a puntatori in una struttura a vettori lineare.\\
+Tale struttura divide i vari parametri della rete in vettori lineari, ogni tipo di elemento viene raggruppato in un unico vettore, mentre le connessioni precedentemente rappresentate da puntatori divengono vettori a loro volta che fungono da tabelle di accesso ordinate, scorrendo dal primo elemento all'ultimo si trovano tutti gli elementi su cui eseguire sequenzialmente le operazioni da svolgere per eseguire la propagazione. La complessità di tale operazione sta proprio nello svolgimento della struttura della rete per poter eseguire con efficienza la computazione sulla scheda grafica, la quale deve essere più "machine-friendly" possibile, data l'enorme quantità di operazioni che deve essere svolta per eseguire l'addestramento. 
+Sono indicate anche altre funzioni di conversione per Hopfield e per il dataset il quale ha bisogno anch'esso di serializzazione per l'utilizzo nelle successive funzioni.
+
+\begin{lstlisting}[style=mycuda, caption= classe di interfaccia alla GPU, captionpos=b]
+	//copia del modello da MLP class a CudaCore class
 	void cudaNetCopyMLP(MLP *pt) {
 		cout << "copying the net into CUDAcore.." << endl;
 		weights.resize(pt->nArc);
@@ -743,7 +841,8 @@ public:
 			priority[i + 1] = ArcIdx - 1; // salvo l'indice dell'ultimo arco del layer corrente
 		}
 	}
-
+	
+	//copia del modello da CudaCore class a MLP class
 	void cudaNetPasteMLP(MLP *pt) {
 		int idx = 0;
 		int Nidx = 0;
@@ -760,6 +859,13 @@ public:
 	void cudaNetCopyHopfield(Hopfield* pt) { ... }
 
 	void cudaNetCopyExamples(MLP *pt) { ... }
+	
+\end{lstlisting}
+
+\subsubsection{metodi che lanciano i kernel sulla GPU}
+i seguenti metodi interagiscono direttamente con la GPU allocando memoria su di essa, caricando i dati, e lanciando i kernel che eseguono le effettive operazioni sulla GPU.  
+
+\begin{lstlisting}[style=mycuda, caption= classe di interfaccia alla GPU, captionpos=b]
 	
 	///////////////////////////////CUDA Kernel functions//////////////////////////
 	//esegue le operazioni di allocamento memoria e preparazione al lancio del kernel di propagazione della rete
@@ -874,11 +980,6 @@ public:
 		double elapsedMilliseconds = 0;
 		double elapsedInMilliseconds = 0;
 
-		//debug////////////
-		int en = 0;
-		float delta = 0;
-		//////////////////
-
 		for (int it = 0; it < Niter; it++) { //scorro le iterazioni
 
 			t0 = PerformanceCounter();
@@ -889,23 +990,11 @@ public:
 				t0in = PerformanceCounter();
 				//resetto il vettore contenente lo stato di attivazione dei neuroni
 				numOfBlocksA = (floorf(NeuronOut.size() / ThxBlock) + 1);
-				CUDAresetVector << <numOfBlocksA, ThxBlock >> > (dev_NeuronOut, NeuronOut.size());
-
-				//////////////////////////////DEBUG///////////////////////////////
-				//cudaStatus = cudaMemcpy(CNeuronOut, dev_NeuronOut, NeuronOut.size() * sizeof(float), cudaMemcpyDeviceToHost);
-				//if (cudaCheckStatus(cudaStatus) == true) goto Error;
-				//copy(CNeuronOut, CNeuronOut + NeuronOut.size(), NeuronOut.begin());
-				///////////////////////////////////////////////////////////////////
+				CUDAresetVector <<<numOfBlocksA, ThxBlock >>> (dev_NeuronOut, NeuronOut.size());
 
 				//imposto i valori di input ai neuroni dello strato input
 				numOfBlocksA = (floorf(inputN / ThxBlock) + 1);
-				CUDAsetInput << <numOfBlocksA, ThxBlock >> > (dev_NeuronOut, inputN, exampleRef, dev_examples);
-
-				//////////////////////////////DEBUG///////////////////////////////
-				//cudaStatus = cudaMemcpy(CNeuronOut, dev_NeuronOut, NeuronOut.size() * sizeof(float), cudaMemcpyDeviceToHost);
-				//if (cudaCheckStatus(cudaStatus) == true) goto Error;
-				//copy(CNeuronOut, CNeuronOut + NeuronOut.size(), NeuronOut.begin());
-				///////////////////////////////////////////////////////////////////
+				CUDAsetInput <<<numOfBlocksA, ThxBlock >>> (dev_NeuronOut, inputN, exampleRef, dev_examples);
 
 				//propagazione dell'input nella rete
 
@@ -931,14 +1020,12 @@ public:
 					numOfBlocksN = floorf(numLayerNeur / ThxBlock) + 1;
 
 					if (i < priority.size() - 2) {
-						CUDAlayerInput << <numOfBlocksA, ThxBlock >> > (dev_weights, dev_ArcIn, dev_ArcOut, dev_NeuronOut, startA, endA); //propago l'output dei neuroni al prossimo/i layer
-						CUDAbayesInput << < numOfBlocksN, ThxBlock >> > (dev_NeuronOut, dev_Bayes, startN, endN); //applico il contributo dei bayes all output dei neuroni del layer corrente 
-						CUDAsigLayer << <numOfBlocksN, ThxBlock >> > (dev_NeuronOut, startN, endN); //applico la sigmoide allo stato di attivazione dei neuroni
-						//////////////////////////////DEBUG//////////////////////////////
-						cudaStatus = cudaMemcpy(CNeuronOut, dev_NeuronOut, NeuronOut.size() * sizeof(float), cudaMemcpyDeviceToHost);
-						if (cudaCheckStatus(cudaStatus) == true) goto Error;
-						copy(CNeuronOut + outputRef, CNeuronOut + NeuronOut.size(), NeuronOut.begin() + outputRef);
-						/////////////////////////////////////////////////////////////////
+						//propago l'output dei neuroni al prossimo/i layer
+						CUDAlayerInput <<<numOfBlocksA, ThxBlock >>> (dev_weights, dev_ArcIn, dev_ArcOut, dev_NeuronOut, startA, endA); 
+						 //applico il contributo dei bayes all output dei neuroni del layer corrente 
+						CUDAbayesInput <<< numOfBlocksN, ThxBlock >>> (dev_NeuronOut, dev_Bayes, startN, endN);
+						//applico la sigmoide allo stato di attivazione dei neuroni
+						CUDAsigLayer <<<numOfBlocksN, ThxBlock >>> (dev_NeuronOut, startN, endN); 
 					}
 				}
 
@@ -948,41 +1035,11 @@ public:
 
 				//resetto il vettore contenente l'errore  dei neuroni
 				numOfBlocksN = (floorf(BPerr.size() / ThxBlock) + 1);
-				CUDAresetVector << <numOfBlocksN, ThxBlock >> > (dev_BPerr, BPerr.size());
-
-				//////////////////////////////DEBUG///////////////////////////////
-				//cudaStatus = cudaMemcpy(CBPerr, dev_BPerr, BPerr.size() * sizeof(float), cudaMemcpyDeviceToHost);
-				//if (cudaCheckStatus(cudaStatus) == true) goto Error;
-				//copy(CBPerr, CBPerr + BPerr.size(), BPerr.begin());
-				//////////////////////////////////////////////////////////////////
+				CUDAresetVector <<<numOfBlocksN, ThxBlock >>> (dev_BPerr, BPerr.size());
 
 				CUDAresetVar <<<1, 1 >>> (dev_MeanErr);
-				CUDAoutputErr << <numOfBlocksOut, ThxBlock >> > (dev_NeuronOut, outputRef, NeuronOut.size(), inputN, dev_BPerr, dev_examples, exampleRef, dev_mapMaxOut, dev_mapMinOut, dev_MeanErr);
+				CUDAoutputErr <<<numOfBlocksOut, ThxBlock >>> (dev_NeuronOut, outputRef, NeuronOut.size(), inputN, dev_BPerr, dev_examples, exampleRef, dev_mapMaxOut, dev_mapMinOut, dev_MeanErr);
 				cudaMemcpy(CMeanErr, dev_MeanErr, sizeof(float), cudaMemcpyDeviceToHost);
-				//////////////////////////////DEBUG///////////////////////////////
-				//cudaStatus = cudaMemcpy(CBPerr, dev_BPerr, BPerr.size() * sizeof(float), cudaMemcpyDeviceToHost);
-				//if (cudaCheckStatus(cudaStatus) == true) goto Error;
-				//copy(CBPerr, CBPerr + BPerr.size(), BPerr.begin());
-
-				///////////////////////////////////////////////////////////////////
-
-				///////////////////////visualizzazione dell'esempio////////////////
-				if (en == t) {
-
-					cudaStatus = cudaMemcpy(CNeuronOut, dev_NeuronOut, NeuronOut.size() * sizeof(float), cudaMemcpyDeviceToHost);
-					if (cudaCheckStatus(cudaStatus) == true) goto Error;
-					copy(CNeuronOut, CNeuronOut + NeuronOut.size(), NeuronOut.begin());
-
-					cout << "esempio " << en << endl;
-					for (int on = 0; on < outputN; on++) {
-						delta = mapMaxOut[on] - mapMinOut[on];
-						cout << "Y" << on << ": " << (NeuronOut[NeuronOut.size() - outputN + on] * delta) + mapMinOut[on] << "   D" << on << ": " << examples[exampleRef + inputN + on] << endl;
-					}
-					cout << endl;
-					en--;
-					if (en < 0)en = (examples.size() / (inputN + outputN)) - 1;
-				}
-				//////////////////////////////////////////////////////////////////////////////////////
 
 				MeanErr += *CMeanErr / outputN;
 
@@ -1020,23 +1077,8 @@ public:
 				numOfBlocksA = floorf(weights.size() / ThxBlock) + 1;
 				numOfBlocksN = floorf(numLayerNeur / ThxBlock) + 1;
 
-				CUDAapplyWeightCorrections << <numOfBlocksA, ThxBlock >> > (eps, dev_NeuronOut, dev_BPerr, dev_weights, dev_ArcIn, dev_ArcOut, weights.size());
-				CUDAapplyBayesCorrections << <numOfBlocksN, ThxBlock >> > (eps, dev_BPerr, dev_Bayes, startN, endN);
-
-				////////////////////DEBUG SECTION////////////////////////
-				//cudaStatus = cudaMemcpy(Cweights, dev_weights, weights.size() * sizeof(float), cudaMemcpyDeviceToHost);
-				//if (cudaCheckStatus(cudaStatus) == true) goto Error;
-				//copy(Cweights, Cweights + weights.size(), weights.begin());
-
-				//cudaStatus = cudaMemcpy(CBayes, dev_Bayes, Bayes.size() * sizeof(float), cudaMemcpyDeviceToHost);
-				//if (cudaCheckStatus(cudaStatus) == true) goto Error;
-				//copy(CBayes, CBayes + Bayes.size(), Bayes.begin());
-
-				//cudaStatus = cudaMemcpy(CBPerr, dev_BPerr, BPerr.size() * sizeof(float), cudaMemcpyDeviceToHost);
-				//if (cudaCheckStatus(cudaStatus) == true) goto Error;
-				//copy(CBPerr, CBPerr + BPerr.size(), BPerr.begin());
-				/////////////////////////////////////////////////////////
-
+				CUDAapplyWeightCorrections <<<numOfBlocksA, ThxBlock >>> (eps, dev_NeuronOut, dev_BPerr, dev_weights, dev_ArcIn, dev_ArcOut, weights.size());
+				CUDAapplyBayesCorrections <<<numOfBlocksN, ThxBlock >>> (eps, dev_BPerr, dev_Bayes, startN, endN);
 			}
 
 			t1 = PerformanceCounter();
@@ -1340,8 +1382,6 @@ public:
 	template<typename T, typename A>
 	float sizeOfVector(vector<T, A> const& vect,string mesureUnit = "B") { ... }
 	//////////////////////////////////////////////////////////////////////////////////////
-	
-	/////////////////////////////ALTRE FUNZIONI///////////////////////////////////////////
 };
 
 \end{lstlisting}
