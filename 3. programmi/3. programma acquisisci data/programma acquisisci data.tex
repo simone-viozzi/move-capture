@@ -625,9 +625,6 @@ logger::attr_thread_name(&slg, "main");
 %
 %
 Un altra classe usata nel resto del programma \`e "class bounded\_buffer", questa classe ospita funzioni specifiche per immagazzinare temporaneamente dei dati gestendone l'ingresso e l'uscita dal buffer. Fondamentalmente costituisce un registro FIFO indipendente dal tipo di dato che si utilizza. Questo tipo di buffer viene comunemente usato in caso si ha la struttura thread che produce dati - thread che consuma dati: il produttore acquisisce i dati e li inserisce nel buffer, il consumatore estrae i dati e li processa. La dimensione del buffer viene specificata quando lo si inizializza e deve essere sufficentemente grande in modo da garantire la non perdita di dati e il non rallentamento del trhead produttore. Nel nostro caso abbiamo adottato questo tipo di buffer per poter garantire l'asincronicit\`a delle acquisizioni tra arduino e il kinect, cos\`i facendo si garantisce la massima velocit\`a tra le acquisizioni dei dati. Il codice relativo a questa classe \`e stato quasi interamente presto dagli esempi della libreria boost, \href{https://www.boost.org/doc/libs/1_69_0/doc/html/circular_buffer/examples.html}{qui} ed \`e:
-
-TODO: https://tex.stackexchange.com/questions/18363/diagrams-package-that-allows-to-draw-computer-buffers-memory-diagrams
-
 \begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
 template <class T>
 class bounded_buffer
@@ -669,6 +666,28 @@ private:
   boost::condition_variable m_not_full;
 };
 \end{lstlisting}
+
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[>=latex,font=\sffamily,semithick,scale=1.75]
+    \fill [green!25] (0,0) -- (67.5:1) arc [end angle=-22.5, start angle=67.5, radius=1] -- cycle;
+    \draw [thick] (0,0) circle (1);
+    \foreach \angle in {90,67.5,...,-67.5}
+        \draw (\angle:1) -- (\angle-180:1);
+    \node [circle,thick,fill=white,draw=black,align=center,minimum size=3cm] at (0,0) {FIFO as a\\Circulate Buffer};
+    \draw [<-] (56.25:1) -- (56.25:1.25) -- +(.333,0)
+        node [right,inner xsep=.333cm] (Head) {Head (extract)};
+    \draw [<-] (-33.75:1) -- (-33.75:1.25) -- +(.333,0)
+        node [right,inner xsep=.333cm] (Tail) {Tail (insert)};
+    \draw [->,shorten >=5pt,shorten <=5pt] (Tail.west) to [bend right] 
+        node [midway,sloped,above,allow upside down] {\footnotesize 4 dati nel FIFO}
+    (Head.west);
+\end{tikzpicture}
+\caption{schema}
+\end{figure}
+TODO!!
+
 %
 %
 Di seguito troviamo i thread producer "kinect\_class" e "arduino\_class".
