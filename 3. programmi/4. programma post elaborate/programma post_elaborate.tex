@@ -175,9 +175,8 @@
 
 \begin{document}
 
-\subsection{programma che si occupa di post-elaborare i dati}
+\subsection{Programma che si occupa di post-elaborare i dati}
 Dopo aver acquisito i dati di arduino e del kinect bisogna effettuare una post elaborazione per ottenere coppie di valori riferiti allo stesso istante temporale. 
-(altro da dire?)
 Il programma usato per fare ci\`o riprende molte cose dal codice del programma "prg\_get\_data", le librerie usate sono le stesse ed anche le classi "kin\_file\_manager", "kin\_file\_manager" e "data\_structure.h".
 L'unica classe nuova \`e "make\_dataset":
 \begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
@@ -250,6 +249,81 @@ public:
 
 };
 \end{lstlisting}
+In questa classe le 2 funzioni principali sono "sync\_with\_clones" e "sync\_without\_clones" che provvedono a costruire le coppie di dati ed a salvarle nella struttura dati "dataset".
+Analizziamo la funzione "sync\_with\_clones":
+\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+void sync_with_clones()
+{
+  uint64_t time_old_good_pair = 0;
+
+  uint64_t time_old_ard = 0;
+  uint64_t time_old_kin = 0;
+
+  auto ard_iter = a_dat.begin();
+  auto kin_iter = k_dat.begin();
+
+  uint32_t ard_cont = 0;
+  uint32_t kin_cont = 0;
+
+  uint32_t old_ard_cont = 0;
+  uint32_t old_kin_cont = 0;
+
+  while (true)
+  {
+    // controllo la sincronia 
+    if (check_sync(ard_iter->frame_time, kin_iter->frame_time))
+    {
+      // aggiungo il dato al dataset
+      transfer_data_to_dataset(&(*ard_iter), &(*kin_iter));
+
+      // stampo delle info utili a capire la qualit\`a dei dati acquisiti
+      cout << abs((long long)(ard_iter->frame_time - kin_iter->frame_time)) << "  kin: " << kin_cont << " ard: " << ard_cont << endl;
+      cout << "time since another good pair: " << ((ard_iter->frame_time + kin_iter->frame_time) / 2 - time_old_good_pair) << endl;
+      cout << "ard frame rate: " << (1.0f / ((ard_iter->frame_time - time_old_ard) / 1000.0f)) << "Hz" << endl;
+      cout << "kin frame rate: " << (1.0f / ((kin_iter->frame_time - time_old_kin) / 1000.0f)) << "Hz" << endl;
+
+      // salvo 
+      time_old_good_pair = (ard_iter->frame_time + kin_iter->frame_time) / 2;
+
+      time_old_ard = ard_iter->frame_time;
+      time_old_kin = kin_iter->frame_time;
+
+
+      if ((kin_cont == old_kin_cont) || (ard_cont == old_ard_cont))
+      {
+        cout << "dati multipli nello stesso range" << endl;
+      }
+      else
+      {
+        old_kin_cont = kin_cont;
+        old_ard_cont = ard_cont;
+      }
+
+      cout << endl;
+
+    }
+    else
+    {
+      cout << "dato scartato" << endl << endl;
+    }
+
+    // incremento chi tra i 2 dati \`e il pi\`u vecchio
+    if (ard_iter->frame_time >= kin_iter->frame_time)
+    {
+      kin_iter++;
+      kin_cont++;
+    }
+    else
+    {
+      ard_iter++;
+      ard_cont++;
+    }
+
+    if ((kin_iter == k_dat.end()) || (ard_iter == a_dat.end())) { break; }
+  }
+}
+\end{lstlisting}
+
 La funzione che si occupa di acquisire i nomi dei file e altro dall'utente \`e "post\_elaborate":
 \begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
 void post_elaborate()

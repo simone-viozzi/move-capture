@@ -371,15 +371,15 @@ Questa struttura dati ha la particolarit\`a che a differenza di una struct, in c
 
 TODO sistemare la formattazione alla fine
 
-\newsavebox{\mylistingboxone}
-\newsavebox{\mylistingboxtwo}
+\newsavebox{\mylistingboxstruct}
+\newsavebox{\mylistingboxunion}
 
-\newsavebox{\mytikzboxone}
-\newsavebox{\mytikzboxtwo}
+\newsavebox{\mytikzboxonestruct}
+\newsavebox{\mytikzboxtwounion}
 
 \begin{figure}[h]
 	\centering
-	\begin{lrbox}{\mylistingboxone}%
+	\begin{lrbox}{\mylistingboxstruct}%
 		\begin{minipage}{.30\linewidth}%
 			\centering
 			\begin{lstlisting}[style=mycpp]
@@ -393,7 +393,7 @@ struct es_struct
 	\end{lrbox}%
 	
 	
-	\begin{lrbox}{\mylistingboxtwo}%
+	\begin{lrbox}{\mylistingboxunion}%
 		\begin{minipage}{.30\linewidth}%
 			\centering
 			\begin{lstlisting}[style=mycpp]
@@ -406,7 +406,7 @@ union es_union
 		\end{minipage}%
 	\end{lrbox}%
 	
-	\begin{lrbox}{\mytikzboxone}%
+	\begin{lrbox}{\mytikzboxonestruct}%
 		\begin{minipage}{.50\linewidth}%
 			\centering
 			\hspace{-1cm}
@@ -440,7 +440,7 @@ union es_union
 	\end{lrbox}%
 	
 	
-	\begin{lrbox}{\mytikzboxtwo}%
+	\begin{lrbox}{\mytikzboxtwounion}%
 		\begin{minipage}{.50\linewidth}%
 			\centering
 			\begin{tikzpicture}[every node/.style={rectpile}]
@@ -493,7 +493,7 @@ union es_union
 		
 			\begin{subfigure}[b]{.40\textwidth}
 				\centering
-				\usebox{\mylistingboxone}
+				\usebox{\mylistingboxstruct}
 				\vspace{-10pt}
 				\caption{Struct generico}
 	  			\label{fig:es_struct}
@@ -502,7 +502,7 @@ union es_union
 	 		
 	 		\begin{subfigure}[b]{.45\textwidth}
 				\centering
-				\usebox{\mytikzboxone}
+				\usebox{\mytikzboxonestruct}
 				\vspace{0pt}
 				\caption{Rappresentazione dei dati dello struct\\memorizzati in ram}
 	  			\label{fig:struct_ram}
@@ -518,7 +518,7 @@ union es_union
 			
 			\begin{subfigure}[b]{.40\textwidth}
 				\centering
-				\usebox{\mylistingboxtwo}
+				\usebox{\mylistingboxunion}
 				\vspace{-10pt}
 				\caption{Union generico}
 	  			\label{fig:struct_ram}
@@ -528,7 +528,7 @@ union es_union
 			
 			\begin{subfigure}[b]{.45\textwidth}
 				\centering
-				\usebox{\mytikzboxtwo}
+				\usebox{\mytikzboxtwounion}
 				\vspace{0pt}
 				\caption{Rappresentazione dei dati dell'union\\memorizzati in ram}
 	  			\label{fig:es_union}
