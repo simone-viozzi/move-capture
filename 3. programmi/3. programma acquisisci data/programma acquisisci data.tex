@@ -163,7 +163,7 @@
 % per non farlo anadre a capo ovunque 
 % va in conflitto con quello che lo fa andare a capo nel codice quindi attenzione <--------
 %\usepackage[none]{hyphenat}
-
+\usepackage[italian=nohyphenation,english=nohyphenation]{hyphsubst}
 
 % per togliere gli ident all'inizio dei paragrafi
 \setlength{\parindent}{0pt}
@@ -382,6 +382,7 @@ Questa libreria \`e strutturata in modo totalmente simile alla precedente con l'
 %
 %
 La libreria "data\_structure.h" \`e fondamentale e definisce le strutture dati utilizzate nel resto del programma:
+TODO massiiiiii
 \begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
 #pragma once
 
@@ -624,6 +625,9 @@ logger::attr_thread_name(&slg, "main");
 %
 %
 Un altra classe usata nel resto del programma \`e "class bounded\_buffer", questa classe ospita funzioni specifiche per immagazzinare temporaneamente dei dati gestendone l'ingresso e l'uscita dal buffer. Fondamentalmente costituisce un registro FIFO indipendente dal tipo di dato che si utilizza. Questo tipo di buffer viene comunemente usato in caso si ha la struttura thread che produce dati - thread che consuma dati: il produttore acquisisce i dati e li inserisce nel buffer, il consumatore estrae i dati e li processa. La dimensione del buffer viene specificata quando lo si inizializza e deve essere sufficentemente grande in modo da garantire la non perdita di dati e il non rallentamento del trhead produttore. Nel nostro caso abbiamo adottato questo tipo di buffer per poter garantire l'asincronicit\`a delle acquisizioni tra arduino e il kinect, cos\`i facendo si garantisce la massima velocit\`a tra le acquisizioni dei dati. Il codice relativo a questa classe \`e stato quasi interamente presto dagli esempi della libreria boost, \href{https://www.boost.org/doc/libs/1_69_0/doc/html/circular_buffer/examples.html}{qui} ed \`e:
+
+TODO: https://tex.stackexchange.com/questions/18363/diagrams-package-that-allows-to-draw-computer-buffers-memory-diagrams
+
 \begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
 template <class T>
 class bounded_buffer
@@ -668,7 +672,7 @@ private:
 %
 %
 Di seguito troviamo i thread producer "kinect\_class" e "arduino\_class".
-La classe "kinect\_class" provvede a leggere i dati dal kinect ed aggiungerli al suo corrispettivo registro FIFO. L'estrazione dei dati dal kinect \`e stata per la maggior parte copiata dall'esempio body basic D2D integrato nell'\href{https://www.microsoft.com/en-us/download/details.aspx?id=44561}{sdk browser} fornito da microsoft. Il codice relativo a questa classe \`e:
+La classe "kinect\_class" provvede a leggere i dati dal kinect ed aggiungerli al suo corrispettivo registro FIFO. L'estrazione dei dati dal kinect \`e stata realizzata sulla base dell'esempio body basic D2D integrato nell'\href{https://www.microsoft.com/en-us/download/details.aspx?id=44561}{sdk browser} fornito da microsoft. Il codice relativo a questa classe \`e:
 \begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
 class kinect_class
 {

@@ -20,6 +20,7 @@
 \usepackage{graphicx}
 \usepackage{subcaption}
 \usepackage{wrapfig}
+%\usepackage{subfig}
 
 %per i link
 \usepackage{hyperref} 
@@ -136,6 +137,8 @@
 	                       rounded corners, draw=black,
                            minimum width=2cm, minimum height=1cm,
                            text centered, font=\sffamily},
+        rectpile/.style = {rectangle, outer sep=0pt, align=right,
+                           minimum width=1cm, minimum height=0.5cm, font=\sffamily}
 }
 
 %\tikzset{%
@@ -173,149 +176,151 @@
 
 
 
+
 \begin{document}
 
-\subsection{programma che si occupa di post-elaborare i dati}
-Dopo aver acquisito i dati di arduino e del kinect bisogna effettuare una post elaborazione per ottenere coppie di valori riferiti allo stesso istante temporale. 
-(altro da dire?)
-Il programma usato per fare ci\`o riprende molte cose dal codice del programma "prg\_get\_data", le librerie usate sono le stesse ed anche le classi "kin\_file\_manager", "kin\_file\_manager" e "data\_structure.h".
-L'unica classe nuova \`e "make\_dataset":
-\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
-class make_dataset
+
+
+\newsavebox{\mylistingboxone}
+\newsavebox{\mylistingboxtwo}
+
+\newsavebox{\mytikzboxone}
+\newsavebox{\mytikzboxtwo}
+
+
+\begin{figure}[h]
+	\centering
+	\begin{lrbox}{\mylistingboxone}%
+		\begin{minipage}{.30\linewidth}%
+			\centering
+			\begin{lstlisting}[style=mycpp]
+struct
 {
-private:
-  // dichiaro i puntatori alle classi per la gestione dei file cos\`i da renderle disponibili per tutta la classe
-  ard_file_manager *f_a;
-  kin_file_manager *f_k;
-
-  // delta di accettazione in millisecondi
-  const int range = 35; 
-
-  // dichiaro 2 liste per conservare i dati 
-  list<arduino_data> a_dat;
-  list<kinect_data> k_dat;
-
-  // devo dichiararare il numero di ingressi e di uscite della rete
-  static const std::size_t n_in = 9;
-  static const std::size_t n_out = 4;
-
-  // dichiaro una lista di tipo dataset_data che verr\`a riempita con i dati accoppiati
-  list<dataset_data<float, n_in, float, n_out>> dataset;
-
-  // questa funzione si occupa di scrivere il dataset sul file
-  void write_dataset(string dataset_file_name){...}
-
-  // restituisce 1 solo se i 2 tempi che gli vengono passati differiscono meno della soglia impostata sopra
-  bool check_sync(uint64_t t1, uint64_t t2){...}
-
-  // questo metodo sposta i dati dalle strutture "arduino_data" e "kinect_data" alla struttura "dataset" dichiarata globalmente nella classe
-  void transfer_data_to_dataset(arduino_data* ard_iter, kinect_data* kin_iter){...}
-
-  // restituisce la differenza temporale tra i tempi passati alla funzione
-  uint32_t time_distance(uint32_t t1, uint32_t t2){...}
-
-  // sincronizza i dati caricati in "a_dat", "k_dat" e li sposta in "dataset" attraverso la funzione "transfer_data_to_dataset". Questa funzione non tiene conto dei "cloni", nella sezione successiva vi \'e una spiegazione pi\'u dettagliata. 
-  void sync_with_clones(){...}
-
-  // stessa cosa della funzione precedente ma eliminando i cloni.
-  void sync_without_clones(){...}
-
-  // carica i dati dai file usando "f_a" e "f_k", sposta i dati acquisiti in "a_dat" e k_dat"
-  void load_data(){...}
-
-public:
-  // l'unica funzione accessibile \`e il costruttore che provvede ad inizializzare i  file manager, caricare i dati, sincronizzarli (con o senza cloni) e scrivere il file del dataset con i dati appena generati.
-  make_dataset(string ard_file_name, string kin_file_name, string dataset_file_name, bool want_clones)
-  {
-    f_a = new ard_file_manager(ard_file_name, std::ios::in);
-    f_k = new kin_file_manager(kin_file_name, std::ios::in);
-
-    load_data();
-    
-    if (want_clones)
-    {
-      sync_with_clones();
-    }
-    else
-    {
-      sync_without_clones();
-    }
-
-    write_dataset(dataset_file_name);
-
-  }
-
-  // distruttore della classe
-  ~make_dataset(){...}
-
-};
-\end{lstlisting}
-La funzione che si occupa di acquisire i nomi dei file e altro dall'utente \`e "post\_elaborate":
-\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
-void post_elaborate()
-{
-  string ard_file_mane = "";
-  string kin_file_mane = "";
-  string dataset_file_name = "";
-  string tmp = "";
-  bool clones = false;
-  
-  // acquisisco i nomi dei file dei dati di arduino e del kinect
-  cout << "insert the input file names: " << endl
-    << "\t arduino -> ";
-  std::getline(std::cin, ard_file_mane);
-  cout << "\t kinekt -> ";
-  std::getline(std::cin, kin_file_mane);
-
-  // acquisisco il nome del file in cui verr\`a scritto il dataset
-  cout << "insert the ouptut file name -> : ";
-  std::getline(std::cin, dataset_file_name);
-
-  // chiedo se si vuole il dataset con o senza cloni
-  cout << "do you want clones in the data? [y/n] -> : ";
-  std::getline(std::cin, tmp);
-
-  if (tmp == "y")
-  {
-    clones = true;
-  }
-  
-  // chiamo la classe make_dataset passandogli i dati appena acquisiti
-  make_dataset(ard_file_mane, kin_file_mane, dataset_file_name, clones);
+  int a;
+  unsigned char b[4];
 }
-\end{lstlisting}
+			\end{lstlisting}%
+		\end{minipage}%
+	\end{lrbox}%
+	
+	
+	\begin{lrbox}{\mylistingboxtwo}%
+		\begin{minipage}{.30\linewidth}%
+			\centering
+			\begin{lstlisting}[style=mycpp]
+union
+{
+  int a;
+  unsigned char b[4];
+}
+			\end{lstlisting}%
+		\end{minipage}%
+	\end{lrbox}%
+	
+	\begin{lrbox}{\mytikzboxone}%
+		\begin{minipage}{.50\linewidth}%
+			\centering
+			\hspace{-1cm}
+			\begin{tikzpicture}[every node/.style={rectpile}]
+			\node at (0, 0) (A) {0x00};
+	        \node [anchor=north, align=right] at (A.south) (B) {0x01};
+	        \node [anchor=north, align=right] at (B.south) (C) {0x02};
+	        \node [anchor=north] at (C.south) (D) {0x03};
+	        \node [anchor=north] at (D.south) (E) {0x04};
+	        \node [anchor=north] at (E.south) (F) {0x05};
+	        \node [anchor=north] at (F.south) (G) {0x06};
+	        \node [anchor=north] at (G.south) (H) {0x07};
+	        
+	        \node [anchor=west, draw=black] at (A.east) (M) {};
+	        \node [anchor=west, draw=black] at (B.east) (N) {};
+	        \node [anchor=west, draw=black] at (C.east) (O) {};
+	        \node [anchor=west, draw=black] at (D.east) (P) {};
+	        \node [anchor=west, draw=black] at (E.east) (Q) {};
+	        \node [anchor=west, draw=black] at (F.east) (R) {};
+	        \node [anchor=west, draw=black] at (G.east) (S) {};
+	        \node [anchor=west, draw=black] at (H.east) (T) {};
+			\end{tikzpicture}%
+		\end{minipage}%
+	\end{lrbox}%
+	
+	
+	\begin{lrbox}{\mytikzboxtwo}%
+		\begin{minipage}{.50\linewidth}%
+			\centering
+			\begin{tikzpicture}[node distance=2cm, align=center]
+			\node (prg_ard)			[rect, fill=green!30] 							
+											{programma arduino};
+			\end{tikzpicture}%
+		\end{minipage}%
+	\end{lrbox}%
+	
+	\begin{tabular}{@{}cc@{}}
+		%
+		\begin{tabular}{@{}c@{}}
+		
+			\begin{subfigure}[b]{.40\textwidth}
+				\centering
+				\usebox{\mylistingboxone}
+				\vspace{-10pt}
+				\caption{Another subfigure}
+	  			\label{fig:1b}
+	  			\vspace{10pt}
+	 		\end{subfigure} \\
+	 		
+	 		\begin{subfigure}[b]{.45\textwidth}
+				\centering
+				\usebox{\mytikzboxone}
+				\vspace{0pt}
+				\caption{Another subfigure}
+	  			\label{fig:1b}
+	  			\vspace{0pt}
+	 		\end{subfigure}  
+			%
+			
+		\end{tabular}
+
+		\hspace{-50pt}		
+		
+		\begin{tabular}{@{}c@{}}
+			
+			\begin{subfigure}[b]{.40\textwidth}
+				\centering
+				\usebox{\mylistingboxtwo}
+				\vspace{-10pt}
+				\caption{Another subfigure}
+	  			\label{fig:1b}
+	  			\vspace{10pt}
+	 		\end{subfigure} \\
+			
+			
+			\begin{subfigure}[b]{.45\textwidth}
+				\centering
+				\usebox{\mytikzboxtwo}
+				\vspace{0pt}
+				\caption{Another subfigure}
+	  			\label{fig:1b}
+	  			\vspace{0pt}
+	 		\end{subfigure} 
+	 		
+		\end{tabular}
+		
+	\end{tabular}
+	
+	\caption{A figure}
+	\label{fig:1}
+\end{figure}
 
 
-
-TODO
-
-
-
-
+\begin{tikzpicture}[>=latex,font=\sffamily,every node/.style={minimum width=1cm,minimum height=1.5em,outer sep=0pt,draw=black,fill=blue!40}]
+        \node at (0,0) (A) {};
+        \node [anchor=west, align=right] at (A.east) (B) {dio cane \\ porco};
+        \node [anchor=west, fill=white!50] at (B.east) (C) {1};
+        \node [anchor=west] at (C.east) (D) {2};
+        \node [anchor=west] at (D.east) (E) {3};
+        \node [anchor=west] at (E.east) (F) {};
+        \node [anchor=west] at (F.east) (G) {};
+        \draw [->,shorten >=2pt,shorten <=2pt,semithick] (G.south) -- +(0,-1em) -| (A);
+\end{tikzpicture}
 
 
 \end{document}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
