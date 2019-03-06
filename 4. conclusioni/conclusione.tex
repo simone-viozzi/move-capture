@@ -1,0 +1,43 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[italian]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+\usepackage[left=1cm,right=1cm,top=1cm,bottom=2cm]{geometry}
+
+\usepackage{txfonts}
+\usepackage[T1]{fontenc}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{titlesec}
+\setcounter{secnumdepth}{4}
+\titleformat{\paragraph}{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\usepackage{graphicx}
+\usepackage{subcaption}
+
+\usepackage{wrapfig}
+
+\pagenumbering{arabic}
+\pagestyle{plain}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+ 
+\section{Conclusioni}
+Il progetto in fine si è concluso con esito negativo per quanto riguarda la buona generalizzazione del modello, principalmente a causa della cattiva qualità della bussola 3D, la quale anche durante i test sull'output non filtrato restituiva valori non coincidenti con la realtà.
+In compenso la libreria sviluppata per l'addestramento dei modelli ha dato buoni risultati in termini di ottimizzazione dell'addestramento dei modelli, incrementando su GPU la velocità di addestramento di ben 250 volte rispetto alla CPU, risultati soddisfacenti considerando che il programma è affetto fortemente da "race-condition", una problematica che affligge gli approcci al calcolo che si basano fortemente su multithreading.
+Tale problematica si presenta quando processi paralleli cercano di eseguire calcoli che mirano a modificare una stessa variabile contemporaneamente, e tale variabile è anche un input di queste funzioni, in particolare un processo prende tale variabile come input copiandola, un altro thread la modifica, e il primo la sovrascrive con il suo risultato non considerando la modifica fatta dal secondo. Per far fronte a tale problema è stato necessario utilizzare le funzioni atomiche che causano un blocco della variabile e mettono in attesa i thread che cercano di utilizzarla, causando una serializzazione delle operazioni.
+Un possibile altro approccio sarebbe stato effettuare queste operazioni con uno specifico ordine che mirava a fare più operazioni su più variabili evitando però la race-condition, con tale ottimizzazione si possono raggiungere velocità di computazione molto maggiori, in quanto un solo thread in attesa in un warp in cui tutti gli altri hanno concluso il proprio lavoro, li blocca tutti, e non permette allo stream-multiprocessor di lanciarne un altro.
+Abbiamo comunque deciso di non intraprendere questa strada in quanto richiedeva molto tempo e ingenti modifiche alla struttura del programma.\\ 
+In oltre con modelli a molti neuroni per layer tendeva ad attenuarsi in quanto si verificavano meno collisioni.
+Concludendo il problema non è stato risolto con i risultati sperati, ma la libreria realizzata è perfettamente funzionante e pronta per essere applicata per l'apprendimento di nuove task.
+
+
+
+
+\end{document}
