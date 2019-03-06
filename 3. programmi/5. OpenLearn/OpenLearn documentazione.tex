@@ -1,0 +1,1373 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[italian]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+\usepackage[left=1cm,right=1cm,top=1cm,bottom=2cm]{geometry}
+
+\usepackage{txfonts}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage{titlesec}
+\setcounter{secnumdepth}{4}
+\titleformat{\paragraph}{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+%per le immagini
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{wrapfig}
+
+%per i link
+\usepackage{hyperref} 
+
+%%%%%%%% per il codice c++
+\usepackage{textcomp}
+\usepackage{listings}          % for creating language style
+\usepackage{listingsutf8}
+\input{arduinoLanguage.tex}    % adds the arduino language listing
+\definecolor{commentgreen}{RGB}{2,112,10}
+\definecolor{eminence}{RGB}{108,48,130}
+\definecolor{weborange}{RGB}{255,165,0}
+\definecolor{frenchplum}{RGB}{129,20,83}
+
+
+%% Define an Arduino style fore use later %%
+\lstdefinestyle{myArduino}{
+  language=Arduino,
+    %% Add other words needing highlighting below %%
+    morekeywords=[1]{},                  % [1] -> dark green
+    morekeywords=[2]{FILE_WRITE},        % [2] -> light blue
+    morekeywords=[3]{SD, File},          % [3] -> bold orange
+    morekeywords=[4]{open, exists, write, SoftwareSerial},      % [4] -> orange
+    frame=tb,    
+    inputencoding=utf8,
+    extendedchars=true,
+    literate={è}{{\`{e}}}{1},
+    breaklines=true,  
+}
+
+\lstdefinestyle{mycpp}{
+    language=C++,
+    inputencoding=utf8,
+    extendedchars=true,
+    literate={è}{{\`{e}}}{1},
+    %escapeinside={(*******}{*******)}
+    escapechar=\£,
+    %escapeinside=~~,
+    frame=tb,
+    tabsize=2,
+    mathescape=false,
+    breaklines=true,                    % wordwrapping
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},         
+    basicstyle=\fontsize{9}{11}\ttfamily,
+    backgroundcolor=\color{light-gray},
+    xleftmargin=.25in,
+    showstringspaces=false,
+    numbers=left,                    
+    numbersep=5pt,                   
+    %numberstyle=\color{arduinoGrey},    
+    %stepnumber=2, 
+    %upquote=true,
+    commentstyle=\color{commentgreen},
+    keywordstyle=\color{eminence},
+    stringstyle=\color{red},
+    basicstyle=\small\ttfamily, % basic font setting
+    emph={int,char,double,float,unsigned,void,bool},
+    emphstyle={\color{blue}},
+    % keyword highlighting
+    classoffset=1, % starting new class
+    otherkeywords={>,<,.,;,-,!,=,~},
+    morekeywords={>,<,.,;,-,!,=,~},
+    keywordstyle=\color{weborange},
+    classoffset=0,
+}
+
+\lstdefinestyle{mycuda}{
+    language=C++,
+    inputencoding=utf8,
+    extendedchars=true,
+     literate=
+    {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+    {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+    {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+    {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+    {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+    {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+    {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+    {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+    {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+    {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+    {€}{{\EUR}}1 {£}{{\pounds}}1,
+    %escapeinside={(*******}{*******)}
+    escapechar=\£,
+    %escapeinside=~~,
+    frame=tb,
+    tabsize=2,
+    mathescape=false,
+    breaklines=true,                    % wordwrapping
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},         
+    basicstyle=\fontsize{9}{11}\ttfamily,
+    backgroundcolor=\color{light-gray},
+    xleftmargin=.25in,
+    showstringspaces=false,
+    numbers=left,                    
+    numbersep=5pt,                   
+    %numberstyle=\color{arduinoGrey},    
+    %stepnumber=2, 
+    %upquote=true,
+    commentstyle=\color{commentgreen},
+    keywordstyle=\color{eminence},
+    stringstyle=\color{red},
+    basicstyle=\small\ttfamily, % basic font setting
+    emph={int,char,double,float,unsigned,void,bool},
+    emphstyle={\color{blue}},
+    morekeywords = [2]{cudaMalloc, cudaFree,
+        __global__, __shared__, __device__, __host__,
+        __syncthreads},
+    keywordstyle=[2]\color{magenta},
+    % keyword highlighting
+    classoffset=1, % starting new class
+    otherkeywords={>,<,.,;,-,!,=,~},
+    morekeywords=[3]{>,<,.,;,-,!,=,~zz},
+    keywordstyle=[3]\color{weborange},
+    classoffset=0,
+}
+
+\lstdefinestyle{myoutput}
+{
+    inputencoding=utf8,
+    extendedchars=true,
+    literate={è}{{\`{e}}}{1},
+    tabsize=2,
+    frame=tb,
+    breaklines=true,                    % wordwrapping
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},         
+    basicstyle=\fontsize{9}{11}\ttfamily,
+    backgroundcolor=\color{light-gray},
+    xleftmargin=.25in,
+    showstringspaces=false,
+    numbers=left,                    
+    numbersep=5pt, 
+}
+%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\usepackage{siunitx} %pacchetto per le unita' di misura
+
+%%%%%%%%%%%%%%%%%%%%%% per i flowchart
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{positioning}
+\usetikzlibrary{shapes.geometric}
+\usepgflibrary{shapes.symbols}
+\usetikzlibrary{shapes.multipart}
+
+\tikzset{%
+  >={Latex[width=2mm,length=2mm]},
+  % Specifications for style of nodes:
+            rect/.style = {rectangle, rounded corners, draw=black,
+                           minimum width=4cm, minimum height=1cm,
+                           text centered, font=\sffamily},
+           round/.style = {ellipse, draw, draw=black,
+                           minimum width=4cm, minimum height=1cm,
+                           text centered, font=\sffamily},
+       smallrect/.style = {rectangle, rounded corners, draw=black,
+                           minimum width=2cm, minimum height=1cm,
+                           text centered, font=\sffamily},
+ smallrectsplit4/.style = {rectangle split, rectangle split parts=4, 
+	                       rectangle split part fill={green!30, none, none, none},
+	                       align=center,
+	                       rounded corners, draw=black,
+                           minimum width=2cm, minimum height=1cm,
+                           text centered, font=\sffamily},
+}
+
+%\tikzset{%
+%    >={Latex[width=2mm,length=2mm]},
+%      % Specifications for style of nodes:
+%         declare/.style = {trapezium,draw=black, minimum width=4cm, minimum height=1cm, 
+%                                trapezium right angle=-70, trapezium left angle=70,
+%                                minimum width=4cm, minimum height=1cm,
+%                                text centered, font=\sffamily},
+%           start/.style = {ellipse, draw, draw=black, minimum width=4cm, 
+%                                minimum height=1cm, text centered, font=\sffamily},
+%            cond/.style = {diamond, aspect=2, draw, draw=black,
+%                                minimum width=4cm, minimum height=1cm,
+%                                text centered, font=\sffamily},
+%            rect/.style = {rectangle, draw, draw=black,
+%                                minimum width=4cm, minimum height=1cm,
+%                                text centered, font=\sffamily},
+%}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+
+\pagenumbering{arabic}
+\pagestyle{plain}
+
+% per non farlo anadre a capo ovunque 
+% va in conflitto con quello che lo fa andare a capo nel codice quindi attenzione <--------
+%\usepackage[none]{hyphenat}
+
+
+% per togliere gli ident all'inizio dei paragrafi
+\setlength{\parindent}{0pt}
+
+
+
+
+
+
+\begin{document}
+
+\subsection{OpenLearn documentazione}
+Questa parte della relazione è dedicata all'illustrazione e al commento della struttura e delle parti principali  del componente principale del progetto, la libreria di machine learning sviluppata per la creazione, l'addestramento e l'utilizzo dei modelli neuronali.
+La libreria è stata sviluppata per un utilizzo general-purpose, quindi non finalizzata alla risoluzione dello specifico problema proposto, il quale è stato utilizzato per testare la risposta di varie strutture neurali alla risoluzione di un problema con soluzione nota ma attraverso l'elaborazione di dati di ingresso fortemente affetti da rumore.
+\\
+Nella documentazione verranno mostrate soltanto le caratteristiche principali della libreria, le classi, le strutture e i metodi più importanti effettivamente utilizzati benche la libreria ne presenti altri predisposti per future revisioni ed espansioni.
+
+\subsubsection{Le librerie importate}
+Le prime librerie importate sono le librerie per l'utilizzo del linguaggio C/CUDA, proprietario di Nvidia, per la programmazione delle schede della stessa azienda.
+\begin{lstlisting}[style=mycuda, caption=librerie cuda, captionpos=b]
+//////////////CUDA INCLUDES///////////////
+#include "cuda.h"
+#include "cuda_runtime.h"
+#include <device_functions.h>
+#include "device_launch_parameters.h"
+
+\end{lstlisting}
+Sono state importate poi diverse librerie standard del linguaggio C++, principalmente:\\
+la classe vector è stata usata per l'incapsulamento e la manipolazione dei dati.\\
+le classi *stream sono state utilizzate per il salvataggio e il caricamento dei modelli su file di testo.\\
+la libreria windows per l'utilizzo delle funzioni di timing ad alta precisione.\\
+
+\begin{lstlisting}[style=mycuda, caption=librerie STD, captionpos=b]
+
+#include "stdafx.h"
+#include <iostream>
+#include <stdio.h>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <windows.h>
+#include <limits>
+#include <math.h>
+#include <vector>
+#include <list>
+#include <time.h>
+#include <algorithm>
+#include <assert.h>
+
+\end{lstlisting}
+
+\begin{lstlisting}[style=mycuda, caption=struct strutturali del modello, captionpos=b]
+
+struct Neuron;
+typedef Neuron *ptNeuron;
+
+struct arc {
+	ptNeuron target = nullptr;
+	float weight = 0;
+	float oldDelta = 0;
+	//bool enabled = true;
+};
+
+struct interArc {
+	ptNeuron target = nullptr;
+	ptNeuron base = nullptr;
+};
+
+struct Neuron {
+	vector<arc> OutArcs; // to inizialize: = new vector<arc>(10);
+	u_int numOutArcs = 0; // numero di archi in uscita
+	u_int numInArcs = 0; //numero di archi in ingresso
+	u_int layer = 0; //indice riga del neurone
+	u_int column = 0; //indice della colonna del neurone
+	float bayes = 0.01f; //peso del bayes
+	float oldBayesDelta = 0; //ultima variazione del peso
+	//vector<float> timeBayes; // vettore delle interconnessioni temporali
+	vector<float> influenceInput; // vettore contenente la percentuale di influenza relativa ad ogni input
+	vector<float> influenceOutput; // vettore contenente la percentuale di influenza relativa all'errore retropropagato da ogni output
+	float output = 0; //potenziale attuale del neurone
+	float absOutSum = 0; //somma in valore assoluto degli input del neurone
+	float absDeltaSum = 0; //somma in valore assoluto delle variazioni dei pesi
+	float BPerr = 0; //errore di retropropagazione
+	int neurIdx = 0; //ogni neurone è contraddistinto da un indice unico che si riferisce alla sua posizione
+};
+
+struct Layer {
+	vector<Neuron> Neurons;
+	u_int numNeurons = 0;
+};
+
+struct Omap {
+	float maxValue = 1;
+	float minValue = 0;
+};
+
+struct conMap { // struttura necessaria per l'inserimento di un nuovo neurone
+	u_int startLyr;
+	u_int startCol;
+	u_int arcRef;
+	u_int targetLyr;
+	u_int targetCol;
+};
+
+struct timeSeries {
+	list<float> evento;
+};
+
+struct example {
+	vector<float> input;
+	vector<float> Doutput;
+};
+
+struct Dataset {
+	vector<example> trainingSet;
+	vector<example> validationSet;
+	float triningErr = 0;
+	float validationErr = 0;
+};
+
+\end{lstlisting}
+
+\begin{lstlisting}[style=mycuda, caption=class DatasetCore, captionpos=b]
+class DatasetCore {
+public:
+	list<Dataset> Datasets;
+
+	DatasetCore() { ... }
+	//////////////////////MANIPOLAZIONE DATASET////////////////////////////////////
+	void readTimeSeriesCsv(string filename, int outStep, int inEx, float trainingPerc) { ... }
+	
+	vector<example> getDataset(int n, bool training = true) { ... }
+	//////////////////////////////////////////////////////////////////////////////////////
+	
+	//////////////////////////ALTRE FUNZIONI//////////////////////////////////////////////
+	int coutnRow(string filename) { ... }
+	//////////////////////////////////////////////////////////////////////////////////////
+};
+
+\end{lstlisting}
+
+\begin{lstlisting}[style=mycuda, caption=class Network, captionpos=b]
+
+class Network {
+
+public:
+	vector<Layer> Layers; // vettore di struct layer
+	vector<example> examples; // vettore di esempi per l'apprendimento
+	vector<Omap> map; // vettore contenente i valori di rimappatura del'output della rete
+
+	string genoma = ""; // nome del file
+	u_int nLayers = 0; // Layer nella rete compresi input output
+	u_int nNeurons = 0; // numero totale neuroni nella rete
+	u_int nArc = 0; //numero totale di tutti gli archi presenti nella rete
+
+	Network(string filename) {
+		genoma = filename;
+	}
+
+	////////////////FUNZIONE COSTRUZIONE RETE DA FILE////////////////////////////////////
+	void getNetParams() { ... }
+	//////////////////////////////////////////////////////////////////////////////////////
+	
+	////////////////////FUNZIONE COSTRUZIONE DATASET DA FILE//////////////////////////////
+	void getDataset(string filename) { ... }
+	//////////////////////////////////////////////////////////////////////////////////////
+	
+	////////////////////SALVA RETE SU FILE////////////////////////////////////////////////
+	void saveNet(string filename = "") { ... }
+	//////////////////////////////////////////////////////////////////////////////////////
+	
+	////////////////////////SALVA DATASET SU FILE/////////////////////////////////////////
+	void saveDataset(string filename) { ... }
+	//////////////////////////////////////////////////////////////////////////////////////
+	
+	////////////////////// FUNZIONI MODIFICA RETE/////////////////////////////////////////
+	void deleteArc(int Nlayer, int Ncolumn, int targetLayer, int targetColumn) { ... }
+	
+	void deleteNeuron(int Nlayer, int Ncolumn) { ... }
+	
+	void addArc(int Nlayer, int Ncolumn, int targetLayer, int targetColumn) { ... }
+	//////////////////////////////////////////////////////////////////////////////////////
+	
+	/////////////////////////FUNZIONI VARIE///////////////////////////////////////////////
+	float DsigOut(int Layer, int Neuron) { ... }
+	float sigmoid(float x) { return 1 / (1 + exp(-x)); } // Sigmoide
+	float logit(float x) { return log(x / (1 - x)); } // funzione sigmoide inversa 
+	float gaussian(float x, float mu, float var) { ... }
+	void WeightsStamp(string mode = "a") { ... }
+		//m - stampa le medie dei pesi di ogni layer
+		//a - stampa tutti i pesi della rete con alcuni parametri di apprendimento
+		//w - stampa tutti i pesi con il riferimento riga colonna al target
+		//fc - stampa le medie dei gruppi di pesi tra due layer 	
+		
+	void sigLayer(int lyr) { ... }
+	void bayesLayer(int lyr, bool absSum = false) { ... }
+	//applica il bayes all'output di ogni neurone del dato layer
+	
+	void resetPotential() { ... }
+	// esegue il reset del potenziale di tutti i neuroni della rete
+		
+	void resetAbsSumPotenzial() { ... }
+	// esegue il reset della sommatoria di ogni input in valore assoluto di ogni neurone
+		
+	void resetAbsSumDelta() { ... }
+	// esegue il reset della sommatoria di ogni input in valore assoluto di ogni neurone
+		
+	void resetBPerr() { ...}
+	// esegue il reset dell'errore retropropagato in ogni neurone
+		
+	void resetNeuronsID() { ... }
+	vector<conMap> saveConsTowardsLyr(int Layer) { ... }
+	// salva su vettore i riferimenti numerici delle connesioni verso il layer specificato
+		
+	void loadConsTowardsLyr(vector<conMap> con) { ... } 
+	// ricarica i riferimenti numerici delle connesioni verso il layer specificato
+		
+	void ClearDataset() { ... }
+	void genTestDataset(int nExe, int nIn, int nOut, float step, int type, float offset) { ... }
+	//generazione di una serie storica del seno (DEBUG)
+		
+	void setNetMap(float max, float min) { ... }
+	float reverseMap(int neur, float val) { ... }
+	vector<u_int> casualVector(int in, int start = 0) { ... }
+		// crea un vettore di n elementi successivi e li disordina
+		// creazione di una tabella di accesso casuale per un secondo vettore
+		
+	/*vector<T, A>*/
+	template<typename T, typename A>
+	void shackeVector(vector<T, A> const& vec) { ... }
+		//esegue il mescolamento degli elementi all'interno di un oggetto vector 
+		
+	void refreshNeurIdx() { ... }
+	void datasetOffset(float offset) { ... }
+	//////////////////////////////////////////////////////////////////////////////////////
+	
+	///////////////////////ACCESSO A VARIABILI PRIVATE////////////////////////////////////
+	int numLayers() { ... }
+	int numNeurons(int Layer) { ... }
+	int numCon(int Layer, int Neuron) { ... }
+	int numInCon(int Layer, int Neuron) { ... }
+	int getConTargetLyr(int Layer, int Neuron, int Arc) { ... }
+	int getConTargetCol(int Layer, int Neuron, int Arc) { ... }
+	float getWeight(int Layer, int Neuron, int Arc) { ... }
+	float getDeltaWeight(int Layer, int Neuron, int Arc) { ... }
+	float getOutput(int Layer, int Neuron) { ... }
+	float getBPerr(int Layer, int Neuron) { ... }
+	ptNeuron getTarget(int Layer, int Neuron) { ... }
+	ptNeuron getConTarget(int Layer, int Neuron, int Conn) { ... }
+	int getOutConTargetID(ptNeuron base, ptNeuron target) { ... }
+	//////////////////////////////////////////////////////////////////////////////////////
+	
+	/////////////////////////WINDOWS HIGH SPEED TIMING////////////////////////////////////
+	BOOL WINAPI QueryPerformanceCounter(_Out_ LARGE_INTEGER *lpPerformanceCount);
+	BOOL WINAPI QueryPerformanceFrequency(_Out_ LARGE_INTEGER *lpFrequency);
+	inline long long PerformanceCounter() noexcept
+	{...}
+	inline long long PerformanceFrequency() noexcept
+	{...}
+	//////////////////////////////////////////////////////////////////////////////////////
+};
+
+\end{lstlisting}
+
+\begin{lstlisting}[style=mycuda, caption=class MLP, captionpos=b]
+
+class MLP : public Network {
+
+public:
+
+	float NetPerformance = 0; // tempo di esecuzione medio in millisecondi
+	float NetErrPercent = 0; //errore percentuale medio associato alla rete
+
+	MLP(string filename) :Network(filename) {};
+
+	/////////////////////FUNZIONI CREAZIONE RETE/////////////////////////////////////////
+	void qubeNet(int Nlayers, int Ncolumns, int input, int output, bool c, float initValue = 0.01f) { ... }
+	
+	//CREAZIONE RETE QUADRATA COMPLETAMENTE CONNESSA
+	void qubeNetFC(int Nlayers, int Ncolumns, int input, int output, bool c, float initValue = 0.01f) { ... }
+	
+	//CREAZIONE RETE CUSTOM
+	void customNet(int Nlayers, vector<int> Ncolumns, float conFill) { ... }
+	//////////////////////////////////////////////////////////////////////////////////////
+	
+	/////////////////////STIMOLAZIONE RETE////////////////////////////////////////////////
+	//procedura di propagazione dell'informazione
+	void inputNet(vector<float> &input, vector<float> &output) { ... }
+	
+	//esegue una propagazione dell'informazione salvando lo storico di propagazione degli input
+	void inputNetProfiler(vector<float> &input, vector<float> &output) { ... }
+	//////////////////////////////////////////////////////////////////////////////////////
+	
+	////////////////////////FUNZIONI DI ADDESTRAMENTO MLP/////////////////////////////////
+	//Algoritmo di addestramento Back-propagation
+	void BP(int iter, float eps, float beta, float ErrPercent) { ... }
+	
+	//esecuzione del backpropagation per un solo esempio
+	void oneBP(float eps, float beta, example e) { ... }
+	//////////////////////////////////////////////////////////////////////////////////////
+	
+	///////////////////////ALTRE FUNZIONI MLP/////////////////////////////////////////////
+	//inizializza i vettori di benchmark presenti nei neuroni
+	void initVectorsProfiler() { ... }
+	
+	//resetta a zero tutti i vettori di profilazione esclusi layer input e output
+	void resetVectorsProfiler(bool inInfl, bool outInfl) { ... }
+	
+	//stampa a schermo l'influenza degli input per ogni uscita
+	void stampInputInfluences(bool all = false) { ... }
+	
+	//stampa a schermo l'influenza degli errori degli output per ogni ingresso
+	void stampOutputErrorPropagation(bool all = false) { ... }
+	
+	//dal riferimento al nodo target e dall'indice del vettore restituisce il puntatore al neurone base
+	ptNeuron basePosfromtarget(ptNeuron target, int k) { ... }
+	
+	//dato un neurone e l'indice di un suo arco restituisce l'indice di quella connessione all'interno del vettore influenceInput all'interno del neurone target
+	int idBaseConReftoTargetInfl(ptNeuron base, int arc) { ... }
+	//////////////////////////////////////////////////////////////////////////////////////
+
+};
+
+\end{lstlisting}
+
+\begin{lstlisting}[style=mycuda, caption=altre classi, captionpos=b]
+class Hopfield : public Network { ... };
+
+class StructuralLearning { ... };
+\end{lstlisting}
+
+\begin{lstlisting}[style=mycuda, caption=cuda kernels, captionpos=b]
+//////////////////////////////////////CUDA Kernels/////////////////////////////////////
+
+//resetta il valore di una variabile all'interno della scheda grafica
+__global__ void CUDAresetVar(float *val) {
+	*val = 0;
+}
+//applica ad ogni arco della rete la correzione del peso
+__global__ void CUDAapplyWeightCorrections(float eps, float *NeuronOut, float *BPerr, float *weights, int *ArcIn, int *ArcOut, int nArcs) {
+	unsigned int i = (blockIdx.x * blockDim.x) + threadIdx.x;
+	if (i < nArcs) {
+		weights[i] += -eps * BPerr[ArcIn[i]] * NeuronOut[ArcOut[i]];
+	}
+}
+__global__ void CUDAapplyBayesCorrections(float eps, float *BPerr, float *Bayes, int startN, int endN) {
+	unsigned int i = startN + (blockIdx.x * blockDim.x) + threadIdx.x;
+	if (i <= endN) {
+		Bayes[i] += -eps * BPerr[i];
+	}
+}
+//applica alla sommatoria degli errori pesati e retropropagati ad ogni neurone la derivata puntuale della sigmoide 
+//DEPRECATED!!!
+/*__global__ void CUDAapplayDsigToBPerr(float *NeuronOut, float *BPerr, int nNeuron) {
+	unsigned int i = (blockIdx.x * blockDim.x) + threadIdx.x;
+	if (i < nNeuron) {
+		BPerr[i] *= NeuronOut[i] * (1 - NeuronOut[i]);
+	}
+}*/
+//retropropaga l'errore nella rete 
+__global__ void CUDAPropagationErr(float *BPerr, float *weights, float *NeuronOut, int *ArcIn, int *ArcOut, int startA, int endA) {
+	unsigned int i = startA + (blockIdx.x * blockDim.x) + threadIdx.x;
+
+	//retropropago l'errore dai neuroni successivi
+	if (i <= endA) {
+		//BPerr[ArcOut[i]] += BPerr[ArcIn[i]] * weights[i];
+		atomicAdd(&BPerr[ArcOut[i]], BPerr[ArcIn[i]] * weights[i]);
+	}
+}
+__global__ void CUDAoutDiff(float *BPerr, float *NeuronOut, int startN, int endN) {
+	int i = startN + (blockIdx.x * blockDim.x) + threadIdx.x;
+	if (i <= endN) {
+		BPerr[i] *= NeuronOut[i] * (1 - NeuronOut[i]);
+	}
+}
+//calcola l'errore dei neuroni dello strato output
+__global__ void CUDAoutputErr(float *NeuronOut, int OutputRef, int numNeurons, int inputN, float *BPerr, float *examples, int exampleRef, float *mapMaxOut, float *mapMinOut, float *MeanErr) {
+	unsigned int i = (OutputRef) + (blockIdx.x * blockDim.x) + threadIdx.x; //indice di scorrimento vettori: NeuronOut, BPerr, 
+	unsigned int e = (exampleRef + inputN) + (blockIdx.x * blockDim.x) + threadIdx.x; //indice di scorrimento vettori: examples
+	unsigned int m = (blockIdx.x * blockDim.x) + threadIdx.x; // indice di scorrimento vettori: mapMaxOut, mapMinOut
+	//if (i == 0) *MeanErr = 0;
+	if (i < numNeurons) {
+
+		float delta = mapMaxOut[m] - mapMinOut[m];
+		BPerr[i] = (NeuronOut[i] - ((examples[e] - mapMinOut[m]) / delta)) * NeuronOut[i] * (1 - NeuronOut[i]); // formula valida solo per i neuroni di uscita
+		//atomicAdd(MeanErr, (abs((((NeuronOut[i] * delta) + mapMinOut[m]) - examples[e]) / examples[e]))*100.0f);
+		atomicAdd(MeanErr, abs((((NeuronOut[i] * delta) + mapMinOut[m]) - examples[e])/ examples[e]) * 100.0f);
+		//*MeanErr += abs((examples[e] - ((NeuronOut[i] * delta) + mapMinOut[m])) / examples[e]); // calcolo l'errore percentuale sulla singola uscita e lo sommo 
+	}
+}
+//resetta un dato vettore 
+__global__ void CUDAresetVector(float *vect, int size) {
+	unsigned int i = (blockIdx.x * blockDim.x) + threadIdx.x;
+	if (i < size) vect[i] = 0.0f;
+}
+//imposta i valori di output dei neuroni di input al valore dell'esempio
+__global__ void CUDAsetInput(float *NeuronOut, int inputN, int exampleRef, float *example) {
+	unsigned int i = (blockIdx.x * blockDim.x) + threadIdx.x;
+	if (i < inputN)NeuronOut[i] = example[exampleRef + i];
+}
+__global__ void CUDAsetSingleInput(float *NeuronOut, int inputN, float *example) {
+	unsigned int i = (blockIdx.x * blockDim.x) + threadIdx.x;
+	if (i < inputN)NeuronOut[i] = example[i];
+}
+//applica la sigmoide ai potenziali dei neuroni in un dato intervallo
+__global__ void CUDAsigLayer(float *NeuronOut, int start, int end) {
+	unsigned int i = start + (blockIdx.x * blockDim.x) + threadIdx.x;
+	if (i <= end) {
+		NeuronOut[i] = 1 / (1 + expf(-NeuronOut[i]));
+	}
+}
+//aggiunge all'output del neurone il contributo del bayes
+__global__ void CUDAbayesInput(float *NeuronOut, float *Bayes, int start, int end) {
+	unsigned int i = start + (blockIdx.x * blockDim.x) + threadIdx.x;
+	if (i <= end) {
+		NeuronOut[i] += Bayes[i];
+	}
+}
+//propaga l'informazione dai neuroni dello strato input a quello di output
+//TODO sostituire l'utilizzo di atomicAdd con la riduzione delle somme (utilizando atomicAdd il minor numero possibile di volte per ogni neurone)
+__global__ void CUDAlayerInput(float *weights, int *ArcIn, int *ArcOut, float *NeuronOut, int start, int end) {
+	unsigned int i = start + (blockIdx.x * blockDim.x) + threadIdx.x;
+	if (i <= end) {
+		atomicAdd(&NeuronOut[ArcIn[i]], NeuronOut[ArcOut[i]] * weights[i]); //addizione bloccante non permette ad altri thread di sovrascrivere il falore finche l'operazione non è completata
+		//printf("Neurone %d ( %f ) += Neuron %d ( %f ) * peso ( %f ) \n", ArcIn[i], NeuronOut[ArcIn[i]], ArcOut[i], NeuronOut[ArcOut[i]], weights[i]);
+		//NeuronOut[ArcIn[i]] += NeuronOut[ArcOut[i]] * weights[i];
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////
+
+\end{lstlisting}
+
+\begin{lstlisting}[style=mycuda, caption=librerie usate, captionpos=b]
+//api di interfacciamento alla GPU
+class CUDAcore {
+public:
+	//TODO aggiungere il vettore dei bayes e relativa funzione di applicazione e correzione
+
+	cudaDeviceProp prop; //Device specs struct
+	int GpuID = 0;
+
+	//struttura contenente i puntatori alle aree di memoria conenenti i parametri della rete nella GPU
+	struct devNetParams {
+		float *weights = 0;
+		int *ArcIn = 0;
+		int *ArcOut = 0;
+		float *examples = 0;
+		float *NeuronOut = 0;
+		float *Bayes = 0;
+		float *BPerr = 0;
+		float *mapMaxOut = 0;
+		float *mapMinOut = 0;
+		int *NeurInLyr = 0;
+		int *priority = 0;
+		float *MeanErr = 0;
+		float *InputRT = 0;
+	}gpuNetParams;
+
+	vector<float> weights; //pei della rete
+	vector<int> ArcIn; //target dell'n-esimo arco
+	vector<int> ArcOut; //base dell'n-esimo arco
+	vector<float> NeuronOut; //vettore contenente l'output dei neuroni
+	vector<float> Bayes; //vettore contenente i bayes dei neuroni
+	vector<float> BPerr; // vettore contenete gli errori retropropagati
+	vector<float> mapMaxOut; //vettore contenente il massimo valore degli output
+	vector<float> mapMinOut; //vettore contenente il minimo valore degli output
+	vector<int> priority; // vettore contenente i punti di sincronizazione dei thread
+	vector<int> NeurInLyr; //vettore contenente gli indici dell'ultimo neurone di ogni layer
+	vector<float>examples; //vettore degli esempi
+	float MeanErr = 0; //veriabile contenente l'errore medio percentuale della rete
+	int inputN, outputN; //passo di esecuzione elementi del vettore esempi
+
+	CUDAcore(int nGpu) {
+		GpuID = nGpu;
+		checkCuda(cudaGetDeviceProperties(&prop, nGpu)); // carica lo struct cudaDeviceProp prop con le caratteristiche della GPU con indice 0
+	}
+	/*per convertire gli oggetti vector in Array
+	std::vector<double> v;
+	double* a = &v[0];
+	*/
+
+	void cudaNetCopyMLP(MLP *pt) {
+		cout << "copying the net into CUDAcore.." << endl;
+		weights.resize(pt->nArc);
+		ArcIn.resize(pt->nArc);
+		ArcOut.resize(pt->nArc);
+		NeuronOut.resize(pt->nNeurons);
+		Bayes.resize(pt->nNeurons);
+		BPerr.resize(pt->nNeurons);
+		priority.resize(pt->nLayers + 1);
+		NeurInLyr.resize(pt->nLayers + 1);
+		mapMaxOut.resize(pt->map.size());
+		mapMinOut.resize(pt->map.size());
+		inputN = pt->numNeurons(0);
+		outputN = pt->numNeurons(pt->nLayers - 1);
+
+		int NeuronIdx = 0;
+		int ArcIdx = 0;
+		vector<int> neurons(pt->nLayers);
+		//carico il vettore di mappatura dell'output della rete
+		for (int i = 0; i < pt->map.size(); i++) {
+			mapMaxOut[i] = pt->map[i].maxValue;
+			mapMinOut[i] = pt->map[i].minValue;
+		}
+
+		NeurInLyr[0] = -1; // setto il primo valore 
+		priority[0] = -1; // setto il primo valore 
+
+		//carico i parametri della rete
+		for (int i = 0; i < pt->nLayers; i++) {
+
+			for (int j = 0; j < pt->numNeurons(i); j++) {
+
+				Bayes[NeuronIdx] = pt->getTarget(i, j)->bayes;
+
+				for (int k = 0; k < pt->numCon(i, j); k++) {
+
+					weights[ArcIdx] = pt->getTarget(i, j)->OutArcs[k].weight;
+					ArcIn[ArcIdx] = pt->getTarget(i, j)->OutArcs[k].target->neurIdx;
+					ArcOut[ArcIdx] = pt->getTarget(i, j)->neurIdx;
+					ArcIdx++;
+				}
+				NeuronIdx++;
+			}
+			NeurInLyr[i + 1] = NeuronIdx - 1; // salvo l'indice dell'ultimo neurone del layer corrente
+			priority[i + 1] = ArcIdx - 1; // salvo l'indice dell'ultimo arco del layer corrente
+		}
+	}
+
+	void cudaNetPasteMLP(MLP *pt) {
+		int idx = 0;
+		int Nidx = 0;
+		for (int i = 0; i < pt->nLayers; i++) {
+			for (int j = 0; j < pt->numNeurons(i); j++) {
+				pt->getTarget(i, j)->bayes = Bayes[Nidx++];
+				for (int k = 0; k < pt->numCon(i, j); k++) {
+					pt->getTarget(i, j)->OutArcs[k].weight = weights[idx++];
+				}
+			}
+		}
+	}
+
+	void cudaNetCopyHopfield(Hopfield* pt) { ... }
+
+	void cudaNetCopyExamples(MLP *pt) { ... }
+	
+	///////////////////////////////CUDA Kernel functions//////////////////////////
+	//esegue le operazioni di allocamento memoria e preparazione al lancio del kernel di propagazione della rete
+	cudaError_t hostCUDAtrainingNet(float eps, int Niter, int ThxBlock) {
+		cout << "learning is started!" << endl;
+		//host variables
+		float *Cweights = &weights[0];
+		int *CArcIn = &ArcIn[0];
+		int *CArcOut = &ArcOut[0];
+		float *CNeuronOut = &NeuronOut[0];
+		float *CBayes = &Bayes[0];
+		float *CBPerr = &BPerr[0];
+		float *CmapMaxOut = &mapMaxOut[0];
+		float *CmapMinOut = &mapMinOut[0];
+		float *Cexamples = &examples[0];
+		int *CNeurInLyr = &NeurInLyr[0];
+		int *Cpriority = &priority[0];
+		float *CMeanErr = &MeanErr;
+
+		//device variables
+		float *dev_weights = 0;
+		int *dev_ArcIn = 0;
+		int *dev_ArcOut = 0;
+		float *dev_examples = 0;
+		float *dev_NeuronOut = 0;
+		float *dev_Bayes = 0;
+		float *dev_BPerr = 0;
+		float *dev_mapMaxOut = 0;
+		float *dev_mapMinOut = 0;
+		int *dev_NeurInLyr = 0;
+		int *dev_priority = 0;
+		float *dev_MeanErr = 0;
+
+		//int ThxBlock = 1024;
+
+		cudaError_t cudaStatus;
+
+		// Choose which GPU to run on, change this on a multi-GPU system.
+		cudaStatus = cudaSetDevice(GpuID);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+
+		// Allocate GPU buffers for vectors    
+		cudaStatus = cudaMalloc((void**)&dev_weights, weights.size() * sizeof(float));
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMalloc((void**)&dev_ArcIn, ArcIn.size() * sizeof(float));
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMalloc((void**)&dev_ArcOut, ArcOut.size() * sizeof(float));
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMalloc((void**)&dev_NeuronOut, NeuronOut.size() * sizeof(float));
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMalloc((void**)&dev_Bayes, Bayes.size() * sizeof(float));
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMalloc((void**)&dev_BPerr, BPerr.size() * sizeof(float));
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMalloc((void**)&dev_mapMaxOut, mapMaxOut.size() * sizeof(float));
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMalloc((void**)&dev_mapMinOut, mapMinOut.size() * sizeof(float));
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMalloc((void**)&dev_examples, examples.size() * sizeof(float));
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMalloc((void**)&dev_NeurInLyr, NeurInLyr.size() * sizeof(int));
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMalloc((void**)&dev_priority, priority.size() * sizeof(int));
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMalloc((void**)&dev_MeanErr, sizeof(float));
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+
+
+		// Copy input vectors from host memory to GPU buffers.
+		cudaStatus = cudaMemcpy(dev_weights, Cweights, weights.size() * sizeof(float), cudaMemcpyHostToDevice);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMemcpy(dev_ArcIn, CArcIn, ArcIn.size() * sizeof(int), cudaMemcpyHostToDevice);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMemcpy(dev_ArcOut, CArcOut, ArcOut.size() * sizeof(int), cudaMemcpyHostToDevice);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMemcpy(dev_NeuronOut, CNeuronOut, NeuronOut.size() * sizeof(float), cudaMemcpyHostToDevice);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMemcpy(dev_Bayes, CBayes, Bayes.size() * sizeof(float), cudaMemcpyHostToDevice);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMemcpy(dev_BPerr, CBPerr, BPerr.size() * sizeof(float), cudaMemcpyHostToDevice);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMemcpy(dev_mapMaxOut, CmapMaxOut, mapMaxOut.size() * sizeof(float), cudaMemcpyHostToDevice);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMemcpy(dev_mapMinOut, CmapMinOut, mapMinOut.size() * sizeof(float), cudaMemcpyHostToDevice);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMemcpy(dev_examples, Cexamples, examples.size() * sizeof(float), cudaMemcpyHostToDevice);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMemcpy(dev_NeurInLyr, CNeurInLyr, NeurInLyr.size() * sizeof(int), cudaMemcpyHostToDevice);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMemcpy(dev_priority, Cpriority, priority.size() * sizeof(int), cudaMemcpyHostToDevice);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMemcpy(dev_MeanErr, CMeanErr, sizeof(float), cudaMemcpyHostToDevice);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+
+
+
+		//////////////////lancio dei kernel all'interno della gpu////////////////
+		int startA = 0;
+		int endA = 0;
+		int startN = 0;
+		int endN = 0;
+		int numLayerArcs = 0;
+		int numLayerNeur = 0;
+		int numOfBlocksMax = 0;
+		int numOfBlocksA = 0;
+		int numOfBlocksN = 0;
+		int numOfBlocksOut = floorf(outputN / ThxBlock) + 1;
+		int exampleRef = 0;
+		int outputRef = NeuronOut.size() - outputN;
+		long long t0 = 0, t1 = 0;
+		long long t0in = 0, t1in = 0;
+		double elapsedMilliseconds = 0;
+		double elapsedInMilliseconds = 0;
+
+		//debug////////////
+		int en = 0;
+		float delta = 0;
+		//////////////////
+
+		for (int it = 0; it < Niter; it++) { //scorro le iterazioni
+
+			t0 = PerformanceCounter();
+
+			for (int t = 0; t < (examples.size() / (inputN + outputN)); t++) { //scorro gli esempi
+				//imposto il riferimento per l'esempio di input
+				exampleRef = t * (inputN + outputN);
+				t0in = PerformanceCounter();
+				//resetto il vettore contenente lo stato di attivazione dei neuroni
+				numOfBlocksA = (floorf(NeuronOut.size() / ThxBlock) + 1);
+				CUDAresetVector << <numOfBlocksA, ThxBlock >> > (dev_NeuronOut, NeuronOut.size());
+
+				//////////////////////////////DEBUG///////////////////////////////
+				//cudaStatus = cudaMemcpy(CNeuronOut, dev_NeuronOut, NeuronOut.size() * sizeof(float), cudaMemcpyDeviceToHost);
+				//if (cudaCheckStatus(cudaStatus) == true) goto Error;
+				//copy(CNeuronOut, CNeuronOut + NeuronOut.size(), NeuronOut.begin());
+				///////////////////////////////////////////////////////////////////
+
+				//imposto i valori di input ai neuroni dello strato input
+				numOfBlocksA = (floorf(inputN / ThxBlock) + 1);
+				CUDAsetInput << <numOfBlocksA, ThxBlock >> > (dev_NeuronOut, inputN, exampleRef, dev_examples);
+
+				//////////////////////////////DEBUG///////////////////////////////
+				//cudaStatus = cudaMemcpy(CNeuronOut, dev_NeuronOut, NeuronOut.size() * sizeof(float), cudaMemcpyDeviceToHost);
+				//if (cudaCheckStatus(cudaStatus) == true) goto Error;
+				//copy(CNeuronOut, CNeuronOut + NeuronOut.size(), NeuronOut.begin());
+				///////////////////////////////////////////////////////////////////
+
+				//propagazione dell'input nella rete
+
+				startA = 0; // indice di partenza dei vettori archi
+				endA = 0; // ultimo indice dei vettori archi
+				startN = 0; // indice di partenza dei vettori neuroni
+				endN = 0; // ultimo indice dei vettori neuroni
+
+				for (int i = 0; i < priority.size() - 1; i++) { //NB non viene applicata la sigmoide allo strato di input eventulmente correggi
+
+					startA = priority[i] + 1;
+					endA = priority[i + 1];
+
+					if (i < priority.size() - 2) {
+						startN = NeurInLyr[i + 1] + 1;
+						endN = NeurInLyr[i + 2];
+					}
+
+					numLayerArcs = endA - startA + 1;
+					numLayerNeur = endN - startN + 1;
+
+					numOfBlocksA = floorf(numLayerArcs / ThxBlock) + 1;
+					numOfBlocksN = floorf(numLayerNeur / ThxBlock) + 1;
+
+					if (i < priority.size() - 2) {
+						CUDAlayerInput << <numOfBlocksA, ThxBlock >> > (dev_weights, dev_ArcIn, dev_ArcOut, dev_NeuronOut, startA, endA); //propago l'output dei neuroni al prossimo/i layer
+						CUDAbayesInput << < numOfBlocksN, ThxBlock >> > (dev_NeuronOut, dev_Bayes, startN, endN); //applico il contributo dei bayes all output dei neuroni del layer corrente 
+						CUDAsigLayer << <numOfBlocksN, ThxBlock >> > (dev_NeuronOut, startN, endN); //applico la sigmoide allo stato di attivazione dei neuroni
+						//////////////////////////////DEBUG//////////////////////////////
+						cudaStatus = cudaMemcpy(CNeuronOut, dev_NeuronOut, NeuronOut.size() * sizeof(float), cudaMemcpyDeviceToHost);
+						if (cudaCheckStatus(cudaStatus) == true) goto Error;
+						copy(CNeuronOut + outputRef, CNeuronOut + NeuronOut.size(), NeuronOut.begin() + outputRef);
+						/////////////////////////////////////////////////////////////////
+					}
+				}
+
+				t1in = PerformanceCounter();
+				elapsedInMilliseconds += ((t1in - t0in) * 1000.0) / PerformanceFrequency();
+
+
+				//resetto il vettore contenente l'errore  dei neuroni
+				numOfBlocksN = (floorf(BPerr.size() / ThxBlock) + 1);
+				CUDAresetVector << <numOfBlocksN, ThxBlock >> > (dev_BPerr, BPerr.size());
+
+				//////////////////////////////DEBUG///////////////////////////////
+				//cudaStatus = cudaMemcpy(CBPerr, dev_BPerr, BPerr.size() * sizeof(float), cudaMemcpyDeviceToHost);
+				//if (cudaCheckStatus(cudaStatus) == true) goto Error;
+				//copy(CBPerr, CBPerr + BPerr.size(), BPerr.begin());
+				//////////////////////////////////////////////////////////////////
+
+				CUDAresetVar <<<1, 1 >>> (dev_MeanErr);
+				CUDAoutputErr << <numOfBlocksOut, ThxBlock >> > (dev_NeuronOut, outputRef, NeuronOut.size(), inputN, dev_BPerr, dev_examples, exampleRef, dev_mapMaxOut, dev_mapMinOut, dev_MeanErr);
+				cudaMemcpy(CMeanErr, dev_MeanErr, sizeof(float), cudaMemcpyDeviceToHost);
+				//////////////////////////////DEBUG///////////////////////////////
+				//cudaStatus = cudaMemcpy(CBPerr, dev_BPerr, BPerr.size() * sizeof(float), cudaMemcpyDeviceToHost);
+				//if (cudaCheckStatus(cudaStatus) == true) goto Error;
+				//copy(CBPerr, CBPerr + BPerr.size(), BPerr.begin());
+
+				///////////////////////////////////////////////////////////////////
+
+				///////////////////////visualizzazione dell'esempio////////////////
+				if (en == t) {
+
+					cudaStatus = cudaMemcpy(CNeuronOut, dev_NeuronOut, NeuronOut.size() * sizeof(float), cudaMemcpyDeviceToHost);
+					if (cudaCheckStatus(cudaStatus) == true) goto Error;
+					copy(CNeuronOut, CNeuronOut + NeuronOut.size(), NeuronOut.begin());
+
+					cout << "esempio " << en << endl;
+					for (int on = 0; on < outputN; on++) {
+						delta = mapMaxOut[on] - mapMinOut[on];
+						cout << "Y" << on << ": " << (NeuronOut[NeuronOut.size() - outputN + on] * delta) + mapMinOut[on] << "   D" << on << ": " << examples[exampleRef + inputN + on] << endl;
+					}
+					cout << endl;
+					en--;
+					if (en < 0)en = (examples.size() / (inputN + outputN)) - 1;
+				}
+				//////////////////////////////////////////////////////////////////////////////////////
+
+				MeanErr += *CMeanErr / outputN;
+
+
+				//retropropagazione dell'errore
+
+				for (int i = priority.size() - 2; i > 1; i--) {
+
+					startA = priority[i - 1] + 1;
+					endA = priority[i];
+					startN = NeurInLyr[i - 1] + 1;
+					endN = NeurInLyr[i];
+
+					numLayerArcs = endA - startA + 1;
+					numLayerNeur = endN - startN + 1;
+
+					numOfBlocksA = floorf(numLayerArcs / ThxBlock) + 1;
+					numOfBlocksN = floorf(numLayerNeur / ThxBlock) + 1;
+					//numOfBlocksMax = maxOf(numOfBlocksA, numOfBlocksN);
+
+					CUDAPropagationErr <<<numOfBlocksA, ThxBlock >>> (dev_BPerr, dev_weights, dev_NeuronOut, dev_ArcIn, dev_ArcOut, startA, endA);
+					CUDAoutDiff <<<numOfBlocksN, ThxBlock >>> (dev_BPerr, dev_NeuronOut, startN, endN);
+					cudaStatus = cudaMemcpy(CBPerr, dev_BPerr, BPerr.size() * sizeof(float), cudaMemcpyDeviceToHost);
+					if (cudaCheckStatus(cudaStatus) == true) goto Error;
+					copy(CBPerr, CBPerr + BPerr.size(), BPerr.begin());
+				}
+
+				//applico a ogni peso la sua correzione
+
+				startN = NeurInLyr[1] + 1; // la correzione dei bais va applicata dal primo layer nascosto in poi
+				endN = NeurInLyr[NeurInLyr.size() - 1];
+
+				numLayerNeur = endN - startN + 1;
+
+				numOfBlocksA = floorf(weights.size() / ThxBlock) + 1;
+				numOfBlocksN = floorf(numLayerNeur / ThxBlock) + 1;
+
+				CUDAapplyWeightCorrections << <numOfBlocksA, ThxBlock >> > (eps, dev_NeuronOut, dev_BPerr, dev_weights, dev_ArcIn, dev_ArcOut, weights.size());
+				CUDAapplyBayesCorrections << <numOfBlocksN, ThxBlock >> > (eps, dev_BPerr, dev_Bayes, startN, endN);
+
+				////////////////////DEBUG SECTION////////////////////////
+				//cudaStatus = cudaMemcpy(Cweights, dev_weights, weights.size() * sizeof(float), cudaMemcpyDeviceToHost);
+				//if (cudaCheckStatus(cudaStatus) == true) goto Error;
+				//copy(Cweights, Cweights + weights.size(), weights.begin());
+
+				//cudaStatus = cudaMemcpy(CBayes, dev_Bayes, Bayes.size() * sizeof(float), cudaMemcpyDeviceToHost);
+				//if (cudaCheckStatus(cudaStatus) == true) goto Error;
+				//copy(CBayes, CBayes + Bayes.size(), Bayes.begin());
+
+				//cudaStatus = cudaMemcpy(CBPerr, dev_BPerr, BPerr.size() * sizeof(float), cudaMemcpyDeviceToHost);
+				//if (cudaCheckStatus(cudaStatus) == true) goto Error;
+				//copy(CBPerr, CBPerr + BPerr.size(), BPerr.begin());
+				/////////////////////////////////////////////////////////
+
+			}
+
+			t1 = PerformanceCounter();
+			elapsedMilliseconds = ((t1 - t0) * 1000.0) / PerformanceFrequency(); // calcolo il tempo di esecuzione di una iterazione di addestramento (tutto il set)
+			MeanErr = MeanErr / (examples.size() / (inputN + outputN)); //calcolo l'errore percentuale medio sul dataset
+			elapsedInMilliseconds = elapsedInMilliseconds / (examples.size() / (inputN + outputN));
+			cout << "Iterazione: " << it << "  " << MeanErr << " %Err  " << "execution time:" << elapsedMilliseconds << "ms" << endl;
+			cout << "mean InputTime: " << elapsedInMilliseconds << "ms" << endl;
+			printNetSpecs();
+			MeanErr = 0;
+		}
+
+		cudaStatus = cudaMemcpy(Cweights, dev_weights, weights.size() * sizeof(float), cudaMemcpyDeviceToHost);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		copy(Cweights, Cweights + weights.size(), weights.begin());
+
+		cudaStatus = cudaMemcpy(CBayes, dev_Bayes, Bayes.size() * sizeof(float), cudaMemcpyDeviceToHost);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		copy(CBayes, CBayes + Bayes.size(), Bayes.begin());
+		//checkpoint di errore (se la GPU richiama un qualunque errore ripare da qui)
+	Error:
+
+		//libero la memoria nella scheda grafica
+		cudaFree(dev_weights);
+		cudaFree(dev_ArcIn);
+		cudaFree(dev_ArcOut);
+		cudaFree(dev_NeuronOut);
+		cudaFree(dev_examples);
+		cudaFree(dev_BPerr);
+		cudaFree(dev_mapMaxOut);
+		cudaFree(dev_mapMinOut);
+		cudaFree(dev_priority);
+		cudaFree(dev_NeurInLyr);
+
+		//ritorno lo stato della GPU
+		return cudaStatus;
+	}
+
+	//esegue il caricamento nella gpu dei parametri della rete
+	cudaError_t hostCUDAuploadNetParams() {
+
+		cudaError_t cudaStatus;
+
+		cudaStatus = cudaSetDevice(GpuID);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+
+		//host variables
+		float *Cweights = &weights[0];
+		int *CArcIn = &ArcIn[0];
+		int *CArcOut = &ArcOut[0];
+		float *CNeuronOut = &NeuronOut[0];
+		float *CBayes = &Bayes[0];
+		float *CBPerr = &BPerr[0];
+		float *CmapMaxOut = &mapMaxOut[0];
+		float *CmapMinOut = &mapMinOut[0];
+		float *Cexamples = &examples[0];
+		int *CNeurInLyr = &NeurInLyr[0];
+		int *Cpriority = &priority[0];
+		float *CMeanErr = &MeanErr;
+
+		// Choose which GPU to run on, change this on a multi-GPU system.
+		cudaStatus = cudaSetDevice(GpuID);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+
+		// Allocate GPU buffers for vectors    
+		cudaStatus = cudaMalloc((void**)&gpuNetParams.weights, weights.size() * sizeof(float));
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMalloc((void**)&gpuNetParams.ArcIn, ArcIn.size() * sizeof(float));
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMalloc((void**)&gpuNetParams.ArcOut, ArcOut.size() * sizeof(float));
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMalloc((void**)&gpuNetParams.NeuronOut, NeuronOut.size() * sizeof(float));
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMalloc((void**)&gpuNetParams.Bayes, Bayes.size() * sizeof(float));
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMalloc((void**)&gpuNetParams.BPerr, BPerr.size() * sizeof(float));
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMalloc((void**)&gpuNetParams.mapMaxOut, mapMaxOut.size() * sizeof(float));
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMalloc((void**)&gpuNetParams.mapMinOut, mapMinOut.size() * sizeof(float));
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMalloc((void**)&gpuNetParams.examples, examples.size() * sizeof(float));
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMalloc((void**)&gpuNetParams.NeurInLyr, NeurInLyr.size() * sizeof(int));
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMalloc((void**)&gpuNetParams.priority, priority.size() * sizeof(int));
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMalloc((void**)&gpuNetParams.InputRT, inputN * sizeof(float));
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMalloc((void**)&gpuNetParams.MeanErr, sizeof(float));
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+
+
+		// Copy input vectors from host memory to GPU buffers.
+		cudaStatus = cudaMemcpy(gpuNetParams.weights, Cweights, weights.size() * sizeof(float), cudaMemcpyHostToDevice);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMemcpy(gpuNetParams.ArcIn, CArcIn, ArcIn.size() * sizeof(int), cudaMemcpyHostToDevice);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMemcpy(gpuNetParams.ArcOut, CArcOut, ArcOut.size() * sizeof(int), cudaMemcpyHostToDevice);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMemcpy(gpuNetParams.NeuronOut, CNeuronOut, NeuronOut.size() * sizeof(float), cudaMemcpyHostToDevice);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMemcpy(gpuNetParams.Bayes, CBayes, Bayes.size() * sizeof(float), cudaMemcpyHostToDevice);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMemcpy(gpuNetParams.BPerr, CBPerr, BPerr.size() * sizeof(float), cudaMemcpyHostToDevice);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMemcpy(gpuNetParams.mapMaxOut, CmapMaxOut, mapMaxOut.size() * sizeof(float), cudaMemcpyHostToDevice);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMemcpy(gpuNetParams.mapMinOut, CmapMinOut, mapMinOut.size() * sizeof(float), cudaMemcpyHostToDevice);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMemcpy(gpuNetParams.examples, Cexamples, examples.size() * sizeof(float), cudaMemcpyHostToDevice);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMemcpy(gpuNetParams.NeurInLyr, CNeurInLyr, NeurInLyr.size() * sizeof(int), cudaMemcpyHostToDevice);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMemcpy(gpuNetParams.priority, Cpriority, priority.size() * sizeof(int), cudaMemcpyHostToDevice);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+		cudaStatus = cudaMemcpy(gpuNetParams.MeanErr, CMeanErr, sizeof(float), cudaMemcpyHostToDevice);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+
+		if (false) {
+			Error:
+			//libero la memoria nella scheda grafica
+			cudaFree(gpuNetParams.weights);
+			cudaFree(gpuNetParams.ArcIn);
+			cudaFree(gpuNetParams.ArcOut);
+			cudaFree(gpuNetParams.NeuronOut);
+			cudaFree(gpuNetParams.examples);
+			cudaFree(gpuNetParams.BPerr);
+			cudaFree(gpuNetParams.mapMaxOut);
+			cudaFree(gpuNetParams.mapMinOut);
+			cudaFree(gpuNetParams.priority);
+			cudaFree(gpuNetParams.NeurInLyr);
+			cout << "ERRORE: libero la memoria della gpu. " << endl;
+		}
+			
+		return cudaStatus;
+	}
+
+	//esegue il download dalla gpu dei parametri della rete
+	cudaError_t hostCUDAdownloadNetParams() {
+
+		cout << "downloading net params from gpu.." << endl;
+
+		float *Cweights = &weights[0];
+		float *CBayes = &Bayes[0];
+
+		cudaError_t cudaStatus;
+
+		cudaStatus = cudaSetDevice(GpuID);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+
+		cudaStatus = cudaMemcpy(Cweights, gpuNetParams.weights, weights.size() * sizeof(float), cudaMemcpyDeviceToHost);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+
+		cudaStatus = cudaMemcpy(CBayes, gpuNetParams.Bayes, Bayes.size() * sizeof(float), cudaMemcpyDeviceToHost);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+
+
+		if (false) {
+		Error:
+			//libero la memoria nella scheda grafica
+			cudaFree(gpuNetParams.weights);
+			cudaFree(gpuNetParams.ArcIn);
+			cudaFree(gpuNetParams.ArcOut);
+			cudaFree(gpuNetParams.NeuronOut);
+			cudaFree(gpuNetParams.examples);
+			cudaFree(gpuNetParams.BPerr);
+			cudaFree(gpuNetParams.mapMaxOut);
+			cudaFree(gpuNetParams.mapMinOut);
+			cudaFree(gpuNetParams.priority);
+			cudaFree(gpuNetParams.NeurInLyr);
+			cout << "ERRORE: libero la memoria della gpu. " << endl;
+		}
+
+		return cudaStatus;
+	}
+
+	//esegue l'input della rete gia addestrata prendendo in input l'esempio dato 
+	cudaError_t hostCUDAInputNet(float *input, int ThxBlock) {
+		//inportante verificare che l'input abbia la stessa dimansione dell'input della rete
+
+		cudaError cudaStatus;
+
+		cudaStatus = cudaSetDevice(GpuID);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+
+		//////////////////lancio dei kernel all'interno della gpu////////////////
+		//int ThxBlock = 1024;
+		int startA = 0;
+		int endA = 0;
+		int startN = 0;
+		int endN = 0;
+		int numLayerArcs = 0;
+		int numLayerNeur = 0;
+		int numOfBlocksMax = 0;
+		int numOfBlocksA = 0;
+		int numOfBlocksN = 0;
+		int numOfBlocksOut = floorf(outputN / ThxBlock) + 1;
+		int outputRef = NeuronOut.size() - outputN;
+		long long t0in = 0, t1in = 0;
+		double elapsedInMilliseconds = 0;
+			
+		t0in = PerformanceCounter();
+		//resetto il vettore contenente lo stato di attivazione dei neuroni
+		numOfBlocksA = (floorf(NeuronOut.size() / ThxBlock) + 1);
+		CUDAresetVector <<<numOfBlocksA, ThxBlock >>> (gpuNetParams.NeuronOut, NeuronOut.size());
+
+		cudaStatus = cudaMemcpy(gpuNetParams.InputRT, input, inputN * sizeof(float), cudaMemcpyHostToDevice);
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+
+		//imposto i valori di input ai neuroni dello strato input
+		numOfBlocksA = (floorf(inputN / ThxBlock) + 1);
+		CUDAsetSingleInput <<<numOfBlocksA, ThxBlock>>> (gpuNetParams.NeuronOut, inputN, gpuNetParams.InputRT);
+		
+		//propagazione dell'input nella rete
+
+		startA = 0; // indice di partenza dei vettori archi
+		endA = 0; // ultimo indice dei vettori archi
+		startN = 0; // indice di partenza dei vettori neuroni
+		endN = 0; // ultimo indice dei vettori neuroni
+
+		for (int i = 0; i < priority.size() - 1; i++) { //NB non viene applicata la sigmoide allo strato di input eventulmente correggi
+
+			startA = priority[i] + 1;
+			endA = priority[i + 1];
+
+			if (i < priority.size() - 2) {
+				startN = NeurInLyr[i + 1] + 1;
+				endN = NeurInLyr[i + 2];
+			}
+
+			numLayerArcs = endA - startA + 1;
+			numLayerNeur = endN - startN + 1;
+
+			numOfBlocksA = floorf(numLayerArcs / ThxBlock) + 1;
+			numOfBlocksN = floorf(numLayerNeur / ThxBlock) + 1;
+
+			if (i < priority.size() - 2) {
+				CUDAlayerInput <<<numOfBlocksA, ThxBlock >>> (gpuNetParams.weights, gpuNetParams.ArcIn, gpuNetParams.ArcOut, gpuNetParams.NeuronOut, startA, endA); //propago l'output dei neuroni al prossimo/i layer
+				CUDAbayesInput <<<numOfBlocksN, ThxBlock >>> (gpuNetParams.NeuronOut, gpuNetParams.Bayes, startN, endN); //applico il contributo dei bayes all output dei neuroni del layer corrente 
+				CUDAsigLayer <<<numOfBlocksN, ThxBlock >>> (gpuNetParams.NeuronOut, startN, endN); //applico la sigmoide allo stato di attivazione dei neuroni
+				
+			}
+		}
+
+		//copio l'output dei neuroni dello strato output nella memoria della cpu
+		cudaStatus = cudaMemcpy(&NeuronOut[0] + outputRef, gpuNetParams.NeuronOut + outputRef, outputN * sizeof(float), cudaMemcpyDeviceToHost); //TODO da errore e non carica il vettore trovare il BUG
+		if (cudaCheckStatus(cudaStatus) == true) goto Error;
+			
+		t1in = PerformanceCounter();
+		elapsedInMilliseconds = ((t1in - t0in) * 1000.0) / PerformanceFrequency();
+
+		///////////////////////////visualizzazione dell'esempio//////////////////////////////
+
+		float delta;
+		cout << "input time: " << elapsedInMilliseconds << " ms" << endl;
+
+		for (int on = 0; on < outputN; on++) {
+			delta = mapMaxOut[on] - mapMinOut[on];
+			cout << "Y" << on << ": " << (NeuronOut[NeuronOut.size() - outputN + on] * delta) + mapMinOut[on] << endl;
+		}
+		cout << endl;
+		
+		//////////////////////////////////////////////////////////////////////////////////////
+
+		if (false) {
+		Error:
+			//libero la memoria nella scheda grafica
+			cudaFree(gpuNetParams.weights);
+			cudaFree(gpuNetParams.ArcIn);
+			cudaFree(gpuNetParams.ArcOut);
+			cudaFree(gpuNetParams.NeuronOut);
+			cudaFree(gpuNetParams.examples);
+			cudaFree(gpuNetParams.BPerr);
+			cudaFree(gpuNetParams.mapMaxOut);
+			cudaFree(gpuNetParams.mapMinOut);
+			cudaFree(gpuNetParams.priority);
+			cudaFree(gpuNetParams.NeurInLyr);
+		}
+
+		return cudaStatus;
+	}
+	//////////////////////////////////////////////////////////////////////////////////////
+	
+	////////////////////////////////CUDA UTILITY//////////////////////////////////////////
+	//verifica la corretta esecuzione di un operazione
+	inline cudaError_t checkCuda(cudaError_t result){ ... }
+	
+	//verifica la corretta esecuzione di un operazione restituendo un bool
+	bool cudaCheckStatus(cudaError_t cudaStatus) { ... }
+	
+	//stampa a schermo le principali proprietà della scheda
+	void printDeviceSpecs() { ... }
+	
+	//stampa i parametri della rete che vengono passati alla scheda
+	void printNetSpecs() { ... }
+	
+	//calcola il peso del modello
+	float sizeOfModel(string mesureUnit = "B") { ... }
+	
+	template<typename T, typename A>
+	float sizeOfVector(vector<T, A> const& vect,string mesureUnit = "B") { ... }
+	//////////////////////////////////////////////////////////////////////////////////////
+	
+	/////////////////////////////ALTRE FUNZIONI///////////////////////////////////////////
+};
+
+\end{lstlisting}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
