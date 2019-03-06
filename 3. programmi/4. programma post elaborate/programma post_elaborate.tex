@@ -1,5 +1,7 @@
 \documentclass[10pt,a4paper]{article}
 
+%intestazione copiata
+
 \usepackage[italian]{babel}
 \usepackage{amsmath}
 \usepackage{amsfonts}
@@ -56,7 +58,7 @@
     extendedchars=true,
     literate={è}{{\`{e}}}{1},
     %escapeinside={(*******}{*******)}
-    escapechar=\£,
+    %escapechar=\£,
     %escapeinside=~~,
     frame=tb,
     tabsize=2,
@@ -176,10 +178,10 @@
 \begin{document}
 
 \subsection{Programma che si occupa di post-elaborare i dati}
-Dopo aver acquisito i dati di arduino e del kinect bisogna effettuare una post elaborazione per ottenere coppie di valori riferiti allo stesso istante temporale. 
+Dopo aver acquisito i dati di arduino e del kinect bisogna effettuare una post elaborazione per ottenere coppie di valori riferiti a circa lo stesso istante temporale. 
 Il programma usato per fare ci\`o riprende molte cose dal codice del programma "prg\_get\_data", le librerie usate sono le stesse ed anche le classi "kin\_file\_manager", "kin\_file\_manager" e "data\_structure.h".
 L'unica classe nuova \`e "make\_dataset":
-\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+\begin{lstlisting}[style=mycpp, caption=classe make\_dataset, captionpos=b]
 class make_dataset
 {
 private:
@@ -251,7 +253,7 @@ public:
 \end{lstlisting}
 In questa classe le 2 funzioni principali sono "sync\_with\_clones" e "sync\_without\_clones" che provvedono a costruire le coppie di dati ed a salvarle nella struttura dati "dataset".
 Analizziamo la funzione "sync\_with\_clones":
-\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+\begin{lstlisting}[style=mycpp, caption=funzione sync\_with\_clones, captionpos=b, label={lst:syncclones}]
 void sync_with_clones()
 {
   uint64_t time_old_good_pair = 0;
@@ -282,13 +284,12 @@ void sync_with_clones()
       cout << "ard frame rate: " << (1.0f / ((ard_iter->frame_time - time_old_ard) / 1000.0f)) << "Hz" << endl;
       cout << "kin frame rate: " << (1.0f / ((kin_iter->frame_time - time_old_kin) / 1000.0f)) << "Hz" << endl;
 
-      // salvo 
+      // salvo i tempi
       time_old_good_pair = (ard_iter->frame_time + kin_iter->frame_time) / 2;
-
       time_old_ard = ard_iter->frame_time;
       time_old_kin = kin_iter->frame_time;
 
-
+      // controllo se ci sono pi\`u dati che si accoppiano con uno solo (solo debug)
       if ((kin_cont == old_kin_cont) || (ard_cont == old_ard_cont))
       {
         cout << "dati multipli nello stesso range" << endl;
@@ -319,13 +320,114 @@ void sync_with_clones()
       ard_cont++;
     }
 
+    // se sono arrivato alla fine esco dal ciclo
+    if ((kin_iter == k_dat.end()) || (ard_iter == a_dat.end())) { break; }
+  }
+}
+\end{lstlisting}
+Questa prima funzione effettua il pair dei dati senza per\`o tener conto che, dati i differenti frame rate di arduino e del kinect, un singolo dato del kinect potrebbe accoppiarsi con pi\`u di un dato di arduino e viceversa. Questi "cloni" interferiscono con il processo di apprendimento della rete e quindi si \`e passati alla funzione "sync\_without\_clones" che effettua la stessa operazione ma tenendo conto che potrebbero esserci pi\`u dati di un tipo accoppiati con uno dell'altro e salva solo la coppia che ha la differenza di tempo minore.
+\begin{lstlisting}[style=mycpp, caption=funzione sync\_without\_clones, captionpos=b]
+void sync_without_clones()
+{
+  uint64_t time_old_good_pair = 0;
+
+  uint64_t time_old_ard = 0;
+  uint64_t time_old_kin = 0;
+
+  auto ard_iter = a_dat.begin();
+  auto kin_iter = k_dat.begin();
+
+  uint32_t ard_cont = 0;
+  uint32_t kin_cont = 0;
+
+  uint32_t old_ard_cont = 0;
+  uint32_t old_kin_cont = 0;
+
+  kinect_data k_tmp = *kin_iter;
+  arduino_data a_tmp = *ard_iter;
+
+  for(;;)
+  {
+    // controllo la sincronia
+    if (check_sync(ard_iter->frame_time, kin_iter->frame_time))
+    {
+      // stampo i tempi per valutere la qualit\`a del dataset
+      cout << "common " << abs((long long)(ard_iter->frame_time - kin_iter->frame_time)) << "  kin: " << kin_iter->contatore << " ard: " << ard_iter->contatore << endl;
+      cout << "ard frame rate: " << (1.0f / ((ard_iter->frame_time - time_old_ard) / 1000.0f)) << "Hz" << endl;
+      cout << "kin frame rate: " << (1.0f / ((kin_iter->frame_time - time_old_kin) / 1000.0f)) << "Hz" << endl;
+
+      // salvo i tempi attuali
+      time_old_ard = ard_iter->frame_time;
+      time_old_kin = kin_iter->frame_time;
+
+      // se il contatore del kinect non \`e variato dall'ultima volta significa che ci sono pi\`u dati riferiti ad arduino che si accoppiano ad un solo dato del kinect
+      if (kin_cont == old_kin_cont)
+      {
+      
+        cout << "multi ard in the same kin" << endl;
+        if (time_distance(kin_iter->frame_time, ard_iter->frame_time) < time_distance(k_tmp.frame_time, a_tmp.frame_time))
+        {
+          a_tmp = *ard_iter;
+        }
+      }
+      // se il contatore dei arduino non \`e variato dall'ultima volta significa che ci sono pi\`u dati riferiti al kinect che si accoppiano ad un solo dato di arduino
+      else if (ard_cont == old_ard_cont)
+      {
+        cout << "multi kin in the same ard" << endl;
+        if (time_distance(kin_iter->frame_time, ard_iter->frame_time) < time_distance(k_tmp.frame_time, a_tmp.frame_time))
+        {
+          k_tmp = *kin_iter;
+        }
+      }
+      \\ se entrambi sono variati significa che la sequenza \`e finita e posso salvare i dati
+      else
+      {
+        cout << "sequence reset" << endl;
+
+        // salvo la coppia salvata
+        transfer_data_to_dataset(&a_tmp, &k_tmp);
+
+        // stampo i tempi per le valutazioni
+        cout << "best " << abs((long long)(a_tmp.frame_time - k_tmp.frame_time)) << "  kin: " << k_tmp.contatore << " ard: " << a_tmp.contatore << endl;
+        cout << "time since another good pair: " << ((a_tmp.frame_time + k_tmp.frame_time) / 2 - time_old_good_pair) << endl;
+        time_old_good_pair = (a_tmp.frame_time + k_tmp.frame_time) / 2;
+
+        // salvo i dati correnti e i contatori correnti
+        old_kin_cont = kin_cont;
+        old_ard_cont = ard_cont;
+        a_tmp = *ard_iter;
+        k_tmp = *kin_iter;
+      }
+
+      cout << endl;
+
+    }
+    else
+    {
+      cout << "dato scartato" << endl << endl;
+    }
+
+    // incremento chi tra i 2 dati \`e il pi\`u vecchio
+    if (ard_iter->frame_time >= kin_iter->frame_time)
+    {
+      kin_iter++;
+      kin_cont++;
+    }
+    else
+    {
+      ard_iter++;
+      ard_cont++;
+    }
+
+    // se sono arrivato alla fine dei dati esco
     if ((kin_iter == k_dat.end()) || (ard_iter == a_dat.end())) { break; }
   }
 }
 \end{lstlisting}
 
+
 La funzione che si occupa di acquisire i nomi dei file e altro dall'utente \`e "post\_elaborate":
-\begin{lstlisting}[style=mycpp, caption=librerie usate, captionpos=b]
+\begin{lstlisting}[style=mycpp, caption=funzione "post\_elaborate", captionpos=b]
 void post_elaborate()
 {
   string ard_file_mane = "";
@@ -358,13 +460,6 @@ void post_elaborate()
   make_dataset(ard_file_mane, kin_file_mane, dataset_file_name, clones);
 }
 \end{lstlisting}
-
-
-
-TODO
-
-
-
 
 
 
