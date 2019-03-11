@@ -7,6 +7,7 @@
 
 \usepackage[left=1cm,right=1cm,top=1cm,bottom=2cm]{geometry}
 
+
 \usepackage{txfonts}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -293,12 +294,38 @@
 % per togliere gli ident all'inizio dei paragrafi
 \setlength{\parindent}{0pt}
 
+\setcounter{tocdepth}{4}
+\setcounter{secnumdepth}{4}
+
+
+
+\title{Neural Move Capture}
+\author{Massimiliano Biancucci\\Viozzi Simone}
+\date{11-3-2019}
+
 
 
 
 
 
 \begin{document}
+
+\begin{titlepage}
+    \vspace*{\fill}
+    \begin{center}
+      {\begin{huge} \textbf{Neural Move Capture}\end{huge}}\\[0.5cm]
+      {\begin{large} Massimiliano Biancucci\\Viozzi Simone\end{large} }\\[0.4cm]
+      11-03-2019
+    \end{center}
+    \vspace*{\fill}
+  \end{titlepage}
+
+
+\tableofcontents
+
+\newpage
+
+\setcounter{page}{3}
 
 \section{Prefazione}
  
@@ -338,8 +365,7 @@ Il termine "deep learning" deriva proprio dalla capacità di questi modelli di r
   \end{subfigure}
   \label{fig:graph1}
 \end{figure}
-
-TODO esiste pi\`u di un fig:graph1
+\clearpage
 
 \subsubsection{Le reti feed-forward (MLP)}
 
@@ -416,8 +442,8 @@ P - potenziale del neurone\\
   \end{subfigure}
   \label{fig:graph5}
 \end{figure}
-\\ \\
 
+\newpage
 \subsubsection*{Le reti multi-strato e la separazione non lineare} 
 Le reti multi-strato sono composte da strati di percettroni, interconnessi tra loro in modo che gli output degli strati precedenti siano connessi con gli input dei percettroni successivi. Tale struttura "profonda" permette di rappresentare funzioni non linerai molto complesse, tanto più sono gli strati della rete.\\
 Uno degli esempi che meglio chiarisce questa problematica è la funzione xor nel seguente esempio, la quale per semplicità è rappresentata con neuroni binari a soglia.
@@ -497,7 +523,7 @@ Ponendo a questo punto:
 \Delta W_{jk} = -\eta \ \delta_j \ Z_k
 \end{equation}
 La formula (\ref{eq:grad}) viene impiegata per aggiornare i pesi sinattici delle connessioni tra strato nascosto e strato output, analogamente, per quanto riguarda le connessioni tra strato input e strato nascosto si utilizza la formula (fig. Propagazione b):
-TODO esiste pi\`u di un label eq:dih
+
 \begin{equation} \label{eq:dih}
 \Delta W_{ki} = -\eta \frac{\partial E}{\partial W_{ki}} = - \eta \frac{\partial E}{\partial Z_k} \frac{\partial Z_k}{\partial P_k} \frac{\partial P_k}{\partial W_{ki}} = -\eta \frac{\partial E}{\partial Z_k}f'(P_k)X_i
 \end{equation}
@@ -576,7 +602,7 @@ Questa architettura trova la massima efficacia quando un grande numero di istruz
   \label{fig:graph1}
 \end{figure}
 
-TODO esiste pi\`u di un fig:graph1
+
 
 \subsubsection{L'architettura della GPU}
 La struttura della GPU è definita "SIMT" (single instruction, multiple thread), tale aggettivo è dato in quanto la GPU è realizzata per eseguire un medesimo programma su un gran numero di processori contemporaneamente, i quali però ricevono dati diversi da computare.\\ Tipicamente i processori presenti su una GPU sono più piccoli e semplici di quelli di una CPU e anche molto meno performanti ma il loro grande numero e la strutturazione delle memorie presenti al suo interno permette per il codice parallelizzabile di ottenere tempi di esecuzione estremamente minori rispetto a quelli in una CPU.\\
@@ -695,7 +721,6 @@ Il modulo bluetooth ulilizzato \`e "HC-05", ha 6 pin per interfacciarsi con le a
 Questo modulo ha un regolatore da \SI{5}{\volt} a \SI{3.3}{\volt} integrato, quindi va alimentato a \SI{5}{\volt}.
 \\
 Per comunicare con arduino usa la seriale (RS-232) con livello logico \SI{3.3}{\volt}, ci\`o comporta la necessit\`a di inserire un partitore sul pin rx del modulo (quindi il pin tx di arduino). 
-\\
 Il pin state e\` stato usato per far conoscere ad arduino quando il modulo ha stabilito la connessione con il computer. 
 \\
 Il pin key svolge una funzione particolare poich\`e permette di avviare il modulo in modalit\`a "command mode", in questa modalit\`a si possono usare gli AT commands per programmare il modulo (es. cambiare nome al dispositivo, oppure cambiare il baud rate della seriale).
@@ -1228,6 +1253,8 @@ U.b[2] -> 0xFF
 U.b[3] -> 0xAA
 \end{lstlisting}
 che sono esattamente i byte costituenti U.a. Ci\`o ci ha permesso di inviare un float come sequenza di byte al pc, nella classe serial sul pc c'e` esattamente lo stesso tipo di struttura per ricostruire il float. 
+
+%\newpage
 
 \subsection{programma per l'acquisizione dei dati dal kinect e da arduino}
 Questo programma \`e stato usato per acquisire i dati da arduino e dal kinect e scriverli in dei file di testo, ce vengono successivamente elaborati. 

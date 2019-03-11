@@ -5,3 +5,7 @@
 *.bbl
 *.out
 *.tex.bak
+*.toc
+*.mtc0
+*.mtc
+*.maf
